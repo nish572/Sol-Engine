@@ -57,15 +57,15 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)dependencies\include;$(SolutionDir)dependencies\include\KHR;$(SolutionDir)dependencies\include\glad;$(SolutionDir)dependencies\include\sdl2;$(SolutionDir)dependencies\include\ft;$(SolutionDir)dependencies\include\dearimgui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)dependencies\include;$(SolutionDir)dependencies\include\core;$(SolutionDir)dependencies\include\KHR;$(SolutionDir)dependencies\include\glad;$(SolutionDir)dependencies\include\sdl2;$(SolutionDir)dependencies\include\ft;$(SolutionDir)dependencies\include\dearimgui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)dependencies\lib;$(SolutionDir)dependencies\lib\sdl2;$(SolutionDir)dependencies\lib\freetype;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>freetype.lib;SDL2.lib;SDL2_mixer.lib;SDL2main.lib;SDL2test.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)dependencies\lib;$(SolutionDir)dependencies\lib\sdl2;$(SolutionDir)dependencies\lib\freetype;$(SolutionDir)bin\$(Configuration)-$(Platform)\Core;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>freetype.lib;SDL2.lib;SDL2_mixer.lib;SDL2main.lib;SDL2test.lib;core.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -74,30 +74,30 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)dependencies\include;$(SolutionDir)dependencies\include\KHR;$(SolutionDir)dependencies\include\glad;$(SolutionDir)dependencies\include\sdl2;$(SolutionDir)dependencies\include\ft;$(SolutionDir)dependencies\include\dearimgui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)dependencies\include;$(SolutionDir)dependencies\include\core;$(SolutionDir)dependencies\include\KHR;$(SolutionDir)dependencies\include\glad;$(SolutionDir)dependencies\include\sdl2;$(SolutionDir)dependencies\include\ft;$(SolutionDir)dependencies\include\dearimgui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)dependencies\lib;$(SolutionDir)dependencies\lib\sdl2;$(SolutionDir)dependencies\lib\freetype;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>freetype.lib;SDL2.lib;SDL2_mixer.lib;SDL2main.lib;SDL2test.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)dependencies\lib;$(SolutionDir)dependencies\lib\sdl2;$(SolutionDir)dependencies\lib\freetype;$(SolutionDir)bin\$(Configuration)-$(Platform)\Core;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>freetype.lib;SDL2.lib;SDL2_mixer.lib;SDL2main.lib;SDL2test.lib;core.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\shared\glad.c" />
-    <ClCompile Include="src\application.cpp" />
-    <ClCompile Include="src\imgui.cpp" />
-    <ClCompile Include="src\imgui_demo.cpp" />
-    <ClCompile Include="src\imgui_draw.cpp" />
-    <ClCompile Include="src\imgui_impl_opengl3.cpp" />
-    <ClCompile Include="src\imgui_impl_sdl2.cpp" />
-    <ClCompile Include="src\imgui_init.cpp" />
-    <ClCompile Include="src\imgui_tables.cpp" />
-    <ClCompile Include="src\imgui_widgets.cpp" />
+    <ClCompile Include="src\Application.cpp" />
+    <ClCompile Include="src\dearimgui\imgui.cpp" />
+    <ClCompile Include="src\dearimgui\imgui_demo.cpp" />
+    <ClCompile Include="src\dearimgui\imgui_draw.cpp" />
+    <ClCompile Include="src\dearimgui\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="src\dearimgui\imgui_impl_sdl2.cpp" />
+    <ClCompile Include="src\dearimgui\imgui_init.cpp" />
+    <ClCompile Include="src\dearimgui\imgui_tables.cpp" />
+    <ClCompile Include="src\dearimgui\imgui_widgets.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Core\Core.vcxproj">
