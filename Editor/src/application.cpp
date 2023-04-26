@@ -1,8 +1,5 @@
-#include "Core.h"
+#include "Engine.h"
 
-int main(int argc, char* argv[]) {
-	if (Core::initCore()) {
-		return 1;
-	}
-	return true;
+int main(int argc, char* args[]) {
+	return 1;
 }
