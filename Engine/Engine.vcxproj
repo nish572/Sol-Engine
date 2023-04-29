@@ -78,6 +78,7 @@
       <PreprocessorDefinitions>ENGINE_BUILD_DLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)dependencies\include;$(SolutionDir)dependencies\include\engine;$(SolutionDir)dependencies\include\KHR;$(SolutionDir)dependencies\include\glad;$(SolutionDir)dependencies\include\sdl2;$(SolutionDir)dependencies\include\ft;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>Default</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -92,8 +93,15 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\shared\glad.c" />
-    <ClCompile Include="src\Engine.cpp" />
+    <ClCompile Include="src\Core.cpp" />
+    <ClCompile Include="src\LogElement.cpp" />
+    <ClCompile Include="src\RenderElement.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\dependencies\include\engine\Core.h" />
+    <ClInclude Include="..\dependencies\include\engine\debuglog\LogElement.h" />
+    <ClInclude Include="..\dependencies\include\engine\EngineAPI.h" />
+    <ClInclude Include="..\dependencies\include\engine\render\RenderElement.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

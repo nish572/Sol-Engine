@@ -1,5 +1,20 @@
-#include "Engine.h"
+#include "Core.h"
 
 int main(int argc, char* args[]) {
-	return 1;
+	
+	//Core instance
+	Sol::Core editorCore;
+
+	//Attach log element to the instance
+	editorCore.attachElement("Log");
+
+	//Error message
+	editorCore.getLogElement()->logError("OHNOSPAGGETYOH");
+
+	editorCore.~Core();
+
+	while (true)
+	{
+
+	}
 }
