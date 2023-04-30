@@ -3,10 +3,17 @@
 #include "EngineAPI.h"
 
 #include <memory>
-#include <iostream>
 
 #include <glad.h>
 #include <SDL.h>
+
+//Forward declation of Core class
+//Essentially, telling compiler Sol::Core exists, but not providing full definition
+//This means pointers to Core class can be used without including Core.h
+//Including Core.h would introduce circular dependency
+namespace Sol {
+	class Core;
+}
 
 namespace CoreRenderElement
 {
@@ -16,7 +23,7 @@ namespace CoreRenderElement
 	{
 	public:
 		//Initialize pointers to SDL window and OpenGL context
-		RenderElement();
+		RenderElement(std::shared_ptr<Sol::Core> core);
 		//Release resources associated with the RenderElement instance
 		~RenderElement();
 
@@ -35,10 +42,11 @@ namespace CoreRenderElement
 		ENGINE_API SDL_GLContext getGLContext() const;
 
 	private:
+		//Pointer to core
+		std::weak_ptr<Sol::Core> m_core;
 		//A pointer to the SDL window instanced managed by the RenderElement
-		SDL_Window* m_window;
+		SDL_Window* m_sdlWindow;
 		//An OpenGL context handle managed by the RenderElement
 		SDL_GLContext m_glContext;
-		bool loggerAttached;
 	};
 }

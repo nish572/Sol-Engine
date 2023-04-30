@@ -1,0 +1,13 @@
+Creates a shared instance of Sol::Core using std::make_shared<Sol::Core>().
+
+Initializes the Core, including auto-attached elements like LogElement.
+
+Allows attaching custom or pre-built elements using appCore->attachElement(elementName) with appropriate naming conventions.
+
+Allows detaching custom or pre-built elements using appCore->detachElement(elementName) with appropriate naming conventions.
+
+Provides a runtime loop where the application's logic would be executed.
+
+Terminates the Core, which detaches all still-attached elements and cleans up their resources.
+
+Resets the appCore shared pointer to destroy the Core instance.

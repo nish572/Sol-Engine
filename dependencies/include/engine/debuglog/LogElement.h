@@ -5,8 +5,11 @@
 #include <memory>
 #include <iostream>
 
+#pragma warning(push)
+#pragma warning(disable: 6285 26450 26451 26437 26498 26800 26495) //Disable numerous spdlog warnings - warnings considered, spdlog fully functional and trusted, no need for these warnings
 #include <spdlog/spdlog.h>
 #include <spdlog/sinks/basic_file_sink.h>
+#pragma warning(pop)
 
 namespace CoreLogElement
 {
@@ -24,7 +27,8 @@ namespace CoreLogElement
 		//Set flush frequency/level
 		//Create logger
 		//Register logger
-		bool initialize();
+		//Takes custom logfileName e.g. 'Sol-Log.txt'
+		bool initialize(const std::string& logfileName);
 
 		//Use logger to log messages appropriately
 		ENGINE_API void logInfo(const std::string& msg);

@@ -1,0 +1,13 @@
+Provides a namespace and a class definition for the custom Element, including its constructor, destructor, initialize, and terminate methods.
+
+The constructor takes a shared pointer to a Sol::Core instance and initializes a weak_ptr member variable, allowing the custom Element to have a weak reference to the Core.
+
+The initialize method is used for setting up the custom Element and should be called when amending Core's attachElement function.
+
+Custom functionality can be added to the Element as needed.
+
+The terminate method is responsible for deallocating resources associated with the custom Element and should be called when amending Core's detachElement function and inside Core's terminate function.
+
+The custom Element can include methods for accessing or interacting with its managed objects, if needed.
+
+The Element's header file includes necessary includes, forward declarations, and pragma directives to prevent multiple inclusions.
