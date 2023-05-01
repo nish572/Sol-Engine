@@ -90,16 +90,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\shared\glad.c" />
     <ClCompile Include="src\Application.cpp" />
-    <ClCompile Include="src\dearimgui\imgui.cpp" />
-    <ClCompile Include="src\dearimgui\imgui_demo.cpp" />
-    <ClCompile Include="src\dearimgui\imgui_draw.cpp" />
-    <ClCompile Include="src\dearimgui\imgui_impl_opengl3.cpp" />
-    <ClCompile Include="src\dearimgui\imgui_impl_sdl2.cpp" />
-    <ClCompile Include="src\dearimgui\imgui_init.cpp" />
-    <ClCompile Include="src\dearimgui\imgui_tables.cpp" />
-    <ClCompile Include="src\dearimgui\imgui_widgets.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Engine\Engine.vcxproj">

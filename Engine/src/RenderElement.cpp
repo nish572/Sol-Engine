@@ -39,9 +39,9 @@ namespace CoreRenderElement
 			//Set OpenGL version
 			SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3); //Set version to 3
 			SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3); //Specifically set to X.3
-			SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE); //Chose glad-core when getting glad rather than compatability for reliability
+			SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE); //Chose glad-core when getting glad rather than compatibility for reliability
 			SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1); //Believe defaults to 1 anyways, but explicitly writing for readability and assurance
-			SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24); //24 bit colour allows full colour range, even though 8 bits fine for human eye, more bits=higher quality
+			SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24); //24 bit color allows full color range, even though 8 bits fine for human eye, more bits=higher quality
 			SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8); //8 bit stencil buffer, 8 bits fine for stencil buffer, more bits=higher quality
 
 			//Create SDL window
@@ -67,9 +67,8 @@ namespace CoreRenderElement
 			//Set vsync (0=off, 1=on, -1=adaptive vsync)
 			SDL_GL_SetSwapInterval(vsync);
 
-			//Check if OpenGL context was created successfully, if so then continue, otherwise return false
-			if (!m_glContext)
-			{
+			//Setup function pointers
+			if (!gladLoadGLLoader((GLADloadproc)SDL_GL_GetProcAddress)) {
 				if (corePtr)
 				{
 					corePtr->getLogElement()->logError(std::string("[Render] Failed To Create OpenGL Context") + SDL_GetError());
@@ -81,13 +80,24 @@ namespace CoreRenderElement
 		//then log success and return true
 		if (corePtr)
 		{
-			corePtr->getLogElement()->logInfo("[Render] Sucessfully Initialized");
+			corePtr->getLogElement()->logInfo("[Render] Successfully Initialized");
 		}
 		return true;
 	}
 
-	void RenderElement::update(float deltaTime)
+	void RenderElement::update()
 	{
+		glClearColor(0.7f, 0.3f, 1.0f, 0.0f);
+		glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+		auto corePtr = m_core.lock();
+		if (corePtr)
+		{
+			if (corePtr->getGUIElement())
+			{
+				corePtr->getGUIElement()->update();
+			}
+		}
+		SDL_GL_SwapWindow(m_sdlWindow);
 	}
 
 	void RenderElement::terminate()
@@ -101,7 +111,8 @@ namespace CoreRenderElement
 			SDL_DestroyWindow(m_sdlWindow);
 			m_sdlWindow = nullptr;
 		}
-		//Remember to call SDL_Quit() only from application since other Elements may use SDL
+		//Safe to call here as RenderElement terminated last
+		SDL_Quit();
 	}
 
 	SDL_Window* RenderElement::getWindow() const
@@ -114,13 +125,13 @@ namespace CoreRenderElement
 			if (corePtr)
 			{
 				//Get LogElement to log success
-				corePtr->getLogElement()->logInfo("[Render] Sucessfully Got SDL Window");
+				corePtr->getLogElement()->logInfo("[Render] Successfully Got SDL Window");
 			}
 			//return m_sdlWindow if SDL window successfully found
 			return m_sdlWindow;
 		}
 		//If m_sdlWindow is a nullptr
-		if (corePtr)
+		if (!m_sdlWindow)
 		{
 			//Get LogElement to log error
 			corePtr->getLogElement()->logError("[Render] Failed To Get SDL Window: nullptr found");
@@ -134,7 +145,7 @@ namespace CoreRenderElement
 		//Temporarily upgrade weak pointer to shared pointer, ownership automatically released once out of scope due to reference count
 		auto corePtr = m_core.lock();
 		//If m_glContext isn't a nullptr
-		if (!m_glContext)
+		if (m_glContext)
 		{
 			if (corePtr)
 			{
@@ -145,7 +156,7 @@ namespace CoreRenderElement
 			return m_glContext;
 		}
 		//If m_glContext is a nullptr
-		if (corePtr)
+		if (!m_glContext)
 		{
 			//Get LogElement to log error
 			corePtr->getLogElement()->logError("[Render] Failed To Get OpenGL Context: nullptr found");

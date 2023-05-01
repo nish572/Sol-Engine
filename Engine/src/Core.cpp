@@ -28,7 +28,7 @@ namespace Sol
 	{
 		//Elements can be attached via the following mechanism:
 		//Check elementName and check if Core's respective Element unique_ptr is a nullptr
-		//(elementName should only be in Capitalisation case e.g. 'Render', and should not include 'Element')
+		//(elementName should only be in Capitalization case e.g. 'Render', and should not include 'Element')
 		//If Core's respective Element unique_ptr is a nullptr
 		//  Call make_unique to instantiate the Element class, giving shared_from_this to the Element's constructor
 		//  Log success and return true
@@ -39,11 +39,15 @@ namespace Sol
 			m_logElement->logInfo(std::string("[Core] Successfully Attached ") + elementName + " Element");
 			return true;
 		}
-		
-		// ... ///
+		if (elementName == "GUI" && m_guiElement == nullptr)
+		{
+			m_guiElement = std::make_unique<CoreGUIElement::GUIElement>(shared_from_this());
+			m_logElement->logInfo(std::string("[Core] Successfully Attached ") + elementName + " Element");
+			return true;
+		}
 		
 		//If Element can't be attached then
-		m_logElement->logError(std::string("[Core] Failed To Attach ") + elementName + " Element"); //Due to left-to-right associativity and operator precendence, only implicit conversion of first literal necessary
+		m_logElement->logError(std::string("[Core] Failed To Attach ") + elementName + " Element"); //Due to left-to-right associativity and operator precedence, only implicit conversion of first literal necessary
 		return false;
 	}	
 
@@ -52,7 +56,7 @@ namespace Sol
 	{
 		//Elements can be detached via the following mechanism:
 		//Check elementName and check if Core's respective Element unique_ptr is not a nullptr
-		//(elementName should only be in Capitalisation case e.g. 'Render', and should not include 'Element')
+		//(elementName should only be in Capitalization case e.g. 'Render', and should not include 'Element')
 		//If Core's respective Element unique_ptr is not a nullptr
 		//  Set Core's respective Element unique_ptr to a nullptr
 		//  Log success
@@ -64,27 +68,31 @@ namespace Sol
 			m_logElement->logInfo(std::string("[Core] Successfully Detached ") + elementName + " Element");
 			return true;
 		}
+		if (elementName == "GUI" && m_guiElement != nullptr)
+		{
+			m_guiElement->terminate();
+			m_guiElement = nullptr;
+			m_logElement->logInfo(std::string("[Core] Successfully Detached ") + elementName + " Element");
+			return true;
+		}
 
 		// ... ///
 
 		//If Element can't be detached then
-		m_logElement->logError(std::string("[Core] Failed To Detach ") + elementName + " Element"); //Due to left-to-right associativity and operator precendence, only implicit conversion of first literal necessary
+		m_logElement->logError(std::string("[Core] Failed To Detach ") + elementName + " Element"); //Due to left-to-right associativity and operator precedence, only implicit conversion of first literal necessary
 		return false;
 	}
 
-	//void Core::update(float deltaTime)
-	//{
-		//Process input events
-		//Update ECS
-		//Update elements
-		//Render current scene
-		//Remember physics simulatons is fixed time, rendering and input is frame-dependent (separate function maybe?)
-		//m_renderElement->update(deltaTime);
-	//}
+	void Core::update()
+	{
+		//Call update function(s) for attached Element(s)
+		if (m_renderElement != nullptr) { m_renderElement->update(); }
+	}
 	
 	void Core::terminate()
 	{
 		//Call terminate function(s) for attached Element(s)
+		if (m_guiElement != nullptr) { detachElement("GUI"); }
 		if (m_renderElement != nullptr) { detachElement("Render"); }
 		if (m_logElement != nullptr)
 		{
@@ -122,6 +130,17 @@ namespace Sol
 			return m_renderElement.get();
 		}
 		m_logElement->logError("[Core] Failed To Get Render Element: nullptr found");
+		return nullptr;
+	}
+
+	CoreGUIElement::GUIElement* Core::getGUIElement() const
+	{
+		if (m_guiElement != nullptr)
+		{
+			m_logElement->logInfo("[Core] Successfully Got GUI Element");
+			return m_guiElement.get();
+		}
+		m_logElement->logError("[Core] Failed To Get GUI Element: nullptr found");
 		return nullptr;
 	}
 

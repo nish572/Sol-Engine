@@ -9,12 +9,14 @@
 //WARNING: Use carefully to ensure valid encapsulation
 #include "EngineAPI.h"
 //Include <memory> to manage the link between Core and this Element
+//string also frequently used
 #include <memory>
+#include <string>
 
 //Include any of this Element's specific required includes, e.g. SDL or linmath
 // ... //
 
-//Forward declation of Core class
+//Forward declaration of Core class
 //This tells compiler Sol::Core exists without providing full definition
 //This means pointers to Core class can be used without including Core.h
 //Including Core.h here would introduce circular dependency
@@ -46,7 +48,7 @@ namespace CoreTemplateElement
 
 		//Terminate TemplateElement
 		//Call this to deallocate any of TemplateElement's resources
-		//Call this when ammending Core's detachElement function and inside Core's terminate function
+		//Call this when amending Core's detachElement function and inside Core's terminate function
 		void terminate();
 
 		//If required, ensure object(s) managed by TemplateElement (e.g. RenderElement manages SDL Window)
@@ -65,12 +67,3 @@ namespace CoreTemplateElement
 		// ... //
 	};
 }
-
-//To access one Element from another Element (or any of another Element's member(s)):
-// ---
-//if (auto corePtr = m_core.lock())
-//{
-//	Access other Elements or members using corePtr
-//  e.g. corePtr->getLogElement->logInfo("Write Info Msg Here")
-//}
-// ---

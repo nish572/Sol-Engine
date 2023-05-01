@@ -19,14 +19,14 @@ int main(int argc, char* args[]) {
 
 	// ---
 	//Attach any Element(s) by name - case sensitive and does not include 'Element', e.g. only 'Render' not 'render' or 'RenderElement' etc
-	//Pre-built in Elements use standard Capitalisation case, e.g. 'Render', 'Physics'
+	//Pre-built in Elements use standard Capitalization case, e.g. 'Render', 'Physics'
 	//Custom Elements SHOULD have names that conform to this Element naming convention
 	//e.g. appCore->attachElement("Render");
 	// ---
 
 	// ---
 	//Initialize any Element(s) by calling the Element's initialize function and passing any required parameters
-	//e.g. appCore->getRenderElement()->initialize()
+	//e.g. appCore->getRenderElement()->initialize(...)
 	// ---
 
 	// ---

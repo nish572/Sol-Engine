@@ -4,6 +4,8 @@ Initializes the Core, including auto-attached elements like LogElement.
 
 Allows attaching custom or pre-built elements using appCore->attachElement(elementName) with appropriate naming conventions.
 
+Allows initializing of custom or pre-built elements using appCore->get specific element function->initialize() with respective initialize parameters.
+
 Allows detaching custom or pre-built elements using appCore->detachElement(elementName) with appropriate naming conventions.
 
 Provides a runtime loop where the application's logic would be executed.

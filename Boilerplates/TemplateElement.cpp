@@ -5,15 +5,15 @@
 #include "template/TemplateElement.h"
 
 //#Include Core.h
-//Core.h's full definiton required
+//Core.h's full definition required
 #include "Core.h"
 
 namespace CoreTemplateElement
 {
-	//TemplateElement has intializer list
+	//TemplateElement has initializer list
 	//TemplateElement MUST have at least m_core private member
 	//If TemplateElement has private member(s) for pointer(s) to object(s) managed by TemplateElement
-	//then include in intializer list here with nullptr as value(s)
+	//then include in initializer list here with nullptr as value(s)
 	//e.g. RenderElement's initializer list is: m_core(core), m_window(nullptr), m_glContext(0)
 	TemplateElement::TemplateElement(std::shared_ptr<Sol::Core> core) : m_core(core) //extend initializer list if necessary as above
 	{

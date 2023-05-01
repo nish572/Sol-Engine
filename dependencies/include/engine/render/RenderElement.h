@@ -8,7 +8,7 @@
 #include <glad.h>
 #include <SDL.h>
 
-//Forward declation of Core class
+//Forward declaration of Core class
 //Essentially, telling compiler Sol::Core exists, but not providing full definition
 //This means pointers to Core class can be used without including Core.h
 //Including Core.h would introduce circular dependency
@@ -31,8 +31,8 @@ namespace CoreRenderElement
 		//Initialize RenderElement by creating an SDL window and OpenGL context
 		ENGINE_API bool initialize(const std::string& windowName, int width, int height, SDL_WindowFlags window_flags, int vsync);
 
-		//Update RenderElement, passing the elapsed time since the last frame
-		void update(float deltaTime);
+		//Update RenderElement
+		void update();
 
 		//Terminate RenderElement by destroying the SDL window and the OpenGL context
 		void terminate();

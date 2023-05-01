@@ -5,9 +5,12 @@
 #include <memory>
 #include <iostream>
 #include <string>
+#include <functional>
+
+#include "debuglog/LogElement.h"
 
 #include "render/RenderElement.h"
-#include "debuglog/LogElement.h"
+#include "render/GUIElement.h"
 
 namespace Sol
 {
@@ -23,23 +26,23 @@ namespace Sol
 		ENGINE_API ~Core();
 
 		//Attach an Element in application runtime
-		//To make an Element usable by the Core, ammend the attachElement code to include the Element
-		//elementName should only be in Capitalisation case e.g. 'Render', and should not include 'Element'
+		//To make an Element usable by the Core, amend the attachElement code to include the Element
+		//elementName should only be in Capitalization case e.g. 'Render', and should not include 'Element'
 		ENGINE_API bool attachElement(const std::string& elementName);
 
 		//Detach an Element
 		//Preferably, do so ONLY from Core's terminate function as this checks to see if each Element is not a nullptr
-		// i.e. if the Element is still attached, and if so, call Element's terminate functon
+		// i.e. if the Element is still attached, and if so, call Element's terminate function
 		// which automatically calls detachElement once Element's termination complete
 		//However, if detachElement call desired prior to terminating Core, ensure the Element's terminate function has been called first
 		ENGINE_API bool detachElement(const std::string& elementName);
 
-		//Initialize Core (namely ensure logger initialised)
+		//Initialize Core (namely ensure logger initialized)
 		//Return true/false to be handled by the application
 		ENGINE_API bool initialize(const std::string& logfileName);
 
-		//Update Core and Elements, passing the elapsed time since the last frame
-		//void update(float deltaTime);
+		//Update Core
+		ENGINE_API void update();
 
 		//Call terminate functions for all Elements, first checking they're not nullptrs
 		ENGINE_API void terminate();
@@ -53,6 +56,8 @@ namespace Sol
 
 		//Return a pointer to the RenderElement instance managed by the Core
 		ENGINE_API CoreRenderElement::RenderElement* getRenderElement() const;
+
+		ENGINE_API CoreGUIElement::GUIElement* getGUIElement() const;
 
 		// ... //
 
@@ -68,6 +73,7 @@ namespace Sol
 		// --- 
 		std::unique_ptr<CoreLogElement::LogElement> m_logElement;
 		std::unique_ptr<CoreRenderElement::RenderElement> m_renderElement;
+		std::unique_ptr<CoreGUIElement::GUIElement> m_guiElement;
 		// ... //
 		// ---
 	};
