@@ -24,6 +24,9 @@
     <ClCompile Include="src\Core.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\shared\glad.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\dependencies\include\engine\EngineAPI.h">
@@ -32,10 +35,10 @@
     <ClInclude Include="..\dependencies\include\engine\Core.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\dependencies\include\engine\render\RenderElement.h">
+    <ClInclude Include="..\dependencies\include\engine\debuglog\LogElement.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\dependencies\include\engine\debuglog\LogElement.h">
+    <ClInclude Include="..\dependencies\include\engine\render\RenderElement.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

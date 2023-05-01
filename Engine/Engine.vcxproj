@@ -94,6 +94,7 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\shared\glad.c" />
     <ClCompile Include="src\Core.cpp" />
     <ClCompile Include="src\LogElement.cpp" />
     <ClCompile Include="src\RenderElement.cpp" />

@@ -38,7 +38,7 @@ namespace CoreTemplateElement
 		~TemplateElement();
 
 		//Initialize TemplateElement
-		//Call this when ammending Core's attachElement function
+		//Call this after calling TemplateElement's attachElement
 		bool initialize();
 
 		//Any custom functionality

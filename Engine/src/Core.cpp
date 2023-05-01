@@ -31,13 +31,11 @@ namespace Sol
 		//(elementName should only be in Capitalisation case e.g. 'Render', and should not include 'Element')
 		//If Core's respective Element unique_ptr is a nullptr
 		//  Call make_unique to instantiate the Element class, giving shared_from_this to the Element's constructor
-		//  Call Element's initialize function
 		//  Log success and return true
 
 		if (elementName == "Render" && m_renderElement == nullptr)
 		{
 			m_renderElement = std::make_unique<CoreRenderElement::RenderElement>(shared_from_this());
-			m_renderElement->initialize();
 			m_logElement->logInfo(std::string("[Core] Successfully Attached ") + elementName + " Element");
 			return true;
 		}
@@ -45,11 +43,11 @@ namespace Sol
 		// ... ///
 		
 		//If Element can't be attached then
-		m_logElement->logError(std::string("[Core] Cannot Attach ") + elementName + " Element"); //Due to left-to-right associativity and operator precendence, only implicit conversion of first literal necessary
+		m_logElement->logError(std::string("[Core] Failed To Attach ") + elementName + " Element"); //Due to left-to-right associativity and operator precendence, only implicit conversion of first literal necessary
 		return false;
 	}	
 
-	//Primarily for internal use only, however if using in application runtime, call Element's terminate function first
+	//Will be automatically called by Core's terminate, but can be called manually if detaching an Element early
 	bool Core::detachElement(const std::string& elementName)
 	{
 		//Elements can be detached via the following mechanism:
@@ -70,7 +68,7 @@ namespace Sol
 		// ... ///
 
 		//If Element can't be detached then
-		m_logElement->logError(std::string("[Core] Cannot Detach ") + elementName + " Element"); //Due to left-to-right associativity and operator precendence, only implicit conversion of first literal necessary
+		m_logElement->logError(std::string("[Core] Failed To Detach ") + elementName + " Element"); //Due to left-to-right associativity and operator precendence, only implicit conversion of first literal necessary
 		return false;
 	}
 
@@ -112,7 +110,7 @@ namespace Sol
 			m_logElement->logInfo("[Core] Successfully Got Log Element");
 			return m_logElement.get();
 		}
-		m_logElement->logError("[Core] Cannot Get Log Element: nullptr found");
+		m_logElement->logError("[Core] Failed To Get Log Element: nullptr found");
 		return nullptr;
 	}
 
@@ -123,7 +121,7 @@ namespace Sol
 			m_logElement->logInfo("[Core] Successfully Got Render Element");
 			return m_renderElement.get();
 		}
-		m_logElement->logError("[Core] Cannot Get Render Element: nullptr found");
+		m_logElement->logError("[Core] Failed To Get Render Element: nullptr found");
 		return nullptr;
 	}
 

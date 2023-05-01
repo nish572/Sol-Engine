@@ -3,6 +3,7 @@
 #include "EngineAPI.h"
 
 #include <memory>
+#include <string>
 
 #include <glad.h>
 #include <SDL.h>
@@ -28,7 +29,7 @@ namespace CoreRenderElement
 		~RenderElement();
 
 		//Initialize RenderElement by creating an SDL window and OpenGL context
-		bool initialize();
+		ENGINE_API bool initialize(const std::string& windowName, int width, int height, SDL_WindowFlags window_flags, int vsync);
 
 		//Update RenderElement, passing the elapsed time since the last frame
 		void update(float deltaTime);

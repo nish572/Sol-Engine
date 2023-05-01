@@ -17,6 +17,10 @@ int main(int argc, char* args[]) {
 
 	//Attach any Element(s) by name
 	appCore->attachElement("Render");
+	//Initialize any Element(s) by name
+	//Here I'm setting the window name to "Sol Editor", width to 1280, height to 720,
+	//window flags to (SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI), and vsync to 0 (disabled)
+	appCore->getRenderElement()->initialize("Sol Editor", 1280, 720, (SDL_WindowFlags)(SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI), 0);
 
 	//Runtime loop
 	bool appRunning = true;

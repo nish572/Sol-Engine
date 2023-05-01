@@ -25,6 +25,11 @@ int main(int argc, char* args[]) {
 	// ---
 
 	// ---
+	//Initialize any Element(s) by calling the Element's initialize function and passing any required parameters
+	//e.g. appCore->getRenderElement()->initialize()
+	// ---
+
+	// ---
 	//Elements can be manually detached since detachElement will call the Element's respective terminate function
 	//This terminate function is responsible for cleaning up resources
 	//HOWEVER it is not necessary to manually detach Elements since Core's terminate functionality

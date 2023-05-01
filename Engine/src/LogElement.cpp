@@ -23,6 +23,7 @@ namespace CoreLogElement
 			logger->flush_on(spdlog::level::err);
 			//Register logger to spdlog
 			spdlog::set_default_logger(logger);
+			logger->info("[Log] Successfully Initialized Logger");
 			return true;
 		} catch (const std::exception& e) { //Catch any spdlog exceptions if spdlog throws
 			//e.what() returns a C-style string that displays a description of the exception

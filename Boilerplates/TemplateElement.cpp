@@ -22,6 +22,8 @@ namespace CoreTemplateElement
 	{
 	}
 
+	//Call after Core's attachElement(elementName) has been called
+	//Pass any required parameters for initialization, e.g. RenderElement's initialize function requires window height and width
 	bool TemplateElement::initialize()
 	{
 		// ... //

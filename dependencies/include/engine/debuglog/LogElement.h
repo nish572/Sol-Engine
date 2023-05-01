@@ -4,6 +4,7 @@
 
 #include <memory>
 #include <iostream>
+#include <string>
 
 #pragma warning(push)
 #pragma warning(disable: 6285 26450 26451 26437 26498 26800 26495) //Disable numerous spdlog warnings - warnings considered, spdlog fully functional and trusted, no need for these warnings
