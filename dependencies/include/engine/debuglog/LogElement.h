@@ -19,9 +19,9 @@ namespace CoreLogElement
 	class LogElement
 	{
 	public:
-		//Create log element
+		//Create LogElement
 		LogElement();
-		//Clean up log element resources
+		//Clean up LogElement resources
 		~LogElement();
 
 		//Create file sink and set file to output to (creates file if it doesn't exist)
@@ -31,7 +31,7 @@ namespace CoreLogElement
 		//Takes custom logfileName e.g. 'Sol-Log.txt'
 		bool initialize(const std::string& logfileName);
 
-		//Use logger to log messages appropriately
+		//Use logger to log messages
 		ENGINE_API void logInfo(const std::string& msg);
 		ENGINE_API void logError(const std::string& msg);
 

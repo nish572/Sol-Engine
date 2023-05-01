@@ -19,11 +19,11 @@ namespace Sol {
 
 namespace CoreInputElement
 {
-	//State functionality of Element in a comment here
+	//Represents the element responsible for managing the Input operations in the Sol Engine
 	class InputElement
 	{
 	public:
-		//Represents the element responsible for managing the Input operations in the Sol Engine
+		//Instantiate InputElement
 		InputElement(std::shared_ptr<Sol::Core> core);
 		//Release resources associated with the InputElement instance
 		~InputElement();
@@ -32,8 +32,10 @@ namespace CoreInputElement
 		//Call this after calling InputElement's attachElement
 		ENGINE_API bool initialize();
 
+		//Check if SDL/ImGui events still need to be checked
 		ENGINE_API bool isRunning() const;
 
+		//Handle events
 		void handleEvents(const std::vector<SDL_Event>& events);
 
 		//Process events

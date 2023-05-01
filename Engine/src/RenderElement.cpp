@@ -4,7 +4,7 @@
 
 namespace CoreRenderElement
 {
-	RenderElement::RenderElement(std::shared_ptr<Sol::Core> core) : m_core(core), m_sdlWindow(nullptr), m_glContext(0) //Initialize m_sdlWindow and m_glContext to nullptrs
+	RenderElement::RenderElement(std::shared_ptr<Sol::Core> core) : m_core(core), m_sdlWindow(nullptr), m_glContext(0)
 	{
 	}
 	RenderElement::~RenderElement()
@@ -92,11 +92,13 @@ namespace CoreRenderElement
 		auto corePtr = m_core.lock();
 		if (corePtr)
 		{
-			if (corePtr->getGUIElement())
+			auto guiElement = corePtr->getGUIElement();
+			if (guiElement)
 			{
-				corePtr->getGUIElement()->update();
+				guiElement->update();
 			}
 		}
+
 		SDL_GL_SwapWindow(m_sdlWindow);
 	}
 

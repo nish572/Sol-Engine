@@ -57,8 +57,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>ENGINE_BUILD_DLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)dependencies\include;$(SolutionDir)dependencies\include\engine;$(SolutionDir)dependencies\include\KHR;$(SolutionDir)dependencies\include\glad;$(SolutionDir)dependencies\include\sdl2;$(SolutionDir)dependencies\include\dearimgui;$(SolutionDir)dependencies\include\ft;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <DisableSpecificWarnings>4005; 4251</DisableSpecificWarnings>
+      <AdditionalIncludeDirectories>$(SolutionDir)dependencies\include;$(SolutionDir)dependencies\include\engine;$(SolutionDir)dependencies\include\KHR;$(SolutionDir)dependencies\include\glad;$(SolutionDir)dependencies\include\sdl2;$(SolutionDir)dependencies\include\dearimgui;$(SolutionDir)dependencies\include\ft;$(SolutionDir)dependencies\include\stb;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>4005; 4251; 6262; 26451</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -78,7 +78,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>ENGINE_BUILD_DLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)dependencies\include;$(SolutionDir)dependencies\include\engine;$(SolutionDir)dependencies\include\KHR;$(SolutionDir)dependencies\include\glad;$(SolutionDir)dependencies\include\sdl2;$(SolutionDir)dependencies\include\dearimgui;$(SolutionDir)dependencies\include\ft;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)dependencies\include;$(SolutionDir)dependencies\include\engine;$(SolutionDir)dependencies\include\KHR;$(SolutionDir)dependencies\include\glad;$(SolutionDir)dependencies\include\sdl2;$(SolutionDir)dependencies\include\dearimgui;$(SolutionDir)dependencies\include\ft;$(SolutionDir)dependencies\include\stb;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>Default</LanguageStandard>
     </ClCompile>
     <Link>
@@ -108,6 +108,8 @@
     <ClCompile Include="src\InputElement.cpp" />
     <ClCompile Include="src\LogElement.cpp" />
     <ClCompile Include="src\RenderElement.cpp" />
+    <ClCompile Include="src\ResourceElement.cpp" />
+    <ClCompile Include="src\ShaderElement.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\dependencies\include\engine\Core.h" />
@@ -116,6 +118,8 @@
     <ClInclude Include="..\dependencies\include\engine\input\InputElement.h" />
     <ClInclude Include="..\dependencies\include\engine\render\GUIElement.h" />
     <ClInclude Include="..\dependencies\include\engine\render\RenderElement.h" />
+    <ClInclude Include="..\dependencies\include\engine\resource\ResourceElement.h" />
+    <ClInclude Include="..\dependencies\include\engine\resource\ShaderElement.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

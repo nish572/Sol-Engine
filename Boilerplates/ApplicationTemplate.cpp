@@ -7,9 +7,10 @@ int main(int argc, char* args[]) {
 	//Core instance (make_shared allows Element's to have a weak_ptr to Core, important for Element's to access each other if desired)
 	auto appCore = std::make_shared<Sol::Core>();
 
-	//Below is highly recommended but not required if you do not wish to use any Elements auto-attached via Core's initialize function (so far: LogElement)
+	//Below is highly recommended but not required if no auto-attached Elements are to be used (so far: LogElement)
 	//LogElement is automatically attached by calling the Core's initialize function because the Elements I have created use this logger
 	//However, if only custom Elements are to be used, skip this appCore->initialize() call, or modify Core.cpp for custom Core initialization behavior
+	//Note that all current Elements use LogElement for debugging purposes
 	// ---
 	if (!appCore->initialize("App-Log.txt")) //Replace 'App-Log.txt' with desired log file name/type e.g. 'EditorDebugLog.txt' or 'MyAppLog.customfiletype'
 	{

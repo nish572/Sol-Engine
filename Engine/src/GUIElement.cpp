@@ -4,10 +4,8 @@
 
 namespace CoreGUIElement
 {
-	//GUIElement has initializer list for any managed resource's that require initializing
+	//GUIElement has initializer list for any managed resources that require initializing
 	//All Elements MUST have at least m_core private member
-	//If GUIElement has private member(s) for pointer(s) to object(s) managed by GUIElement
-	//then include in initializer list here with nullptr as value(s)
 	GUIElement::GUIElement(std::shared_ptr<Sol::Core> core) : m_core(core) //Extend initializer list if necessary
 	{
 	}
@@ -40,7 +38,7 @@ namespace CoreGUIElement
 		// Setup Dear ImGui context
 		IMGUI_CHECKVERSION();
 		ImGui::CreateContext();
-		ImGuiIO& io = ImGui::GetIO(); (void)io;
+		ImGuiIO& io = ImGui::GetIO();
 		io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
 		io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
 		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;         // Enable Docking
@@ -76,38 +74,14 @@ namespace CoreGUIElement
 	//Update
 	void GUIElement::update()
 	{
-		ImGuiIO& io = ImGui::GetIO(); (void)io;
+		ImGuiIO& io = ImGui::GetIO();
 
 		//Start the Dear ImGui frame
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplSDL2_NewFrame();
 		ImGui::NewFrame();
 
-		//ImGui SCAFFOLD APP HERE //
-		{
-			static float f = 0.0f;
-			static int counter = 0;
-
-			ImGui::Begin("Hello, world!");                          // Create a window called "Hello, world!" and append into it.
-
-			if (ImGui::Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
-				counter++;
-			ImGui::SameLine();
-			ImGui::Text("counter = %d", counter);
-			ImGui::End();
-		}
-
-		{
-			static float f = 0.0f;
-			static int counter = 0;
-			
-			ImGui::Begin("Bye world, world!");
-			if (ImGui::Button("Button"))
-				counter++;
-			ImGui::SameLine();
-			ImGui::Text("counter = %d", counter);
-			ImGui::End();
-		}
+		updateImGuiWindows();
 
 		ImGui::Render();
 		glViewport(0, 0, (int)io.DisplaySize.x, (int)io.DisplaySize.y);
@@ -120,8 +94,42 @@ namespace CoreGUIElement
 			auto corePtr = m_core.lock();
 			if (corePtr)
 			{
-				SDL_GL_MakeCurrent(corePtr->getRenderElement()->getWindow(), corePtr->getRenderElement()->getGLContext());
+				auto renderElement = corePtr->getRenderElement();
+				if (renderElement)
+				{
+					SDL_GL_MakeCurrent(renderElement->getWindow(), renderElement->getGLContext());
+				}
 			}
+
+		}
+	}
+
+	void GUIElement::updateImGuiWindows()
+	{
+		//ImGui SCAFFOLD APP HERE //
+		{
+			static float f = 0.0f;
+			static int counter = 0;
+
+			ImGui::Begin("Hello, world!"); // Create a window called "Hello, world!" and append into it.
+
+			if (ImGui::Button("Button")) // Buttons return true when clicked (most widgets return true when edited/activated)
+				counter++;
+			ImGui::SameLine();
+			ImGui::Text("counter = %d", counter);
+			ImGui::End();
+		}
+
+		{
+			static float f = 0.0f;
+			static int counter = 0;
+
+			ImGui::Begin("Bye world, world!");
+			if (ImGui::Button("Button"))
+				counter++;
+			ImGui::SameLine();
+			ImGui::Text("counter = %d", counter);
+			ImGui::End();
 		}
 	}
 

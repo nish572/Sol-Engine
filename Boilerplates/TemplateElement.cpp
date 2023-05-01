@@ -10,7 +10,7 @@
 
 namespace CoreTemplateElement
 {
-	//TemplateElement has initializer list for any managed resource's that require initializing
+	//TemplateElement has initializer list for any managed resources that require initializing
 	//All Elements MUST have at least m_core private member
 	TemplateElement::TemplateElement(std::shared_ptr<Sol::Core> core) : m_core(core) //Extend initializer list if necessary
 	{

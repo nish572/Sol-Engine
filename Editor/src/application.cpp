@@ -6,7 +6,7 @@
 
 int main(int argc, char* args[]) {
 
-	//Core instance (make_shared allows Element's to have a weak_ptr to Core, important for Element's to access each other if desired)
+	//Core instance (make_shared allows Elements to have a weak_ptr to Core, important for Element's to access each other if desired)
 	auto appCore = std::make_shared<Sol::Core>();
 
 	//In this case I've configured the Core to manually attach LogElement as it's used everywhere for logging purposes
@@ -19,13 +19,17 @@ int main(int argc, char* args[]) {
 	appCore->attachElement("Render");
 	appCore->attachElement("GUI");
 	appCore->attachElement("Input");
+	appCore->attachElement("Resource");
+	appCore->attachElement("Shader");
 
 	//Initialize any Element(s) by name
-	//Here I'm setting the window name to "Sol Editor", width to 1280, height to 720,
+	//Here I'm setting the window name to "Sol Editor", width to 1920, height to 1080,
 	//window flags to (SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI), and vsync to 0 (disabled)
-	appCore->getRenderElement()->initialize("Sol Editor", 1280, 720, (SDL_WindowFlags)(SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI), 0);
+	appCore->getRenderElement()->initialize("Sol Editor", 1080, 720, (SDL_WindowFlags)(SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI), 0);
 	appCore->getGUIElement()->initialize();
 	appCore->getInputElement()->initialize();
+	appCore->getResourceElement()->initialize();
+	appCore->getShaderElement()->initialize();
 
 	//Runtime loop
 	bool appRunning = true;

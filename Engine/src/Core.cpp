@@ -51,6 +51,18 @@ namespace Sol
 			m_logElement->logInfo(std::string("[Core] Successfully Attached ") + elementName + " Element");
 			return true;
 		}
+		if (elementName == "Resource" && !m_resourceElement)
+		{
+			m_resourceElement = std::make_unique<CoreResourceElement::ResourceElement>(shared_from_this());
+			m_logElement->logInfo(std::string("[Core] Successfully Attached ") + elementName + " Element");
+			return true;
+		}
+		if (elementName == "Shader" && !m_shaderElement)
+		{
+			m_shaderElement = std::make_unique<CoreShaderElement::ShaderElement>(shared_from_this());
+			m_logElement->logInfo(std::string("[Core] Successfully Attached ") + elementName + " Element");
+			return true;
+		}
 		
 		//If Element can't be attached then
 		m_logElement->logError(std::string("[Core] Failed To Attach ") + elementName + " Element"); //Due to left-to-right associativity and operator precedence, only implicit conversion of first literal necessary
@@ -88,6 +100,19 @@ namespace Sol
 			m_logElement->logInfo(std::string("[Core] Successfully Detached ") + elementName + " Element");
 			return true;
 		}
+		if (elementName == "Resource" && m_resourceElement)
+		{
+			m_resourceElement->terminate();
+			m_resourceElement = nullptr;
+			m_logElement->logInfo(std::string("[Core] Successfully Detached ") + elementName + " Element");
+			return true;
+		}
+		if (elementName == "Shader" && m_shaderElement)
+		{
+			m_shaderElement = nullptr;
+			m_logElement->logInfo(std::string("[Core] Successfully Detached ") + elementName + " Element");
+			return true;
+		}
 
 		// ... ///
 
@@ -105,15 +130,19 @@ namespace Sol
 		{
 			events.push_back(event);
 		}
-		if (m_renderElement) { m_renderElement->update(); }
 		if (m_inputElement) { m_inputElement->handleEvents(events); }
+		events.clear();
+		if (m_renderElement) { m_renderElement->update(); }
 	}
-	
+
 	void Core::terminate()
 	{
 		//Call terminate function(s) for attached Element(s)
 		if (m_guiElement) { detachElement("GUI"); }
 		if (m_renderElement) { detachElement("Render"); }
+		if (m_inputElement) { detachElement("Input"); }
+		if (m_resourceElement) { detachElement("Resource"); }
+		if (m_shaderElement) { detachElement("Shader"); }
 		if (m_logElement)
 		{
 			m_logElement->logInfo("[Core] All Manually Attached Elements Successfully Detached");
@@ -172,6 +201,28 @@ namespace Sol
 			return m_inputElement.get();
 		}
 		m_logElement->logError("[Core] Failed To Get Input Element: nullptr found");
+		return nullptr;
+	}
+
+	CoreResourceElement::ResourceElement* Core::getResourceElement() const
+	{
+		if (m_resourceElement)
+		{
+			m_logElement->logInfo("[Core] Successfully Got Resource Element");
+			return m_resourceElement.get();
+		}
+		m_logElement->logError("[Core] Failed To Get Resource Element: nullptr found");
+		return nullptr;
+	}
+
+	CoreShaderElement::ShaderElement* Core::getShaderElement() const
+	{
+		if (m_shaderElement)
+		{
+			m_logElement->logInfo("[Core] Successfully Got Shader Element");
+			return m_shaderElement.get();
+		}
+		m_logElement->logError("[Core] Failed To Get Shader Element: nullptr found");
 		return nullptr;
 	}
 

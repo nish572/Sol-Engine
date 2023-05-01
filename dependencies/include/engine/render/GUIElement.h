@@ -19,11 +19,11 @@ namespace Sol {
 
 namespace CoreGUIElement
 {
-	//State functionality of Element in a comment here
+	//Represents the element responsible for managing the GUI operations in the Sol Engine
 	class GUIElement
 	{
 	public:
-		//Represents the element responsible for managing the GUI operations in the Sol Engine
+		//Instantiate GUIElement
 		GUIElement(std::shared_ptr<Sol::Core> core);
 		//Release resources associated with the GUIElement instance
 		~GUIElement();
@@ -33,6 +33,8 @@ namespace CoreGUIElement
 		ENGINE_API bool initialize();
 
 		void update();
+
+		void updateImGuiWindows();
 
 		//Terminate GUIElement
 		//Call this to deallocate any of GUIElement's resources
