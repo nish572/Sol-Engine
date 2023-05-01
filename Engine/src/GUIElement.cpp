@@ -72,35 +72,32 @@ namespace CoreGUIElement
 	}
 
 	//Update
-	void GUIElement::update()
+	void GUIElement::update(double deltaTime)
 	{
 		ImGuiIO& io = ImGui::GetIO();
+
+		//Use the provided deltaTime value
+		io.DeltaTime = static_cast<float>(deltaTime);
 
 		//Start the Dear ImGui frame
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplSDL2_NewFrame();
 		ImGui::NewFrame();
 
+		// UPDATE GUI ELEMENTS IN THIS FUNCTION //
 		updateImGuiWindows();
 
 		ImGui::Render();
 		glViewport(0, 0, (int)io.DisplaySize.x, (int)io.DisplaySize.y);
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-		// Update and Render additional Platform Windows
+		//Update and Render additional Platform Windows
 		if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
 		{
+			SDL_Window* backup_current_window = SDL_GL_GetCurrentWindow();
+			SDL_GLContext backup_current_context = SDL_GL_GetCurrentContext();
 			ImGui::UpdatePlatformWindows();
 			ImGui::RenderPlatformWindowsDefault();
-			auto corePtr = m_core.lock();
-			if (corePtr)
-			{
-				auto renderElement = corePtr->getRenderElement();
-				if (renderElement)
-				{
-					SDL_GL_MakeCurrent(renderElement->getWindow(), renderElement->getGLContext());
-				}
-			}
-
+			SDL_GL_MakeCurrent(backup_current_window, backup_current_context);
 		}
 	}
 
@@ -124,7 +121,31 @@ namespace CoreGUIElement
 			static float f = 0.0f;
 			static int counter = 0;
 
-			ImGui::Begin("Bye world, world!");
+			ImGui::Begin("Hello again, world!");
+			if (ImGui::Button("Button"))
+				counter++;
+			ImGui::SameLine();
+			ImGui::Text("counter = %d", counter);
+			ImGui::End();
+		}
+
+		{
+			static float f = 0.0f;
+			static int counter = 0;
+
+			ImGui::Begin("Maybe time to say bye, world!");
+			if (ImGui::Button("Button"))
+				counter++;
+			ImGui::SameLine();
+			ImGui::Text("counter = %d", counter);
+			ImGui::End();
+		}
+
+		{
+			static float f = 0.0f;
+			static int counter = 0;
+
+			ImGui::Begin("Last bye, world!");
 			if (ImGui::Button("Button"))
 				counter++;
 			ImGui::SameLine();

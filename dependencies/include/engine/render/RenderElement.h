@@ -32,7 +32,7 @@ namespace CoreRenderElement
 		ENGINE_API bool initialize(const std::string& windowName, int width, int height, SDL_WindowFlags window_flags, int vsync);
 
 		//Update RenderElement
-		void update();
+		void update(double deltaTime);
 
 		//Terminate RenderElement by destroying the SDL window and the OpenGL context
 		void terminate();

@@ -32,7 +32,7 @@ namespace CoreGUIElement
 		//Call this after calling GUIElement's attachElement
 		ENGINE_API bool initialize();
 
-		void update();
+		void update(double deltaTime);
 
 		void updateImGuiWindows();
 

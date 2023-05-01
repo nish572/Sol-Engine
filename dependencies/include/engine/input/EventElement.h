@@ -17,19 +17,19 @@ namespace Sol {
 	class Core;
 }
 
-namespace CoreInputElement
+namespace CoreEventElement
 {
 	//Represents the element responsible for managing the Input operations in the Sol Engine
-	class InputElement
+	class EventElement
 	{
 	public:
-		//Instantiate InputElement
-		InputElement(std::shared_ptr<Sol::Core> core);
-		//Release resources associated with the InputElement instance
-		~InputElement();
+		//Instantiate EventElement
+		EventElement(std::shared_ptr<Sol::Core> core);
+		//Release resources associated with the EventElement instance
+		~EventElement();
 
-		//Initialize InputElement
-		//Call this after calling InputElement's attachElement
+		//Initialize EventElement
+		//Call this after calling EventElement's attachElement
 		ENGINE_API bool initialize();
 
 		//Check if SDL/ImGui events still need to be checked
@@ -41,8 +41,8 @@ namespace CoreInputElement
 		//Process events
 		void processEvent(const SDL_Event& event);
 
-		//Terminate InputElement
-		//Call this to deallocate any of InputElement's resources
+		//Terminate EventElement
+		//Call this to deallocate any of EventElement's resources
 		//Call this when amending Core's detachElement function and inside Core's terminate function
 		void terminate();
 

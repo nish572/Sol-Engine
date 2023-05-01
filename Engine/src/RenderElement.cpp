@@ -85,7 +85,7 @@ namespace CoreRenderElement
 		return true;
 	}
 
-	void RenderElement::update()
+	void RenderElement::update(double deltaTime)
 	{
 		glClearColor(0.7f, 0.3f, 0.0f, 0.0f);
 		glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
@@ -95,7 +95,7 @@ namespace CoreRenderElement
 			auto guiElement = corePtr->getGUIElement();
 			if (guiElement)
 			{
-				guiElement->update();
+				guiElement->update(deltaTime);
 			}
 		}
 

@@ -45,9 +45,9 @@ namespace Sol
 			m_logElement->logInfo(std::string("[Core] Successfully Attached ") + elementName + " Element");
 			return true;
 		}
-		if (elementName == "Input" && !m_inputElement)
+		if (elementName == "Input" && !m_eventElement)
 		{
-			m_inputElement = std::make_unique<CoreInputElement::InputElement>(shared_from_this());
+			m_eventElement = std::make_unique<CoreEventElement::EventElement>(shared_from_this());
 			m_logElement->logInfo(std::string("[Core] Successfully Attached ") + elementName + " Element");
 			return true;
 		}
@@ -93,10 +93,10 @@ namespace Sol
 			m_logElement->logInfo(std::string("[Core] Successfully Detached ") + elementName + " Element");
 			return true;
 		}
-		if (elementName == "Input" && m_inputElement)
+		if (elementName == "Input" && m_eventElement)
 		{
-			m_inputElement->terminate();
-			m_inputElement = nullptr;
+			m_eventElement->terminate();
+			m_eventElement = nullptr;
 			m_logElement->logInfo(std::string("[Core] Successfully Detached ") + elementName + " Element");
 			return true;
 		}
@@ -123,16 +123,40 @@ namespace Sol
 
 	void Core::run()
 	{
-		//Call update function(s) for attached Element(s)
-		std::vector<SDL_Event> events;
-		SDL_Event event;
-		while (SDL_PollEvent(&event))
+		//Initialize timing variables
+		Uint64 currentTime = SDL_GetPerformanceCounter();
+		Uint64 lastTime = 0;
+		double deltaTime = 0.0;
+		double fixedTimestep = 1.0 / 60.0; // 60 updates per second
+		double accumulatedTime = 0.0;
+
+		while (true)
 		{
-			events.push_back(event);
+			lastTime = currentTime;
+			currentTime = SDL_GetPerformanceCounter();
+			deltaTime = static_cast<double>(currentTime - lastTime) / SDL_GetPerformanceFrequency();
+
+			accumulatedTime += deltaTime;
+
+			// Handle events at a fixed timestep
+			while (accumulatedTime >= fixedTimestep)
+			{
+				std::vector<SDL_Event> events;
+				SDL_Event event;
+				while (SDL_PollEvent(&event))
+				{
+					events.push_back(event);
+				}
+				if (m_eventElement) { m_eventElement->handleEvents(events); }
+				if (!m_eventElement->isRunning()) { break; }
+
+				accumulatedTime -= fixedTimestep;
+			}
+
+			// Render using delta timestep
+			if (m_renderElement) { m_renderElement->update(deltaTime); }
+			if (!m_eventElement->isRunning()) { break; }
 		}
-		if (m_inputElement) { m_inputElement->handleEvents(events); }
-		events.clear();
-		if (m_renderElement) { m_renderElement->update(); }
 	}
 
 	void Core::terminate()
@@ -140,7 +164,7 @@ namespace Sol
 		//Call terminate function(s) for attached Element(s)
 		if (m_guiElement) { detachElement("GUI"); }
 		if (m_renderElement) { detachElement("Render"); }
-		if (m_inputElement) { detachElement("Input"); }
+		if (m_eventElement) { detachElement("Input"); }
 		if (m_resourceElement) { detachElement("Resource"); }
 		if (m_shaderElement) { detachElement("Shader"); }
 		if (m_logElement)
@@ -193,12 +217,12 @@ namespace Sol
 		return nullptr;
 	}
 
-	CoreInputElement::InputElement* Core::getInputElement() const
+	CoreEventElement::EventElement* Core::getEventElement() const
 	{
-		if (m_inputElement)
+		if (m_eventElement)
 		{
 			m_logElement->logInfo("[Core] Successfully Got Input Element");
-			return m_inputElement.get();
+			return m_eventElement.get();
 		}
 		m_logElement->logError("[Core] Failed To Get Input Element: nullptr found");
 		return nullptr;

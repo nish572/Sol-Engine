@@ -27,7 +27,7 @@ int main(int argc, char* args[]) {
 	//window flags to (SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI), and vsync to 0 (disabled)
 	appCore->getRenderElement()->initialize("Sol Editor", 1080, 720, (SDL_WindowFlags)(SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI), 0);
 	appCore->getGUIElement()->initialize();
-	appCore->getInputElement()->initialize();
+	appCore->getEventElement()->initialize();
 	appCore->getResourceElement()->initialize();
 	appCore->getShaderElement()->initialize();
 
@@ -35,11 +35,11 @@ int main(int argc, char* args[]) {
 	bool appRunning = true;
 	while (appRunning)
 	{
-		//Run Core, passing event (so InputElement can process events)
+		//Run Core, passing event (so EventElement can process events)
 		appCore->run();
 
 		//Keep app running unless SDL_QUIT event received or SDL_WINDOWEVENT_CLOSE event received for appCore's window
-		appRunning = appCore->getInputElement()->isRunning();
+		appRunning = appCore->getEventElement()->isRunning();
 	}
 
 	//Good practice to ALWAYS

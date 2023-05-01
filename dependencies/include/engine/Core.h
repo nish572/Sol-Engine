@@ -10,7 +10,7 @@
 
 #include "render/RenderElement.h"
 #include "render/GUIElement.h"
-#include "input/InputElement.h"
+#include "input/EventElement.h"
 #include "resource/ResourceElement.h"
 #include "resource/ShaderElement.h"
 
@@ -62,8 +62,8 @@ namespace Sol
 		//Return a pointer to the GUIElement instance managed by the Core
 		ENGINE_API CoreGUIElement::GUIElement* getGUIElement() const;
 
-		//Return a pointer to the InputElement instance managed by the Core
-		ENGINE_API CoreInputElement::InputElement* getInputElement() const;
+		//Return a pointer to the EventElement instance managed by the Core
+		ENGINE_API CoreEventElement::EventElement* getEventElement() const;
 
 		//Return a pointer to the ResourceElement instance managed by the Core
 		ENGINE_API CoreResourceElement::ResourceElement* getResourceElement() const;
@@ -86,7 +86,7 @@ namespace Sol
 		std::unique_ptr<CoreLogElement::LogElement> m_logElement;
 		std::unique_ptr<CoreRenderElement::RenderElement> m_renderElement;
 		std::unique_ptr<CoreGUIElement::GUIElement> m_guiElement;
-		std::unique_ptr<CoreInputElement::InputElement> m_inputElement;
+		std::unique_ptr<CoreEventElement::EventElement> m_eventElement;
 		std::unique_ptr<CoreResourceElement::ResourceElement> m_resourceElement;
 		std::unique_ptr<CoreShaderElement::ShaderElement> m_shaderElement;
 		// ... //
