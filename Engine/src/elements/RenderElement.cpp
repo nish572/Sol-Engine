@@ -119,24 +119,22 @@ namespace CoreRenderElement
 
 	SDL_Window* RenderElement::getWindow() const
 	{
-		//Temporarily upgrade weak pointer to shared pointer, ownership automatically released once out of scope due to reference count
-		auto corePtr = m_core.lock();
 		//If m_sdlWindow isn't a nullptr
 		if (m_sdlWindow)
 		{
-			if (corePtr)
-			{
-				//Get LogElement to log success
-				corePtr->getLogElement()->logInfo("[Render] Successfully Got SDL Window");
-			}
 			//return m_sdlWindow if SDL window successfully found
 			return m_sdlWindow;
 		}
+		//Temporarily upgrade weak pointer to shared pointer, ownership automatically released once out of scope due to reference count
+		auto corePtr = m_core.lock();
 		//If m_sdlWindow is a nullptr
 		if (!m_sdlWindow)
 		{
-			//Get LogElement to log error
-			corePtr->getLogElement()->logError("[Render] Failed To Get SDL Window: nullptr found");
+			if (corePtr)
+			{
+				//Get LogElement to log error
+				corePtr->getLogElement()->logError("[Render] Failed To Get SDL Window: nullptr found");
+			}
 		}
 		//Return a nullptr if SDL window not found successfully
 		return nullptr;
@@ -144,24 +142,22 @@ namespace CoreRenderElement
 
 	SDL_GLContext RenderElement::getGLContext() const
 	{
-		//Temporarily upgrade weak pointer to shared pointer, ownership automatically released once out of scope due to reference count
-		auto corePtr = m_core.lock();
 		//If m_glContext isn't a nullptr
 		if (m_glContext)
 		{
-			if (corePtr)
-			{
-				//Get LogElement to log success
-				corePtr->getLogElement()->logInfo("[Render] Successfully Got OpenGL Context");
-			}
 			//Return m_sdlWindow if OpenGL context successfully found
 			return m_glContext;
 		}
+		//Temporarily upgrade weak pointer to shared pointer, ownership automatically released once out of scope due to reference count
+		auto corePtr = m_core.lock();
 		//If m_glContext is a nullptr
 		if (!m_glContext)
 		{
-			//Get LogElement to log error
-			corePtr->getLogElement()->logError("[Render] Failed To Get OpenGL Context: nullptr found");
+			if (corePtr)
+			{
+				//Get LogElement to log error
+				corePtr->getLogElement()->logError("[Render] Failed To Get OpenGL Context: nullptr found");
+			}
 		}
 		//Return a nullptr if OpenGL context not found successfully
 		return nullptr;

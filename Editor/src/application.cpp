@@ -18,7 +18,7 @@ int main(int argc, char* args[]) {
 	//Attach any Element(s) by name
 	appCore->attachElement("Render");
 	appCore->attachElement("GUI");
-	appCore->attachElement("Input");
+	appCore->attachElement("Event");
 	appCore->attachElement("Resource");
 	appCore->attachElement("Shader");
 

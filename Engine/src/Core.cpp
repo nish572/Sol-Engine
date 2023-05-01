@@ -45,7 +45,7 @@ namespace Sol
 			m_logElement->logInfo(std::string("[Core] Successfully Attached ") + elementName + " Element");
 			return true;
 		}
-		if (elementName == "Input" && !m_eventElement)
+		if (elementName == "Event" && !m_eventElement)
 		{
 			m_eventElement = std::make_unique<CoreEventElement::EventElement>(shared_from_this());
 			m_logElement->logInfo(std::string("[Core] Successfully Attached ") + elementName + " Element");
@@ -60,6 +60,12 @@ namespace Sol
 		if (elementName == "Shader" && !m_shaderElement)
 		{
 			m_shaderElement = std::make_unique<CoreShaderElement::ShaderElement>(shared_from_this());
+			m_logElement->logInfo(std::string("[Core] Successfully Attached ") + elementName + " Element");
+			return true;
+		}
+		if (elementName == "ECS" && !m_ecsElement)
+		{
+			m_ecsElement = std::make_unique<CoreECSElement::ECSElement>(shared_from_this());
 			m_logElement->logInfo(std::string("[Core] Successfully Attached ") + elementName + " Element");
 			return true;
 		}
@@ -93,7 +99,7 @@ namespace Sol
 			m_logElement->logInfo(std::string("[Core] Successfully Detached ") + elementName + " Element");
 			return true;
 		}
-		if (elementName == "Input" && m_eventElement)
+		if (elementName == "Event" && m_eventElement)
 		{
 			m_eventElement->terminate();
 			m_eventElement = nullptr;
@@ -110,6 +116,13 @@ namespace Sol
 		if (elementName == "Shader" && m_shaderElement)
 		{
 			m_shaderElement = nullptr;
+			m_logElement->logInfo(std::string("[Core] Successfully Detached ") + elementName + " Element");
+			return true;
+		}
+		if (elementName == "ECS" && m_ecsElement)
+		{
+			//m_ecsElement->terminate();
+			m_ecsElement = nullptr;
 			m_logElement->logInfo(std::string("[Core] Successfully Detached ") + elementName + " Element");
 			return true;
 		}
@@ -165,9 +178,10 @@ namespace Sol
 		//Call terminate function(s) for attached Element(s)
 		if (m_guiElement) { detachElement("GUI"); }
 		if (m_renderElement) { detachElement("Render"); }
-		if (m_eventElement) { detachElement("Input"); }
+		if (m_eventElement) { detachElement("Event"); }
 		if (m_resourceElement) { detachElement("Resource"); }
 		if (m_shaderElement) { detachElement("Shader"); }
+		if (m_ecsElement) { detachElement("ECS"); }
 		if (m_logElement)
 		{
 			m_logElement->logInfo("[Core] All Manually Attached Elements Successfully Detached");
@@ -182,14 +196,13 @@ namespace Sol
 
     //Elements can be gotten via the following mechanism:
 	//Check if Core's respective Element unique_ptr is a nullptr
-	//If not
-	//  Log success and return a temporary raw pointer to the Core's unique_ptr (using .get())
+	//If not, return a temporary raw pointer to the Core's unique_ptr (using .get())
+	//Otherwise, log error and return nullptr
 
 	CoreLogElement::LogElement* Core::getLogElement() const
 	{
 		if (m_logElement)
 		{
-			m_logElement->logInfo("[Core] Successfully Got Log Element");
 			return m_logElement.get();
 		}
 		m_logElement->logError("[Core] Failed To Get Log Element: nullptr found");
@@ -200,7 +213,6 @@ namespace Sol
 	{
 		if (m_renderElement)
 		{
-			m_logElement->logInfo("[Core] Successfully Got Render Element");
 			return m_renderElement.get();
 		}
 		m_logElement->logError("[Core] Failed To Get Render Element: nullptr found");
@@ -211,7 +223,6 @@ namespace Sol
 	{
 		if (m_guiElement)
 		{
-			m_logElement->logInfo("[Core] Successfully Got GUI Element");
 			return m_guiElement.get();
 		}
 		m_logElement->logError("[Core] Failed To Get GUI Element: nullptr found");
@@ -222,10 +233,9 @@ namespace Sol
 	{
 		if (m_eventElement)
 		{
-			m_logElement->logInfo("[Core] Successfully Got Input Element");
 			return m_eventElement.get();
 		}
-		m_logElement->logError("[Core] Failed To Get Input Element: nullptr found");
+		m_logElement->logError("[Core] Failed To Get Event Element: nullptr found");
 		return nullptr;
 	}
 
@@ -233,7 +243,6 @@ namespace Sol
 	{
 		if (m_resourceElement)
 		{
-			m_logElement->logInfo("[Core] Successfully Got Resource Element");
 			return m_resourceElement.get();
 		}
 		m_logElement->logError("[Core] Failed To Get Resource Element: nullptr found");
@@ -244,10 +253,19 @@ namespace Sol
 	{
 		if (m_shaderElement)
 		{
-			m_logElement->logInfo("[Core] Successfully Got Shader Element");
 			return m_shaderElement.get();
 		}
 		m_logElement->logError("[Core] Failed To Get Shader Element: nullptr found");
+		return nullptr;
+	}
+
+	CoreECSElement::ECSElement* Core::getECSElement() const
+	{
+		if (m_ecsElement)
+		{
+			return m_ecsElement.get();
+		}
+		m_logElement->logError("[Core] Failed To Get ECS Element: nullptr found");
 		return nullptr;
 	}
 

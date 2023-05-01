@@ -3,7 +3,7 @@
 #include <unordered_map>
 #include <typeindex>
 #include <vector>
-#include "EntityManager.h"
+#include "ecs/EntityManager.h"
 
 //Defines the ComponentManager class
 //Responsible for adding, retrieving, and removing components from entities

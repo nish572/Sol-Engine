@@ -21,6 +21,8 @@ public:
     void removeSystem();
     //update calls the update function of each system
     void update(double deltaTime);
+    //fixedUpdate calls the fixedUpdate function of each system
+    void fixedUpdate(double fixedTimestep);
 
 private:
     //data structure that holds systems, indexed by type

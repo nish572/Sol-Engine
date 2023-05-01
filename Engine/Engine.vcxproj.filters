@@ -66,13 +66,13 @@
     <ClCompile Include="src\ecs\ComponentManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ecs\ECSElement.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\ecs\EntityManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\ecs\SystemManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ecs\ECSElement.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -84,9 +84,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\dependencies\include\engine\elements\debuglog\LogElement.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\dependencies\include\engine\elements\input\EventElement.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\dependencies\include\engine\elements\render\GUIElement.h">
@@ -101,19 +98,22 @@
     <ClInclude Include="..\dependencies\include\engine\elements\resource\ShaderElement.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\dependencies\include\engine\ecs\ComponentManager.h">
+    <ClInclude Include="..\dependencies\include\engine\elements\event\EventElement.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\dependencies\include\engine\ecs\ECSElement.h">
+    <ClInclude Include="..\dependencies\include\engine\elements\ecs\BaseSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\dependencies\include\engine\ecs\EntityManager.h">
+    <ClInclude Include="..\dependencies\include\engine\elements\ecs\ComponentManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\dependencies\include\engine\ecs\SystemManager.h">
+    <ClInclude Include="..\dependencies\include\engine\elements\ecs\ECSElement.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\dependencies\include\engine\ecs\BaseSystem.h">
+    <ClInclude Include="..\dependencies\include\engine\elements\ecs\EntityManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\dependencies\include\engine\elements\ecs\SystemManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

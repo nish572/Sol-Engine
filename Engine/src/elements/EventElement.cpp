@@ -1,4 +1,4 @@
-#include "input/EventElement.h"
+#include "event/EventElement.h"
 
 #include "Core.h"
 
@@ -39,12 +39,12 @@ namespace CoreEventElement
 
 		if (corePtr)
 		{
-			corePtr->getLogElement()->logInfo("[Input] Successfully Initialized");
+			corePtr->getLogElement()->logInfo("[Event] Successfully Initialized");
 		}
 		return true;
 	}
 
-	//Check if input element is running
+	//Check if event element is running
 	bool EventElement::isRunning() const
 	{
 		return m_running;

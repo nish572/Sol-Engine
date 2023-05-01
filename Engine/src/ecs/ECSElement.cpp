@@ -1,24 +1,29 @@
-#include "ECSElement.h"
+#include "ecs/ECSElement.h"
 
-ECSElement::ECSElement() : m_entityManager{}, m_componentManager{}, m_systemManager{}
-{
-}
+#include "Core.h"
 
-ECSElement::~ECSElement()
+namespace CoreECSElement
 {
-}
+    ECSElement::ECSElement(std::shared_ptr<Sol::Core> core) : m_core(core), m_entityManager{}, m_componentManager{}, m_systemManager{}
+    {
+    }
 
-EntityManager& ECSElement::getEntityManager()
-{
-    return m_entityManager;
-}
+    ECSElement::~ECSElement()
+    {
+    }
 
-ComponentManager& ECSElement::getComponentManager()
-{
-    return m_componentManager;
-}
+    EntityManager& ECSElement::getEntityManager()
+    {
+        return m_entityManager;
+    }
 
-SystemManager& ECSElement::getSystemManager()
-{
-    return m_systemManager;
+    ComponentManager& ECSElement::getComponentManager()
+    {
+        return m_componentManager;
+    }
+
+    SystemManager& ECSElement::getSystemManager()
+    {
+        return m_systemManager;
+    }
 }

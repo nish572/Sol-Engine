@@ -1,4 +1,4 @@
-#include "ComponentManager.h"
+#include "ecs/ComponentManager.h"
 
 template <typename T>
 //addComponent adds a component of type T to an entity

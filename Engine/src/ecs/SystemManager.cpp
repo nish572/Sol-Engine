@@ -1,5 +1,4 @@
-#include "SystemManager.h"
-
+#include "ecs/SystemManager.h"
 
 template <typename T, typename... Args>
 void SystemManager::addSystem(Args&&... args)
@@ -28,5 +27,14 @@ void SystemManager::update(double deltaTime)
         auto& system = systemPair.second;
         //system is a unique pointer to a system
         system->update(deltaTime);
+    }
+}
+
+void SystemManager::fixedUpdate(double fixedTimestep)
+{
+    for (auto& systemPair : m_systems)
+    {
+        auto& system = systemPair.second;
+        system->fixedUpdate(fixedTimestep);
     }
 }

@@ -117,13 +117,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\dependencies\include\engine\Core.h" />
-    <ClInclude Include="..\dependencies\include\engine\ecs\BaseSystem.h" />
-    <ClInclude Include="..\dependencies\include\engine\ecs\ComponentManager.h" />
-    <ClInclude Include="..\dependencies\include\engine\ecs\ECSElement.h" />
-    <ClInclude Include="..\dependencies\include\engine\ecs\EntityManager.h" />
-    <ClInclude Include="..\dependencies\include\engine\ecs\SystemManager.h" />
     <ClInclude Include="..\dependencies\include\engine\elements\debuglog\LogElement.h" />
-    <ClInclude Include="..\dependencies\include\engine\elements\input\EventElement.h" />
+    <ClInclude Include="..\dependencies\include\engine\elements\ecs\BaseSystem.h" />
+    <ClInclude Include="..\dependencies\include\engine\elements\ecs\ComponentManager.h" />
+    <ClInclude Include="..\dependencies\include\engine\elements\ecs\ECSElement.h" />
+    <ClInclude Include="..\dependencies\include\engine\elements\ecs\EntityManager.h" />
+    <ClInclude Include="..\dependencies\include\engine\elements\ecs\SystemManager.h" />
+    <ClInclude Include="..\dependencies\include\engine\elements\event\EventElement.h" />
     <ClInclude Include="..\dependencies\include\engine\elements\render\GUIElement.h" />
     <ClInclude Include="..\dependencies\include\engine\elements\render\RenderElement.h" />
     <ClInclude Include="..\dependencies\include\engine\elements\resource\ResourceElement.h" />

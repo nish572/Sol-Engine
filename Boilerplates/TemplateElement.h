@@ -52,10 +52,10 @@ namespace CoreTemplateElement
 		void terminate();
 
 		//If required, ensure object(s) managed by TemplateElement (e.g. RenderElement manages SDL Window)
-		//Have get function(s) for pointer(s) to object(s) managed by TemplateElement
-		//where pointer(s) is (are) private member(s) of TemplateElement
-		//Remember to check if the private member is nullptr, and if it is log error and return nullptr
-		//If the private member is valid, log success and return private member
+		//Have get function(s) for (pointer(s) to) object(s) managed by TemplateElement
+		//where (pointer(s) is (are)) private member(s) of TemplateElement
+		//(Remember to check if the private member is nullptr, and if it is log error and return nullptr)
+		//(If the private member is valid and return private member)
 		// ... //
 
 	private:

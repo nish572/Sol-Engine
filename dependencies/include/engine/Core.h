@@ -10,9 +10,10 @@
 
 #include "render/RenderElement.h"
 #include "render/GUIElement.h"
-#include "input/EventElement.h"
+#include "event/EventElement.h"
 #include "resource/ResourceElement.h"
 #include "resource/ShaderElement.h"
+#include "ecs/ECSElement.h"
 
 namespace Sol
 {
@@ -71,7 +72,8 @@ namespace Sol
 		//Return a pointer to the ShaderElement instance managed by the Core
 		ENGINE_API CoreShaderElement::ShaderElement* getShaderElement() const;
 
-		// ... //
+		//Return a pointer to the ECSElement instance managed by the Core
+		ENGINE_API CoreECSElement::ECSElement* getECSElement() const;
 
 		// ---
 
@@ -89,7 +91,7 @@ namespace Sol
 		std::unique_ptr<CoreEventElement::EventElement> m_eventElement;
 		std::unique_ptr<CoreResourceElement::ResourceElement> m_resourceElement;
 		std::unique_ptr<CoreShaderElement::ShaderElement> m_shaderElement;
-		// ... //
+		std::unique_ptr<CoreECSElement::ECSElement> m_ecsElement;
 		// ---
 	};
 }

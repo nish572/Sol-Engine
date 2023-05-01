@@ -19,7 +19,7 @@ namespace Sol {
 
 namespace CoreEventElement
 {
-	//Represents the element responsible for managing the Input operations in the Sol Engine
+	//Represents the element responsible for managing the Event operations in the Sol Engine
 	class EventElement
 	{
 	public:

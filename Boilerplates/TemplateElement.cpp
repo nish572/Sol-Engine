@@ -35,6 +35,6 @@ namespace CoreTemplateElement
 		// ... //
 	}
 
-	//Get function(s) for pointer(s) to object(s) managed by TemplateElement
+	//Get function(s) for (pointer(s) to) object(s) managed by TemplateElement
 	// ... //
 }
