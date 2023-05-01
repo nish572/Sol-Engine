@@ -57,7 +57,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>ENGINE_BUILD_DLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)dependencies\include;$(SolutionDir)dependencies\include\engine;$(SolutionDir)dependencies\include\KHR;$(SolutionDir)dependencies\include\glad;$(SolutionDir)dependencies\include\sdl2;$(SolutionDir)dependencies\include\dearimgui;$(SolutionDir)dependencies\include\ft;$(SolutionDir)dependencies\include\stb;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)dependencies\include;$(SolutionDir)dependencies\include\engine;$(SolutionDir)dependencies\include\KHR;$(SolutionDir)dependencies\include\glad;$(SolutionDir)dependencies\include\sdl2;$(SolutionDir)dependencies\include\dearimgui;$(SolutionDir)dependencies\include\engine\elements;$(SolutionDir)dependencies\include\engine\ecs;$(SolutionDir)dependencies\include\ft;$(SolutionDir)dependencies\include\stb;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4005; 4251; 6262; 26451</DisableSpecificWarnings>
     </ClCompile>
     <Link>
@@ -78,7 +78,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>ENGINE_BUILD_DLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)dependencies\include;$(SolutionDir)dependencies\include\engine;$(SolutionDir)dependencies\include\KHR;$(SolutionDir)dependencies\include\glad;$(SolutionDir)dependencies\include\sdl2;$(SolutionDir)dependencies\include\dearimgui;$(SolutionDir)dependencies\include\ft;$(SolutionDir)dependencies\include\stb;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)dependencies\include;$(SolutionDir)dependencies\include\engine;$(SolutionDir)dependencies\include\KHR;$(SolutionDir)dependencies\include\glad;$(SolutionDir)dependencies\include\sdl2;$(SolutionDir)dependencies\include\dearimgui;$(SolutionDir)dependencies\include\engine\elements;$(SolutionDir)dependencies\include\engine\ecs;$(SolutionDir)dependencies\include\ft;$(SolutionDir)dependencies\include\stb;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>Default</LanguageStandard>
     </ClCompile>
     <Link>
@@ -104,22 +104,31 @@
     <ClCompile Include="src\dearimgui\imgui_init.cpp" />
     <ClCompile Include="src\dearimgui\imgui_tables.cpp" />
     <ClCompile Include="src\dearimgui\imgui_widgets.cpp" />
-    <ClCompile Include="src\GUIElement.cpp" />
-    <ClCompile Include="src\EventElement.cpp" />
-    <ClCompile Include="src\LogElement.cpp" />
-    <ClCompile Include="src\RenderElement.cpp" />
-    <ClCompile Include="src\ResourceElement.cpp" />
-    <ClCompile Include="src\ShaderElement.cpp" />
+    <ClCompile Include="src\ecs\ComponentManager.cpp" />
+    <ClCompile Include="src\ecs\ECSElement.cpp" />
+    <ClCompile Include="src\ecs\EntityManager.cpp" />
+    <ClCompile Include="src\ecs\SystemManager.cpp" />
+    <ClCompile Include="src\elements\GUIElement.cpp" />
+    <ClCompile Include="src\elements\EventElement.cpp" />
+    <ClCompile Include="src\elements\LogElement.cpp" />
+    <ClCompile Include="src\elements\RenderElement.cpp" />
+    <ClCompile Include="src\elements\ResourceElement.cpp" />
+    <ClCompile Include="src\elements\ShaderElement.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\dependencies\include\engine\Core.h" />
-    <ClInclude Include="..\dependencies\include\engine\debuglog\LogElement.h" />
+    <ClInclude Include="..\dependencies\include\engine\ecs\BaseSystem.h" />
+    <ClInclude Include="..\dependencies\include\engine\ecs\ComponentManager.h" />
+    <ClInclude Include="..\dependencies\include\engine\ecs\ECSElement.h" />
+    <ClInclude Include="..\dependencies\include\engine\ecs\EntityManager.h" />
+    <ClInclude Include="..\dependencies\include\engine\ecs\SystemManager.h" />
+    <ClInclude Include="..\dependencies\include\engine\elements\debuglog\LogElement.h" />
+    <ClInclude Include="..\dependencies\include\engine\elements\input\EventElement.h" />
+    <ClInclude Include="..\dependencies\include\engine\elements\render\GUIElement.h" />
+    <ClInclude Include="..\dependencies\include\engine\elements\render\RenderElement.h" />
+    <ClInclude Include="..\dependencies\include\engine\elements\resource\ResourceElement.h" />
+    <ClInclude Include="..\dependencies\include\engine\elements\resource\ShaderElement.h" />
     <ClInclude Include="..\dependencies\include\engine\EngineAPI.h" />
-    <ClInclude Include="..\dependencies\include\engine\input\EventElement.h" />
-    <ClInclude Include="..\dependencies\include\engine\render\GUIElement.h" />
-    <ClInclude Include="..\dependencies\include\engine\render\RenderElement.h" />
-    <ClInclude Include="..\dependencies\include\engine\resource\ResourceElement.h" />
-    <ClInclude Include="..\dependencies\include\engine\resource\ShaderElement.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -15,10 +15,10 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\RenderElement.cpp">
+    <ClCompile Include="src\elements\RenderElement.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\LogElement.cpp">
+    <ClCompile Include="src\elements\LogElement.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Core.cpp">
@@ -27,7 +27,7 @@
     <ClCompile Include="..\shared\glad.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\GUIElement.cpp">
+    <ClCompile Include="src\elements\GUIElement.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\dearimgui\imgui.cpp">
@@ -54,13 +54,25 @@
     <ClCompile Include="src\dearimgui\imgui_widgets.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\EventElement.cpp">
+    <ClCompile Include="src\elements\EventElement.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ResourceElement.cpp">
+    <ClCompile Include="src\elements\ResourceElement.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ShaderElement.cpp">
+    <ClCompile Include="src\elements\ShaderElement.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ecs\ComponentManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ecs\ECSElement.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ecs\EntityManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ecs\SystemManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -71,22 +83,37 @@
     <ClInclude Include="..\dependencies\include\engine\Core.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\dependencies\include\engine\debuglog\LogElement.h">
+    <ClInclude Include="..\dependencies\include\engine\elements\debuglog\LogElement.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\dependencies\include\engine\render\RenderElement.h">
+    <ClInclude Include="..\dependencies\include\engine\elements\input\EventElement.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\dependencies\include\engine\render\GUIElement.h">
+    <ClInclude Include="..\dependencies\include\engine\elements\render\GUIElement.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\dependencies\include\engine\input\EventElement.h">
+    <ClInclude Include="..\dependencies\include\engine\elements\render\RenderElement.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\dependencies\include\engine\resource\ResourceElement.h">
+    <ClInclude Include="..\dependencies\include\engine\elements\resource\ResourceElement.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\dependencies\include\engine\resource\ShaderElement.h">
+    <ClInclude Include="..\dependencies\include\engine\elements\resource\ShaderElement.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\dependencies\include\engine\ecs\ComponentManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\dependencies\include\engine\ecs\ECSElement.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\dependencies\include\engine\ecs\EntityManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\dependencies\include\engine\ecs\SystemManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\dependencies\include\engine\ecs\BaseSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

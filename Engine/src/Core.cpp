@@ -127,15 +127,16 @@ namespace Sol
 		Uint64 currentTime = SDL_GetPerformanceCounter();
 		Uint64 lastTime = 0;
 		double deltaTime = 0.0;
-		double fixedTimestep = 1.0 / 60.0; // 60 updates per second
+		double fixedTimestep = 1.0 / 60.0; //60 updates per second
 		double accumulatedTime = 0.0;
 
 		while (true)
 		{
+			//Update timing variables
 			lastTime = currentTime;
 			currentTime = SDL_GetPerformanceCounter();
 			deltaTime = static_cast<double>(currentTime - lastTime) / SDL_GetPerformanceFrequency();
-
+			//deltaTime = std::min(deltaTime, 0.25); //Prevent deltaTime from being too large
 			accumulatedTime += deltaTime;
 
 			// Handle events at a fixed timestep
