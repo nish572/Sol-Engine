@@ -5,12 +5,12 @@
 #include <memory>
 #include <iostream>
 #include <string>
-#include <functional>
 
 #include "debuglog/LogElement.h"
 
 #include "render/RenderElement.h"
 #include "render/GUIElement.h"
+#include "input/InputElement.h"
 
 namespace Sol
 {
@@ -42,7 +42,7 @@ namespace Sol
 		ENGINE_API bool initialize(const std::string& logfileName);
 
 		//Update Core
-		ENGINE_API void update();
+		ENGINE_API void run();
 
 		//Call terminate functions for all Elements, first checking they're not nullptrs
 		ENGINE_API void terminate();
@@ -51,13 +51,17 @@ namespace Sol
 
 		//Get functions for Elements
 
-		//Return a pointer to the RenderElement instance managed by the Core
+		//Return a pointer to the LogElement instance managed by the Core
 		ENGINE_API CoreLogElement::LogElement* getLogElement() const;
 
 		//Return a pointer to the RenderElement instance managed by the Core
 		ENGINE_API CoreRenderElement::RenderElement* getRenderElement() const;
 
+		//Return a pointer to the GUIElement instance managed by the Core
 		ENGINE_API CoreGUIElement::GUIElement* getGUIElement() const;
+
+		//Return a pointer to the InputElement instance managed by the Core
+		ENGINE_API CoreInputElement::InputElement* getInputElement() const;
 
 		// ... //
 
@@ -74,6 +78,7 @@ namespace Sol
 		std::unique_ptr<CoreLogElement::LogElement> m_logElement;
 		std::unique_ptr<CoreRenderElement::RenderElement> m_renderElement;
 		std::unique_ptr<CoreGUIElement::GUIElement> m_guiElement;
+		std::unique_ptr<CoreInputElement::InputElement> m_inputElement;
 		// ... //
 		// ---
 	};

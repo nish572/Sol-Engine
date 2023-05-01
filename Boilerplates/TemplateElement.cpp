@@ -10,12 +10,9 @@
 
 namespace CoreTemplateElement
 {
-	//TemplateElement has initializer list
-	//TemplateElement MUST have at least m_core private member
-	//If TemplateElement has private member(s) for pointer(s) to object(s) managed by TemplateElement
-	//then include in initializer list here with nullptr as value(s)
-	//e.g. RenderElement's initializer list is: m_core(core), m_window(nullptr), m_glContext(0)
-	TemplateElement::TemplateElement(std::shared_ptr<Sol::Core> core) : m_core(core) //extend initializer list if necessary as above
+	//TemplateElement has initializer list for any managed resource's that require initializing
+	//All Elements MUST have at least m_core private member
+	TemplateElement::TemplateElement(std::shared_ptr<Sol::Core> core) : m_core(core) //Extend initializer list if necessary
 	{
 	}
 	TemplateElement::~TemplateElement()

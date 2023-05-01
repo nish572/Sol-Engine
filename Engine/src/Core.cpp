@@ -3,7 +3,7 @@
 namespace Sol
 {
 	//Create an instance of LogElement with a unique pointer to it, other elements use nullptr until attached via attachElement
-	Core::Core() : m_logElement(std::make_unique<CoreLogElement::LogElement>()), m_renderElement(nullptr) //Initializer list: initialize all elements with nullptr (except LogElement)
+	Core::Core() : m_logElement(std::make_unique<CoreLogElement::LogElement>())
 	{
 	}
 	Core::~Core()
@@ -33,15 +33,21 @@ namespace Sol
 		//  Call make_unique to instantiate the Element class, giving shared_from_this to the Element's constructor
 		//  Log success and return true
 
-		if (elementName == "Render" && m_renderElement == nullptr)
+		if (elementName == "Render" && !m_renderElement)
 		{
 			m_renderElement = std::make_unique<CoreRenderElement::RenderElement>(shared_from_this());
 			m_logElement->logInfo(std::string("[Core] Successfully Attached ") + elementName + " Element");
 			return true;
 		}
-		if (elementName == "GUI" && m_guiElement == nullptr)
+		if (elementName == "GUI" && !m_guiElement)
 		{
 			m_guiElement = std::make_unique<CoreGUIElement::GUIElement>(shared_from_this());
+			m_logElement->logInfo(std::string("[Core] Successfully Attached ") + elementName + " Element");
+			return true;
+		}
+		if (elementName == "Input" && !m_inputElement)
+		{
+			m_inputElement = std::make_unique<CoreInputElement::InputElement>(shared_from_this());
 			m_logElement->logInfo(std::string("[Core] Successfully Attached ") + elementName + " Element");
 			return true;
 		}
@@ -61,17 +67,24 @@ namespace Sol
 		//  Set Core's respective Element unique_ptr to a nullptr
 		//  Log success
 
-		if (elementName == "Render" && m_renderElement != nullptr)
+		if (elementName == "Render" && m_renderElement)
 		{
 			m_renderElement->terminate();
 			m_renderElement = nullptr;
 			m_logElement->logInfo(std::string("[Core] Successfully Detached ") + elementName + " Element");
 			return true;
 		}
-		if (elementName == "GUI" && m_guiElement != nullptr)
+		if (elementName == "GUI" && m_guiElement)
 		{
 			m_guiElement->terminate();
 			m_guiElement = nullptr;
+			m_logElement->logInfo(std::string("[Core] Successfully Detached ") + elementName + " Element");
+			return true;
+		}
+		if (elementName == "Input" && m_inputElement)
+		{
+			m_inputElement->terminate();
+			m_inputElement = nullptr;
 			m_logElement->logInfo(std::string("[Core] Successfully Detached ") + elementName + " Element");
 			return true;
 		}
@@ -83,18 +96,25 @@ namespace Sol
 		return false;
 	}
 
-	void Core::update()
+	void Core::run()
 	{
 		//Call update function(s) for attached Element(s)
-		if (m_renderElement != nullptr) { m_renderElement->update(); }
+		std::vector<SDL_Event> events;
+		SDL_Event event;
+		while (SDL_PollEvent(&event))
+		{
+			events.push_back(event);
+		}
+		if (m_renderElement) { m_renderElement->update(); }
+		if (m_inputElement) { m_inputElement->handleEvents(events); }
 	}
 	
 	void Core::terminate()
 	{
 		//Call terminate function(s) for attached Element(s)
-		if (m_guiElement != nullptr) { detachElement("GUI"); }
-		if (m_renderElement != nullptr) { detachElement("Render"); }
-		if (m_logElement != nullptr)
+		if (m_guiElement) { detachElement("GUI"); }
+		if (m_renderElement) { detachElement("Render"); }
+		if (m_logElement)
 		{
 			m_logElement->logInfo("[Core] All Manually Attached Elements Successfully Detached");
 			m_logElement->terminate();
@@ -113,7 +133,7 @@ namespace Sol
 
 	CoreLogElement::LogElement* Core::getLogElement() const
 	{
-		if (m_logElement != nullptr)
+		if (m_logElement)
 		{
 			m_logElement->logInfo("[Core] Successfully Got Log Element");
 			return m_logElement.get();
@@ -124,7 +144,7 @@ namespace Sol
 
 	CoreRenderElement::RenderElement* Core::getRenderElement() const
 	{
-		if (m_renderElement != nullptr)
+		if (m_renderElement)
 		{
 			m_logElement->logInfo("[Core] Successfully Got Render Element");
 			return m_renderElement.get();
@@ -135,12 +155,23 @@ namespace Sol
 
 	CoreGUIElement::GUIElement* Core::getGUIElement() const
 	{
-		if (m_guiElement != nullptr)
+		if (m_guiElement)
 		{
 			m_logElement->logInfo("[Core] Successfully Got GUI Element");
 			return m_guiElement.get();
 		}
 		m_logElement->logError("[Core] Failed To Get GUI Element: nullptr found");
+		return nullptr;
+	}
+
+	CoreInputElement::InputElement* Core::getInputElement() const
+	{
+		if (m_inputElement)
+		{
+			m_logElement->logInfo("[Core] Successfully Got Input Element");
+			return m_inputElement.get();
+		}
+		m_logElement->logError("[Core] Failed To Get Input Element: nullptr found");
 		return nullptr;
 	}
 

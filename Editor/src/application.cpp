@@ -18,19 +18,24 @@ int main(int argc, char* args[]) {
 	//Attach any Element(s) by name
 	appCore->attachElement("Render");
 	appCore->attachElement("GUI");
+	appCore->attachElement("Input");
 
 	//Initialize any Element(s) by name
 	//Here I'm setting the window name to "Sol Editor", width to 1280, height to 720,
 	//window flags to (SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI), and vsync to 0 (disabled)
 	appCore->getRenderElement()->initialize("Sol Editor", 1280, 720, (SDL_WindowFlags)(SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI), 0);
 	appCore->getGUIElement()->initialize();
+	appCore->getInputElement()->initialize();
 
 	//Runtime loop
 	bool appRunning = true;
 	while (appRunning)
 	{
-		//To break from loop and progress to quitting application, set appRunning to false
-		appCore->update();
+		//Run Core, passing event (so InputElement can process events)
+		appCore->run();
+
+		//Keep app running unless SDL_QUIT event received or SDL_WINDOWEVENT_CLOSE event received for appCore's window
+		appRunning = appCore->getInputElement()->isRunning();
 	}
 
 	//Good practice to ALWAYS

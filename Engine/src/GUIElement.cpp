@@ -4,12 +4,11 @@
 
 namespace CoreGUIElement
 {
-	//GUIElement has initializer list
-	//GUIElement MUST have at least m_core private member
+	//GUIElement has initializer list for any managed resource's that require initializing
+	//All Elements MUST have at least m_core private member
 	//If GUIElement has private member(s) for pointer(s) to object(s) managed by GUIElement
 	//then include in initializer list here with nullptr as value(s)
-	//e.g. RenderElement's initializer list is: m_core(core), m_window(nullptr), m_glContext(0)
-	GUIElement::GUIElement(std::shared_ptr<Sol::Core> core) : m_core(core) //extend initializer list if necessary as above
+	GUIElement::GUIElement(std::shared_ptr<Sol::Core> core) : m_core(core) //Extend initializer list if necessary
 	{
 	}
 	GUIElement::~GUIElement()
@@ -85,6 +84,30 @@ namespace CoreGUIElement
 		ImGui::NewFrame();
 
 		//ImGui SCAFFOLD APP HERE //
+		{
+			static float f = 0.0f;
+			static int counter = 0;
+
+			ImGui::Begin("Hello, world!");                          // Create a window called "Hello, world!" and append into it.
+
+			if (ImGui::Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
+				counter++;
+			ImGui::SameLine();
+			ImGui::Text("counter = %d", counter);
+			ImGui::End();
+		}
+
+		{
+			static float f = 0.0f;
+			static int counter = 0;
+			
+			ImGui::Begin("Bye world, world!");
+			if (ImGui::Button("Button"))
+				counter++;
+			ImGui::SameLine();
+			ImGui::Text("counter = %d", counter);
+			ImGui::End();
+		}
 
 		ImGui::Render();
 		glViewport(0, 0, (int)io.DisplaySize.x, (int)io.DisplaySize.y);

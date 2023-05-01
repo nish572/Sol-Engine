@@ -4,9 +4,9 @@
 
 #include <memory>
 #include <string>
+#include <vector>
 
-#include <imgui.h>
-#include <imgui_impl_opengl3.h>
+#include <SDL.h>
 #include <imgui_impl_sdl2.h>
 
 //Forward declaration of Core class
@@ -17,30 +17,36 @@ namespace Sol {
 	class Core;
 }
 
-namespace CoreGUIElement
+namespace CoreInputElement
 {
 	//State functionality of Element in a comment here
-	class GUIElement
+	class InputElement
 	{
 	public:
-		//Represents the element responsible for managing the GUI operations in the Sol Engine
-		GUIElement(std::shared_ptr<Sol::Core> core);
-		//Release resources associated with the GUIElement instance
-		~GUIElement();
+		//Represents the element responsible for managing the Input operations in the Sol Engine
+		InputElement(std::shared_ptr<Sol::Core> core);
+		//Release resources associated with the InputElement instance
+		~InputElement();
 
-		//Initialize GUIElement
-		//Call this after calling GUIElement's attachElement
+		//Initialize InputElement
+		//Call this after calling InputElement's attachElement
 		ENGINE_API bool initialize();
 
-		void update();
+		ENGINE_API bool isRunning() const;
 
-		//Terminate GUIElement
-		//Call this to deallocate any of GUIElement's resources
+		void handleEvents(const std::vector<SDL_Event>& events);
+
+		//Process events
+		void processEvent(const SDL_Event& event);
+
+		//Terminate InputElement
+		//Call this to deallocate any of InputElement's resources
 		//Call this when amending Core's detachElement function and inside Core's terminate function
 		void terminate();
 
 	private:
 		//Pointer to Core
 		std::weak_ptr<Sol::Core> m_core;
+		bool m_running;
 	};
 }
