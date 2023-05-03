@@ -31,6 +31,8 @@ namespace CoreRenderElement
 		//Initialize RenderElement by creating an SDL window and OpenGL context
 		ENGINE_API bool initialize(const std::string& windowName, int width, int height, SDL_WindowFlags window_flags, int vsync);
 
+		void drawTexture(const std::string& texturePath, float x, float y, float width, float height);
+
 		//Update RenderElement
 		void update(double deltaTime);
 
@@ -45,6 +47,8 @@ namespace CoreRenderElement
 	private:
 		//Pointer to core
 		std::weak_ptr<Sol::Core> m_core;
+		//Is LogElement present
+		bool m_logElementAttached{ false };
 		//A pointer to the SDL window instanced managed by the RenderElement
 		SDL_Window* m_sdlWindow;
 		//An OpenGL context handle managed by the RenderElement

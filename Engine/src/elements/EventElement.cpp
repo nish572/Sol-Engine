@@ -22,25 +22,34 @@ namespace CoreEventElement
 		auto corePtr = m_core.lock();
 		if (corePtr)
 		{
-			if (!corePtr->getLogElement())
+			if (corePtr->getLogElement())
 			{
-				std::cerr << "Failed to initialize EventElement: LogElement is a nullptr" << std::endl;
-				return false;
+				m_logElementAttached = true;
 			}
 		}
 		if (corePtr)
 		{
 			if (!corePtr->getRenderElement())
 			{
-				std::cerr << "Failed to initialize RenderElement: RenderElement is a nullptr" << std::endl;
+				if (m_logElementAttached)
+				{
+					corePtr->getLogElement()->logError("[Event] Failed to initialize EventElement: RenderElement is a nullptr");
+					return false;
+				}
+				std::cerr << "Failed to initialize EventElement: RenderElement is a nullptr" << std::endl;
 				return false;
 			}
 		}
 
-		if (corePtr)
+		if (m_logElementAttached)
 		{
-			corePtr->getLogElement()->logInfo("[Event] Successfully Initialized");
+			if (corePtr)
+			{
+				corePtr->getLogElement()->logInfo("[Event] Successfully Initialized");
+			}
+			return true;
 		}
+		std::cout << "[Event] Successfully Initialized" << std::endl;
 		return true;
 	}
 

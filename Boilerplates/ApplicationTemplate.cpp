@@ -4,19 +4,8 @@
 
 int main(int argc, char* args[]) {
 	
-	//Core instance (make_shared allows Element's to have a weak_ptr to Core, important for Element's to access each other if desired)
+	//Core instance (make_shared allows Elements to have a weak_ptr to Core, important for Element's to access each other if desired)
 	auto appCore = std::make_shared<Sol::Core>();
-
-	//Below is highly recommended but not required if no auto-attached Elements are to be used (so far: LogElement)
-	//LogElement is automatically attached by calling the Core's initialize function because the Elements I have created use this logger
-	//However, if only custom Elements are to be used, skip this appCore->initialize() call, or modify Core.cpp for custom Core initialization behavior
-	//Note that all current Elements use LogElement for debugging purposes
-	// ---
-	if (!appCore->initialize("App-Log.txt")) //Replace 'App-Log.txt' with desired log file name/type e.g. 'EditorDebugLog.txt' or 'MyAppLog.customfiletype'
-	{
-		return -1; //Exit application with non-zero (i.e. abnormal) termination code
-	}
-	// ---
 
 	// ---
 	//Attach any Element(s) by name - case sensitive and does not include 'Element', e.g. only 'Render' not 'render' or 'RenderElement' etc
@@ -24,11 +13,12 @@ int main(int argc, char* args[]) {
 	//Custom Elements SHOULD have names that conform to this Element naming convention
 	//e.g. appCore->attachElement("Render");
 	// ---
-
 	// ---
 	//Initialize any Element(s) by calling the Element's initialize function and passing any required parameters
 	//e.g. appCore->getRenderElement()->initialize(...)
 	// ---
+	// MAKE SURE ELEMENTS ATTACHED AND INITIALIZED ONE BY ONE
+	// ESPECIALLY IMPORTANT IF LOG ELEMENT NOT INITIALIZED BEFORE ATTACHING OTHER ELEMENTS!
 
 	// ---
 	//Elements can be manually detached since detachElement will call the Element's respective terminate function
@@ -44,9 +34,9 @@ int main(int argc, char* args[]) {
 		//To break from loop and progress to quitting application, set appRunning to false
 	}
 	
-	//Good practice to ALWAYS
+	//Good practice to
 	//Call Core's terminate function in case any Elements are still attached
-	appCore->terminate();
+	//appCore->terminate();
 
 	//Reset appCore as this will destroy appCore's instance of Core
 	appCore.reset();

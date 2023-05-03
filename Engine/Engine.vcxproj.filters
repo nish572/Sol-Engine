@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Header Files\core">
+      <UniqueIdentifier>{1f7240b1-2809-4f84-90fd-04e5d40d9d2f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\elements\RenderElement.cpp">
@@ -63,58 +66,40 @@
     <ClCompile Include="src\elements\ShaderElement.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ecs\ComponentManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ecs\EntityManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ecs\SystemManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ecs\ECSElement.cpp">
+    <ClCompile Include="src\EcsElement.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\dependencies\include\engine\EngineAPI.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\dependencies\include\engine\Core.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\core</Filter>
     </ClInclude>
-    <ClInclude Include="..\dependencies\include\engine\elements\debuglog\LogElement.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\dependencies\include\engine\elements\render\GUIElement.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\dependencies\include\engine\elements\render\RenderElement.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\dependencies\include\engine\elements\resource\ResourceElement.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\dependencies\include\engine\elements\resource\ShaderElement.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="..\dependencies\include\engine\EngineAPI.h">
+      <Filter>Header Files\core</Filter>
     </ClInclude>
     <ClInclude Include="..\dependencies\include\engine\elements\event\EventElement.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\core</Filter>
     </ClInclude>
-    <ClInclude Include="..\dependencies\include\engine\elements\ecs\BaseSystem.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="..\dependencies\include\engine\elements\render\GUIElement.h">
+      <Filter>Header Files\core</Filter>
     </ClInclude>
-    <ClInclude Include="..\dependencies\include\engine\elements\ecs\ComponentManager.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="..\dependencies\include\engine\elements\debuglog\LogElement.h">
+      <Filter>Header Files\core</Filter>
     </ClInclude>
-    <ClInclude Include="..\dependencies\include\engine\elements\ecs\ECSElement.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="..\dependencies\include\engine\elements\render\RenderElement.h">
+      <Filter>Header Files\core</Filter>
     </ClInclude>
-    <ClInclude Include="..\dependencies\include\engine\elements\ecs\EntityManager.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="..\dependencies\include\engine\elements\resource\ResourceElement.h">
+      <Filter>Header Files\core</Filter>
     </ClInclude>
-    <ClInclude Include="..\dependencies\include\engine\elements\ecs\SystemManager.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="..\dependencies\include\engine\elements\resource\ShaderElement.h">
+      <Filter>Header Files\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\dependencies\include\engine\elements\ecs\EcsElement.h">
+      <Filter>Header Files\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\dependencies\include\engine\elements\ecs\Components.h">
+      <Filter>Header Files\core</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

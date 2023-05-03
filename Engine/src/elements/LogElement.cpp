@@ -2,7 +2,7 @@
 
 namespace CoreLogElement
 {
-	LogElement::LogElement()
+	LogElement::LogElement(std::shared_ptr<Sol::Core> core)
 	{
 	}
 	LogElement::~LogElement()

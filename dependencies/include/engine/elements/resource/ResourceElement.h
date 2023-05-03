@@ -45,6 +45,7 @@ struct TextureResource : public Resource {
 };
 
 //Fill in struct AudioResource here
+// ... 
 
 //Fill in struct ShaderResource here
 // Shader resource struct
@@ -77,6 +78,9 @@ namespace CoreResourceElement
 		//Load shader resource by the file path
 		std::shared_ptr<Resource> loadShader(const std::string& vertexPath, const std::string& fragmentPath);
 
+		//Load texture resource by the file path
+		std::shared_ptr<TextureResource> loadTextureResource(const std::string& filePath);
+
 		//Unload resource, decrement refCount and unload resource if refCount is 0
 		void unloadResource(const std::string& filePath);
 
@@ -95,6 +99,9 @@ namespace CoreResourceElement
 	private:
 		//Pointer to Core
 		std::weak_ptr<Sol::Core> m_core;
+		//Is LogElement present
+		bool m_logElementAttached{ false };
+		//Resource cache
 		std::unordered_map<std::string, std::shared_ptr<Resource>> m_resourceCache;
 	};
 }

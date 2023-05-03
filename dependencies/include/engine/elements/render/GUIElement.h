@@ -17,32 +17,34 @@ namespace Sol {
 	class Core;
 }
 
-namespace CoreGUIElement
+namespace CoreGuiElement
 {
-	//Represents the element responsible for managing the GUI operations in the Sol Engine
-	class GUIElement
+	//Represents the element responsible for managing the Gui operations in the Sol Engine
+	class GuiElement
 	{
 	public:
-		//Instantiate GUIElement
-		GUIElement(std::shared_ptr<Sol::Core> core);
-		//Release resources associated with the GUIElement instance
-		~GUIElement();
+		//Instantiate GuiElement
+		GuiElement(std::shared_ptr<Sol::Core> core);
+		//Release resources associated with the GuiElement instance
+		~GuiElement();
 
-		//Initialize GUIElement
-		//Call this after calling GUIElement's attachElement
+		//Initialize GuiElement
+		//Call this after calling GuiElement's attachElement
 		ENGINE_API bool initialize();
 
 		void update(double deltaTime);
 
 		void updateImGuiWindows();
 
-		//Terminate GUIElement
-		//Call this to deallocate any of GUIElement's resources
+		//Terminate GuiElement
+		//Call this to deallocate any of GuiElement's resources
 		//Call this when amending Core's detachElement function and inside Core's terminate function
 		void terminate();
 
 	private:
 		//Pointer to Core
 		std::weak_ptr<Sol::Core> m_core;
+		//Is LogElement present
+		bool m_logElementAttached{ false };
 	};
 }

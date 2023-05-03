@@ -3,24 +3,17 @@
 namespace Sol
 {
 	//Create an instance of LogElement with a unique pointer to it, other elements use nullptr until attached via attachElement
-	Core::Core() : m_logElement(std::make_unique<CoreLogElement::LogElement>())
+	Core::Core()
 	{
 	}
 	Core::~Core()
 	{
+		terminate();
 	}
 
-	bool Core::initialize(const std::string& logfileName)
+	bool Core::initialize()
 	{
-		//Initialize Core
-		//Initialize LogElement by calling LogElement's initialize function, passing logfileName for logger
-		if (!m_logElement->initialize(logfileName))
-		{
-			//If LogElement can't be initialized, return error (std::cerr since no logger) and return false
-			std::cerr << "Failed to initialize LogElement" << std::endl;
-			return false;
-		}
-		m_logElement->logInfo("[Core] Successfully Initialized Sol");
+		//Any initial checks for Core initialization
 		return true;
 	}
 
@@ -33,45 +26,86 @@ namespace Sol
 		//  Call make_unique to instantiate the Element class, giving shared_from_this to the Element's constructor
 		//  Log success and return true
 
+		if (elementName == "Log" && !m_logElement)
+		{
+			m_logElement = std::make_unique<CoreLogElement::LogElement>(shared_from_this());
+			std::cout << "[Core] Successfully Attached " << elementName << " Element" << std::endl;
+			return true;
+		}
 		if (elementName == "Render" && !m_renderElement)
 		{
 			m_renderElement = std::make_unique<CoreRenderElement::RenderElement>(shared_from_this());
-			m_logElement->logInfo(std::string("[Core] Successfully Attached ") + elementName + " Element");
+			if (m_logElement)
+			{
+				m_logElement->logInfo(std::string("[Core] Successfully Attached ") + elementName + " Element");
+				return true;
+			}
+			std::cout << "[Core] Successfully Attached " << elementName << " Element" << std::endl;
 			return true;
 		}
-		if (elementName == "GUI" && !m_guiElement)
+		if (elementName == "Gui" && !m_guiElement)
 		{
-			m_guiElement = std::make_unique<CoreGUIElement::GUIElement>(shared_from_this());
-			m_logElement->logInfo(std::string("[Core] Successfully Attached ") + elementName + " Element");
+			m_guiElement = std::make_unique<CoreGuiElement::GuiElement>(shared_from_this());
+			if (m_logElement)
+			{
+				m_logElement->logInfo(std::string("[Core] Successfully Attached ") + elementName + " Element");
+				return true;
+			}
+			std::cout << "[Core] Successfully Attached " << elementName << " Element" << std::endl;
 			return true;
 		}
 		if (elementName == "Event" && !m_eventElement)
 		{
 			m_eventElement = std::make_unique<CoreEventElement::EventElement>(shared_from_this());
-			m_logElement->logInfo(std::string("[Core] Successfully Attached ") + elementName + " Element");
+			if (m_logElement)
+			{
+				m_logElement->logInfo(std::string("[Core] Successfully Attached ") + elementName + " Element");
+				return true;
+			}
+			std::cout << "[Core] Successfully Attached " << elementName << " Element" << std::endl;
 			return true;
 		}
 		if (elementName == "Resource" && !m_resourceElement)
 		{
 			m_resourceElement = std::make_unique<CoreResourceElement::ResourceElement>(shared_from_this());
-			m_logElement->logInfo(std::string("[Core] Successfully Attached ") + elementName + " Element");
+			if (m_logElement)
+			{
+				m_logElement->logInfo(std::string("[Core] Successfully Attached ") + elementName + " Element");
+				return true;
+			}
+			std::cout << "[Core] Successfully Attached " << elementName << " Element" << std::endl;
 			return true;
 		}
 		if (elementName == "Shader" && !m_shaderElement)
 		{
 			m_shaderElement = std::make_unique<CoreShaderElement::ShaderElement>(shared_from_this());
-			m_logElement->logInfo(std::string("[Core] Successfully Attached ") + elementName + " Element");
+			if (m_logElement)
+			{
+				m_logElement->logInfo(std::string("[Core] Successfully Attached ") + elementName + " Element");
+				return true;
+			}
+			std::cout << "[Core] Successfully Attached " << elementName << " Element" << std::endl;
 			return true;
 		}
-		if (elementName == "ECS" && !m_ecsElement)
+		if (elementName == "Ecs" && !m_ecsElement)
 		{
-			m_ecsElement = std::make_unique<CoreECSElement::ECSElement>(shared_from_this());
-			m_logElement->logInfo(std::string("[Core] Successfully Attached ") + elementName + " Element");
+			m_ecsElement = std::make_unique<CoreEcsElement::EcsElement>(shared_from_this());
+			if (m_logElement)
+			{
+				m_logElement->logInfo(std::string("[Core] Successfully Attached ") + elementName + " Element");
+				return true;
+			}
+			std::cout << "[Core] Successfully Attached " << elementName << " Element" << std::endl;
 			return true;
 		}
 		
 		//If Element can't be attached then
-		m_logElement->logError(std::string("[Core] Failed To Attach ") + elementName + " Element"); //Due to left-to-right associativity and operator precedence, only implicit conversion of first literal necessary
+		if (m_logElement)
+		{
+			m_logElement->logError(std::string("[Core] Failed To Attach ") + elementName + " Element"); //Due to left-to-right associativity and operator precedence, only implicit conversion of first literal necessary
+			return false;
+		}
+		std::cout << "[Core] Failed To Attach " << elementName << " Element" << std::endl;
 		return false;
 	}	
 
@@ -85,6 +119,13 @@ namespace Sol
 		//  Set Core's respective Element unique_ptr to a nullptr
 		//  Log success
 
+		if (elementName == "Log" && m_logElement)
+		{
+			m_logElement->terminate();
+			m_logElement = nullptr;
+			std::cout << "[Core] Successfully Detached " << elementName << " Element" << std::endl;
+			return true;
+		}
 		if (elementName == "Render" && m_renderElement)
 		{
 			m_renderElement->terminate();
@@ -92,7 +133,7 @@ namespace Sol
 			m_logElement->logInfo(std::string("[Core] Successfully Detached ") + elementName + " Element");
 			return true;
 		}
-		if (elementName == "GUI" && m_guiElement)
+		if (elementName == "Gui" && m_guiElement)
 		{
 			m_guiElement->terminate();
 			m_guiElement = nullptr;
@@ -168,6 +209,7 @@ namespace Sol
 			}
 
 			// Render using delta timestep
+			if (m_ecsElement) { m_ecsElement->update(deltaTime); }
 			if (m_renderElement) { m_renderElement->update(deltaTime); }
 			if (!m_eventElement->isRunning()) { break; }
 		}
@@ -176,18 +218,14 @@ namespace Sol
 	void Core::terminate()
 	{
 		//Call terminate function(s) for attached Element(s)
-		if (m_guiElement) { detachElement("GUI"); }
+		if (m_guiElement) { detachElement("Gui"); }
 		if (m_renderElement) { detachElement("Render"); }
 		if (m_eventElement) { detachElement("Event"); }
 		if (m_resourceElement) { detachElement("Resource"); }
 		if (m_shaderElement) { detachElement("Shader"); }
 		if (m_ecsElement) { detachElement("ECS"); }
-		if (m_logElement)
-		{
-			m_logElement->logInfo("[Core] All Manually Attached Elements Successfully Detached");
-			m_logElement->terminate();
-			m_logElement = nullptr;
-		}
+		if (m_logElement) { detachElement("Log"); }
+		std::cout << "[Core] Successfully Terminated" << std::endl;
 	}
 
 	// ---
@@ -205,7 +243,7 @@ namespace Sol
 		{
 			return m_logElement.get();
 		}
-		m_logElement->logError("[Core] Failed To Get Log Element: nullptr found");
+		std::cout << "[Core] Failed To Get Log Element: nullptr found" << std::endl;
 		return nullptr;
 	}
 
@@ -215,17 +253,27 @@ namespace Sol
 		{
 			return m_renderElement.get();
 		}
+		if (m_logElement)
+		{
+			m_logElement->logError("[Core] Failed To Get Render Element: nullptr found");
+			return nullptr;
+		}
 		m_logElement->logError("[Core] Failed To Get Render Element: nullptr found");
 		return nullptr;
 	}
 
-	CoreGUIElement::GUIElement* Core::getGUIElement() const
+	CoreGuiElement::GuiElement* Core::getGuiElement() const
 	{
 		if (m_guiElement)
 		{
 			return m_guiElement.get();
 		}
-		m_logElement->logError("[Core] Failed To Get GUI Element: nullptr found");
+		if (m_logElement)
+		{
+			m_logElement->logError("[Core] Failed To Get Gui Element: nullptr found");
+			return nullptr;
+		}
+		m_logElement->logError("[Core] Failed To Get Gui Element: nullptr found");
 		return nullptr;
 	}
 
@@ -234,6 +282,11 @@ namespace Sol
 		if (m_eventElement)
 		{
 			return m_eventElement.get();
+		}
+		if (m_logElement)
+		{
+			m_logElement->logError("[Core] Failed To Get Event Element: nullptr found");
+			return nullptr;
 		}
 		m_logElement->logError("[Core] Failed To Get Event Element: nullptr found");
 		return nullptr;
@@ -245,6 +298,11 @@ namespace Sol
 		{
 			return m_resourceElement.get();
 		}
+		if (m_logElement)
+		{
+			m_logElement->logError("[Core] Failed To Get Resource Element: nullptr found");
+			return nullptr;
+		}
 		m_logElement->logError("[Core] Failed To Get Resource Element: nullptr found");
 		return nullptr;
 	}
@@ -255,15 +313,25 @@ namespace Sol
 		{
 			return m_shaderElement.get();
 		}
+		if (m_logElement)
+		{
+			m_logElement->logError("[Core] Failed To Get Shader Element: nullptr found");
+			return nullptr;
+		}
 		m_logElement->logError("[Core] Failed To Get Shader Element: nullptr found");
 		return nullptr;
 	}
 
-	CoreECSElement::ECSElement* Core::getECSElement() const
+	CoreEcsElement::EcsElement* Core::getEcsElement() const
 	{
 		if (m_ecsElement)
 		{
 			return m_ecsElement.get();
+		}
+		if (m_logElement)
+		{
+			m_logElement->logError("[Core] Failed To Get ECS Element: nullptr found");
+			return nullptr;
 		}
 		m_logElement->logError("[Core] Failed To Get ECS Element: nullptr found");
 		return nullptr;

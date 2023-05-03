@@ -15,22 +15,26 @@ namespace CoreShaderElement
 
 	//Call after Core's attachElement(elementName) has been called
 	//Pass any required parameters for initialization, e.g. RenderElement's initialize function requires window height and width
-	bool ShaderElement::initialize()
-	{
-		auto corePtr = m_core.lock();
-		if (corePtr)
-		{
-			if (!corePtr->getLogElement())
-			{
-				std::cerr << "Failed to initialize ShaderElement: LogElement is a nullptr" << std::endl;
-				return false;
-			}
-		}
+    bool ShaderElement::initialize()
+    {
+        auto corePtr = m_core.lock();
+        if (corePtr)
+        {
+            if (corePtr->getLogElement())
+            {
+                m_logElementAttached = true;
+            }
+        }
 
-		if (corePtr)
-		{
-			corePtr->getLogElement()->logInfo("[Shader] Successfully Initialized");
-		}
+        if (m_logElementAttached)
+        {
+            if (corePtr)
+            {
+                corePtr->getLogElement()->logInfo("[Shader] Successfully Initialized");
+            }
+            return true;
+        }
+        std::cout << "[Shader] Successfully Initialized" << std::endl;
 		return true;
 	}
 
@@ -64,15 +68,31 @@ namespace CoreShaderElement
             vertexCode = vShaderStream.str();
             fragmentCode = fShaderStream.str();
         } catch (std::ifstream::failure& e) {
+            //Log error if shader file(s) not successfully read
+            if (m_logElementAttached)
+            {
+                if (corePtr)
+                {
+					corePtr->getLogElement()->logError(std::string("[Shader] Failed to Read Shader File(s): ") + e.what());
+				}
+            }
+            else
+            {
+                std::cerr << "[Shader] Failed to Read Shader File(s): " << e.what() << std::endl;
+            }
+        }
+        //Log success if shader files successfully read
+        if (m_logElementAttached)
+        {
             if (corePtr)
             {
-				corePtr->getLogElement()->logError(std::string("[Shader] Failed to Read Shader File: ") + e.what());
-			}
+                corePtr->getLogElement()->logInfo("[Shader] Successfully Read Vertex and Fragment Shader Files");
+            }
         }
-        if (corePtr)
+        else
         {
-            corePtr->getLogElement()->logInfo("[Shader] Successfully Read Vertex and Fragment Shader Files");
-        }
+			std::cout << "[Shader] Successfully Read Vertex and Fragment Shader Files" << std::endl;
+		}
 
         const char* vShaderCode = vertexCode.c_str();
         const char* fShaderCode = fragmentCode.c_str();
@@ -99,11 +119,16 @@ namespace CoreShaderElement
         glDetachShader(shaderProgramID, fragment);
         glDeleteShader(vertex);
         glDeleteShader(fragment);
-        if (corePtr)
+        if (m_logElementAttached)
         {
-			corePtr->getLogElement()->logInfo("[Shader] Successfully Created Shader Program");
-		}
-        return shaderProgramID;
+            if (corePtr)
+            {
+                corePtr->getLogElement()->logInfo("[Shader] Successfully Created Shader Program");
+            }
+            return shaderProgramID;
+        }
+        std::cout << "[Shader] Successfully Created Shader Program" << std::endl;
+        return shaderProgramID;        
     }
 
     void ShaderElement::checkCompileErrors(unsigned int shader, const std::string& type)

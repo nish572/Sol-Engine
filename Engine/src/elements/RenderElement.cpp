@@ -13,25 +13,27 @@ namespace CoreRenderElement
 
 	bool RenderElement::initialize(const std::string& windowName, int width, int height, SDL_WindowFlags window_flags, int vsync)
 	{
-		//Temporarily upgrade weak pointer to shared pointer, ownership automatically released once out of scope due to reference count
-		//Check if logger available and if so then continue, otherwise return false
 		auto corePtr = m_core.lock();
 		if (corePtr)
 		{
-			if (!corePtr->getLogElement())
+			if (corePtr->getLogElement())
 			{
-				std::cerr <<  "Failed to initialize RenderElement: LogElement is a nullptr" << std::endl;
-				return false;
+				m_logElementAttached = true;
 			}
 		}
 
 		//Initialize SDL
 		if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_GAMECONTROLLER) != 0)
 		{
-			if (corePtr)
+			if (m_logElementAttached)
 			{
-				corePtr->getLogElement()->logError(std::string("[Render] Failed To Initialize SDL") + SDL_GetError());
+				if (corePtr)
+				{
+					corePtr->getLogElement()->logError(std::string("[Render] Failed To Initialize SDL") + SDL_GetError());
+				}
+				return false;
 			}
+			std::cerr << "[Render] Failed To Initialize SDL" << std::endl;
 			return false;
 		}
 		else
@@ -53,10 +55,15 @@ namespace CoreRenderElement
 
 			if (!m_sdlWindow)
 			{
-				if (corePtr)
+				if (m_logElementAttached)
 				{
-					corePtr->getLogElement()->logError(std::string("[Render] Failed To Create SDL Window") + SDL_GetError());
+					if (corePtr)
+					{
+						corePtr->getLogElement()->logError(std::string("[Render] Failed To Create SDL Window") + SDL_GetError());
+					}
+					return false;
 				}
+				std::cerr << "[Render] Failed To Create SDL Window" << std::endl;
 				return false;
 			}
 
@@ -69,19 +76,29 @@ namespace CoreRenderElement
 
 			//Setup function pointers
 			if (!gladLoadGLLoader((GLADloadproc)SDL_GL_GetProcAddress)) {
-				if (corePtr)
+				if (m_logElementAttached)
 				{
-					corePtr->getLogElement()->logError(std::string("[Render] Failed To Create OpenGL Context") + SDL_GetError());
+					if (corePtr)
+					{
+						corePtr->getLogElement()->logError(std::string("[Render] Failed To Create OpenGL Context") + SDL_GetError());
+					}
+					return false;
 				}
+				std::cerr << "[Render] Failed To Create OpenGL Context" << std::endl;
 				return false;
 			}
 		}
 		//If SDL initialized successfully, SDL window created successfully, and OpenGL context created successfully
 		//then log success and return true
-		if (corePtr)
+		if (m_logElementAttached)
 		{
-			corePtr->getLogElement()->logInfo("[Render] Successfully Initialized");
+			if (corePtr)
+			{
+				corePtr->getLogElement()->logInfo("[Render] Successfully Initialized");
+			}
+			return true;
 		}
+		std::cout << "[Render] Successfully Initialized" << std::endl;
 		return true;
 	}
 
@@ -92,14 +109,92 @@ namespace CoreRenderElement
 		auto corePtr = m_core.lock();
 		if (corePtr)
 		{
-			auto guiElement = corePtr->getGUIElement();
+			auto guiElement = corePtr->getGuiElement();
 			if (guiElement)
 			{
 				guiElement->update(deltaTime);
 			}
 		}
-
 		SDL_GL_SwapWindow(m_sdlWindow);
+	}
+
+	void RenderElement::drawTexture(const std::string& texturePath, float x, float y, float width, float height)
+	{
+		// Load the texture using ResourceElement
+		auto corePtr = m_core.lock();
+		if (!corePtr)
+		{
+			std::cerr << "[Render] Failed To Draw Texture: Cannot Access Core" << std::endl;
+			return;
+		}
+
+		auto resourceElement = corePtr->getResourceElement();
+		if (!resourceElement)
+		{
+			if (m_logElementAttached)
+			{
+				corePtr->getLogElement()->logError("[Render] Failed To Draw Texture: Cannot Access Resource Element");
+				return;
+			}
+			std::cerr << "[Render] Failed To Draw Texture: Cannot Access Resource Element" << std::endl;
+			return;
+		}
+
+		auto textureResource = resourceElement->loadTextureResource(texturePath);
+		if (!textureResource)
+		{
+			if (m_logElementAttached)
+			{
+				corePtr->getLogElement()->logError("[Render] Failed To Draw Texture: Cannot Load Texture Resource");
+				return;
+			}
+			std::cerr << "[Render] Failed To Draw Texture: Cannot Load Texture Resource" << std::endl;
+			return;
+		}
+
+		GLuint textureID = textureResource->textureID;
+
+		// Bind the texture
+		glBindTexture(GL_TEXTURE_2D, textureID);
+
+		// Set up the vertex data for the sprite
+		float vertices[] = {
+			// positions          // texture coords
+			x,          y,          0.0f, 0.0f, // top left
+			x + width,  y,          1.0f, 0.0f, // top right
+			x + width,  y + height, 1.0f, 1.0f, // bottom right
+			x,          y + height, 0.0f, 1.0f  // bottom left
+		};
+
+		// Set up the vertex buffer object and vertex array object
+		GLuint VBO, VAO;
+		glGenVertexArrays(1, &VAO);
+		glGenBuffers(1, &VBO);
+
+		glBindVertexArray(VAO);
+
+		glBindBuffer(GL_ARRAY_BUFFER, VBO);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+		// position attribute
+		glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
+		glEnableVertexAttribArray(0);
+		// texture coord attribute
+		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
+		glEnableVertexAttribArray(1);
+
+		// Draw the sprite
+		glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+
+		// Clean up
+		glDisableVertexAttribArray(0);
+		glDisableVertexAttribArray(1);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glBindVertexArray(0);
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		glDeleteBuffers(1, &VBO);
+		glDeleteVertexArrays(1, &VAO);
 	}
 
 	void RenderElement::terminate()
@@ -119,47 +214,46 @@ namespace CoreRenderElement
 
 	SDL_Window* RenderElement::getWindow() const
 	{
-		//If m_sdlWindow isn't a nullptr
+		// If SDL window is found, return m_sdlWindow
 		if (m_sdlWindow)
 		{
-			//return m_sdlWindow if SDL window successfully found
 			return m_sdlWindow;
 		}
-		//Temporarily upgrade weak pointer to shared pointer, ownership automatically released once out of scope due to reference count
+
+		// If no SDL window found, log error and return nullptr
 		auto corePtr = m_core.lock();
-		//If m_sdlWindow is a nullptr
-		if (!m_sdlWindow)
+		if (m_logElementAttached)
 		{
+			// Get LogElement to log error
 			if (corePtr)
 			{
-				//Get LogElement to log error
 				corePtr->getLogElement()->logError("[Render] Failed To Get SDL Window: nullptr found");
 			}
 		}
-		//Return a nullptr if SDL window not found successfully
+		std::cerr << "[Render] Failed To Get SDL Window: nullptr found" << std::endl;
 		return nullptr;
 	}
 
+
 	SDL_GLContext RenderElement::getGLContext() const
 	{
-		//If m_glContext isn't a nullptr
+		// If m_glContext is found, return m_glContext
 		if (m_glContext)
 		{
-			//Return m_sdlWindow if OpenGL context successfully found
 			return m_glContext;
 		}
-		//Temporarily upgrade weak pointer to shared pointer, ownership automatically released once out of scope due to reference count
+
+		// If no OpenGL context found, log error and return nullptr
 		auto corePtr = m_core.lock();
-		//If m_glContext is a nullptr
-		if (!m_glContext)
+		if (m_logElementAttached)
 		{
+			// Get LogElement to log error
 			if (corePtr)
 			{
-				//Get LogElement to log error
 				corePtr->getLogElement()->logError("[Render] Failed To Get OpenGL Context: nullptr found");
 			}
 		}
-		//Return a nullptr if OpenGL context not found successfully
+		std::cerr << "[Render] Failed To Get OpenGL Context: nullptr found" << std::endl;
 		return nullptr;
 	}
 }

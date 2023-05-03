@@ -24,24 +24,18 @@ namespace CoreResourceElement
 		auto corePtr = m_core.lock();
 		if (corePtr)
 		{
-			if (!corePtr->getLogElement())
+			if (corePtr->getLogElement())
 			{
-				std::cerr << "Failed to initialize ResourceElement: LogElement is a nullptr" << std::endl;
-				return false;
+				m_logElementAttached = true;
 			}
 		}
 
-		if (corePtr) {
-			if (!corePtr->getRenderElement()) {
-				std::cerr << "Failed to initialize ResourceElement: RenderElement is a nullptr" << std::endl;
-				return false;
-			}
-		}
-
-		if (corePtr)
+		if (m_logElementAttached)
 		{
 			corePtr->getLogElement()->logInfo("[Resource] Successfully Initialized");
+			return true;
 		}
+		std::cout << "[Resource] Successfully Initialized" << std::endl;
 		return true;
 	}
 
@@ -51,16 +45,22 @@ namespace CoreResourceElement
 		//Check if the resource is already in the cache
 		auto it = m_resourceCache.find(filePath);
 		//If the resource is in the cache, return it
-		if (it != m_resourceCache.end()) {
+		if (it != m_resourceCache.end())
+		{
 			//Return the resource
 			return it->second;
 		}
 		//If the resource is not in the cache, return nullptr
-		auto corePtr = m_core.lock();
-		if (corePtr)
+		if (m_logElementAttached)
 		{
-			corePtr->getLogElement()->logError("[Resource] Failed to Get Resource: " + filePath);
+			auto corePtr = m_core.lock();
+			if (corePtr)
+			{
+				corePtr->getLogElement()->logError("[Resource] Failed to Get Resource: " + filePath);
+			}
+			return nullptr;
 		}
+		std::cerr << "[Resource] Failed to Get Resource: " << filePath << std::endl;
 		return nullptr;
 	}
 
@@ -70,7 +70,8 @@ namespace CoreResourceElement
 		//Check if the image is already in the cache
 		auto it = m_resourceCache.find(filePath);
 		//If the image is in the cache, increment the refCount and return the resource
-		if (it != m_resourceCache.end()) {
+		if (it != m_resourceCache.end())
+		{
 			//Image already in cache, increment refCount and return the resource
 			it->second->refCount++;
 			return it->second;
@@ -111,25 +112,45 @@ namespace CoreResourceElement
 		//Insert the new resource into the cache
 		m_resourceCache[filePath] = textureResource;
 
-		auto corePtr = m_core.lock();
-		if (corePtr)
+		//If the resource is created and stored in cache properly, return the resource
+		if (textureResource)
 		{
-			corePtr->getLogElement()->logInfo("[Resource] Successfully Loaded New Image: " + filePath);
+			if (m_logElementAttached)
+			{
+				auto corePtr = m_core.lock();
+				if (corePtr)
+				{
+					corePtr->getLogElement()->logInfo("[Resource] Successfully Loaded New Image: " + filePath);
+				}
+				return textureResource;
+			}
+			std::cout << "[Resource] Successfully Loaded New Image: " << filePath << std::endl;
+			return textureResource;
 		}
-
-		return textureResource;
+		//If the resource is not created and stored in cache properly, return nullptr
+		if (m_logElementAttached)
+		{
+			auto corePtr = m_core.lock();
+			if (corePtr)
+			{
+				corePtr->getLogElement()->logError("[Resource] Failed to Load New Image: " + filePath);
+			}
+			return nullptr;
+		}
+		std::cerr << "[Resource] Failed to Load New Image: " << filePath << std::endl;
+		return nullptr;
 	}
 
-    //Load audio resource from a file path, returns an AudioResource object
+    //Load audio resource from a file path, returns shared pointer to AudioResource
 
 	//Load a shader from a file path, returns a ShaderResource object
 	std::shared_ptr<Resource> ResourceElement::loadShader(const std::string& vertexPath, const std::string& fragmentPath)
 	{
-		auto corePtr = m_core.lock();
 		//Check if the shader is already in the cache
 		std::string combinedPath = vertexPath + "_" + fragmentPath;
 		auto it = m_resourceCache.find(combinedPath);
-		if (it != m_resourceCache.end()) {
+		if (it != m_resourceCache.end())
+		{
 			//Shader already in cache, increment refCount and return the resource
 			it->second->refCount++;
 			return it->second;
@@ -137,11 +158,17 @@ namespace CoreResourceElement
 
 		//Create a ShaderResource object with the texture ID and other necessary information
 		auto shaderResource = std::make_shared<ShaderResource>();
+		auto corePtr = m_core.lock();
 		if (corePtr)
 		{
 			if (!corePtr->getShaderElement())
 			{
-				corePtr->getLogElement()->logError("[Resource] Failed to Create Shader: " + combinedPath);
+				if (m_logElementAttached)
+				{
+					corePtr->getLogElement()->logError("[Resource] Failed to Create Shader: " + combinedPath);
+					return nullptr;
+				}
+				std::cerr << "[Resource] Failed to Create Shader: " << combinedPath << std::endl;
 				return nullptr;
 			}
 			shaderResource->shaderProgramID = corePtr->getShaderElement()->createShaderProgram(vertexPath, fragmentPath);
@@ -152,11 +179,58 @@ namespace CoreResourceElement
 		//Insert the new resource into the cache
 		m_resourceCache[combinedPath] = shaderResource;
 
-		if (corePtr) {
-			corePtr->getLogElement()->logInfo("[Resource] Successfully Loaded New Shader: " + combinedPath);
+		//If the resource is created and stored in cache properly, return the resource
+		if (shaderResource)
+		{
+			if (m_logElementAttached)
+			{
+				auto corePtr = m_core.lock();
+				if (corePtr)
+				{
+					corePtr->getLogElement()->logInfo("[Resource] Successfully Loaded New Shader");
+				}
+				return shaderResource;
+			}
+			std::cout << "[Resource] Successfully Loaded New Shader: " << combinedPath << std::endl;
+			return shaderResource;
 		}
+		//If the resource is not created and stored in cache properly, return nullptr
+		if (m_logElementAttached)
+		{
+			auto corePtr = m_core.lock();
+			if (corePtr)
+			{
+				corePtr->getLogElement()->logError("[Resource] Failed to Load New Shader");
+			}
+			return nullptr;
+		}
+		std::cerr << "[Resource] Failed to Load New Shader: " << combinedPath << std::endl;
+		return nullptr;
+	}
 
-		return shaderResource;
+	//Load a texture resource from a file path, returns a TextureResource object
+	std::shared_ptr<TextureResource> ResourceElement::loadTextureResource(const std::string& filePath)
+	{
+		//Load the image
+		std::shared_ptr<Resource> resource = loadImage(filePath);
+		//If the image was loaded successfully, return a shared pointer to the TextureResource object
+		if (resource && resource->type == Resource::ResourceType::Texture)
+		{
+			//Return the TextureResource object
+			return std::static_pointer_cast<TextureResource>(resource);
+		}
+		//If the image was not loaded successfully, return nullptr
+		if (m_logElementAttached)
+		{
+			auto corePtr = m_core.lock();
+			if (corePtr)
+			{
+				corePtr->getLogElement()->logError("[Resource] Failed to Load Texture Resource: " + filePath);
+			}
+			return nullptr;
+		}
+		std::cerr << "[Resource] Failed to Load Texture Resource: " << filePath << std::endl;
+		return nullptr;
 	}
 
 	//Unload a resource from the cache
@@ -190,8 +264,7 @@ namespace CoreResourceElement
 	}
 
 	//Clear all resources from the cache
-	//.clear() would only release resources from RenderElement
-	//However, unloading each resource ensures they will be deleted as their refCount will reach zero and therefore their destructor's will be
+	//.clear() would only release resources from resource element's cache, but not delete them as their refCount would not reach zero=
 	void ResourceElement::clearCache()
 	{
 		//Iterate through the cache and unload resource data for each resource

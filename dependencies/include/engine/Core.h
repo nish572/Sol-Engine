@@ -9,17 +9,17 @@
 #include "debuglog/LogElement.h"
 
 #include "render/RenderElement.h"
-#include "render/GUIElement.h"
+#include "render/GuiElement.h"
 #include "event/EventElement.h"
 #include "resource/ResourceElement.h"
 #include "resource/ShaderElement.h"
-#include "ecs/ECSElement.h"
+#include "ecs/EcsElement.h"
 
 namespace Sol
 {
 	//Core represents the central manager of the Sol Engine
 	//Responsible for initializing, updating, and terminating the Elements
-	//Responsible for allowing any Sol Applications such as the Editor to interact with the Engine (Core, Elements, ECS)
+	//Responsible for allowing any Sol Applications such as the Editor to interact with the Engine (Core, Elements, Ecs)
 	class Core : public std::enable_shared_from_this<Core>
 	{
 	public:
@@ -40,9 +40,9 @@ namespace Sol
 		//However, if detachElement call desired prior to terminating Core, ensure the Element's terminate function has been called first
 		ENGINE_API bool detachElement(const std::string& elementName);
 
-		//Initialize Core (namely ensure logger initialized)
+		//Initialize Core
 		//Return true/false to be handled by the application
-		ENGINE_API bool initialize(const std::string& logfileName);
+		ENGINE_API bool initialize();
 
 		//Update Core
 		ENGINE_API void run();
@@ -60,8 +60,8 @@ namespace Sol
 		//Return a pointer to the RenderElement instance managed by the Core
 		ENGINE_API CoreRenderElement::RenderElement* getRenderElement() const;
 
-		//Return a pointer to the GUIElement instance managed by the Core
-		ENGINE_API CoreGUIElement::GUIElement* getGUIElement() const;
+		//Return a pointer to the GuiElement instance managed by the Core
+		ENGINE_API CoreGuiElement::GuiElement* getGuiElement() const;
 
 		//Return a pointer to the EventElement instance managed by the Core
 		ENGINE_API CoreEventElement::EventElement* getEventElement() const;
@@ -72,8 +72,8 @@ namespace Sol
 		//Return a pointer to the ShaderElement instance managed by the Core
 		ENGINE_API CoreShaderElement::ShaderElement* getShaderElement() const;
 
-		//Return a pointer to the ECSElement instance managed by the Core
-		ENGINE_API CoreECSElement::ECSElement* getECSElement() const;
+		//Return a pointer to the EcsElement instance managed by the Core
+		ENGINE_API CoreEcsElement::EcsElement* getEcsElement() const;
 
 		// ---
 
@@ -87,11 +87,11 @@ namespace Sol
 		// --- 
 		std::unique_ptr<CoreLogElement::LogElement> m_logElement;
 		std::unique_ptr<CoreRenderElement::RenderElement> m_renderElement;
-		std::unique_ptr<CoreGUIElement::GUIElement> m_guiElement;
+		std::unique_ptr<CoreGuiElement::GuiElement> m_guiElement;
 		std::unique_ptr<CoreEventElement::EventElement> m_eventElement;
 		std::unique_ptr<CoreResourceElement::ResourceElement> m_resourceElement;
 		std::unique_ptr<CoreShaderElement::ShaderElement> m_shaderElement;
-		std::unique_ptr<CoreECSElement::ECSElement> m_ecsElement;
+		std::unique_ptr<CoreEcsElement::EcsElement> m_ecsElement;
 		// ---
 	};
 }

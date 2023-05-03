@@ -49,6 +49,8 @@ namespace CoreEventElement
 	private:
 		//Pointer to Core
 		std::weak_ptr<Sol::Core> m_core;
+		//Is LogElement present
+		bool m_logElementAttached{ false };
 		bool m_running;
 	};
 }

@@ -12,6 +12,14 @@
 #include <spdlog/sinks/basic_file_sink.h>
 #pragma warning(pop)
 
+//Forward declaration of Core class
+//Essentially, telling compiler Sol::Core exists, but not providing full definition
+//This means pointers to Core class can be used without including Core.h
+//Including Core.h would introduce circular dependency
+namespace Sol {
+	class Core;
+}
+
 namespace CoreLogElement
 {
 	//Represents the element responsible for managing the logging operations in the Sol Engine
@@ -20,7 +28,7 @@ namespace CoreLogElement
 	{
 	public:
 		//Create LogElement
-		LogElement();
+		LogElement(std::shared_ptr<Sol::Core> core);
 		//Clean up LogElement resources
 		~LogElement();
 
@@ -29,7 +37,7 @@ namespace CoreLogElement
 		//Create logger
 		//Register logger
 		//Takes custom logfileName e.g. 'Sol-Log.txt'
-		bool initialize(const std::string& logfileName);
+		ENGINE_API bool initialize(const std::string& logfileName);
 
 		//Use logger to log messages
 		ENGINE_API void logInfo(const std::string& msg);
@@ -39,6 +47,8 @@ namespace CoreLogElement
 		void terminate();
 
 	private:
+		//Pointer to core
+		std::weak_ptr<Sol::Core> m_core;
 		//Logger to store logger instance
 		//spdlog requires shared_ptr as opposed to unique_ptr
 		std::shared_ptr<spdlog::logger> logger;

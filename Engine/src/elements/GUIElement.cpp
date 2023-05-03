@@ -1,36 +1,40 @@
-#include "render/GUIElement.h"
+#include "render/GuiElement.h"
 
 #include "Core.h"
 
-namespace CoreGUIElement
+namespace CoreGuiElement
 {
-	//GUIElement has initializer list for any managed resources that require initializing
+	//GuiElement has initializer list for any managed resources that require initializing
 	//All Elements MUST have at least m_core private member
-	GUIElement::GUIElement(std::shared_ptr<Sol::Core> core) : m_core(core) //Extend initializer list if necessary
+	GuiElement::GuiElement(std::shared_ptr<Sol::Core> core) : m_core(core) //Extend initializer list if necessary
 	{
 	}
-	GUIElement::~GUIElement()
+	GuiElement::~GuiElement()
 	{
 	}
 
 	//Call after Core's attachElement(elementName) has been called
 	//Pass any required parameters for initialization, e.g. RenderElement's initialize function requires window height and width
-	bool GUIElement::initialize()
+	bool GuiElement::initialize()
 	{
 		auto corePtr = m_core.lock();
 		if (corePtr)
 		{
-			if (!corePtr->getLogElement())
+			if (corePtr->getLogElement())
 			{
-				std::cerr << "Failed to initialize GUIElement: LogElement is a nullptr" << std::endl;
-				return false;
+				m_logElementAttached = true;
 			}
 		}
 		if (corePtr)
 		{
 			if (!corePtr->getRenderElement())
 			{
-				std::cerr << "Failed to initialize RenderElement: RenderElement is a nullptr" << std::endl;
+				if (m_logElementAttached)
+				{
+					std::cerr << "Failed to initialize GuiElement: RenderElement is a nullptr" << std::endl;
+					return false;
+				}
+				std::cerr << "Failed to initialize GuiElement: RenderElement is a nullptr" << std::endl;
 				return false;
 			}
 		}
@@ -59,20 +63,25 @@ namespace CoreGUIElement
 		// Setup Platform/Renderer backends
 		if (corePtr)
 		{
-			//If RenderElement is not attached to Core, then GUIElement cannot be initialized
+			//If RenderElement is not attached to Core, then GuiElement cannot be initialized
 			ImGui_ImplSDL2_InitForOpenGL(corePtr->getRenderElement()->getWindow(), corePtr->getRenderElement()->getGLContext());
 			ImGui_ImplOpenGL3_Init("#version 330");
 		}
 
-		if (corePtr)
+		if (m_logElementAttached)
 		{
-			corePtr->getLogElement()->logInfo("[GUI] Successfully Initialized");
+			if (corePtr)
+			{
+				corePtr->getLogElement()->logInfo("[Gui] Successfully Initialized");
+			}
+			return true;
 		}
+		std::cout << "[Gui] Successfully Initialized" << std::endl;
 		return true;
 	}
 
 	//Update
-	void GUIElement::update(double deltaTime)
+	void GuiElement::update(double deltaTime)
 	{
 		ImGuiIO& io = ImGui::GetIO();
 
@@ -84,7 +93,7 @@ namespace CoreGUIElement
 		ImGui_ImplSDL2_NewFrame();
 		ImGui::NewFrame();
 
-		// UPDATE GUI ELEMENTS IN THIS FUNCTION //
+		// UPDATE Gui ELEMENTS IN THIS FUNCTION //
 		updateImGuiWindows();
 
 		ImGui::Render();
@@ -101,7 +110,7 @@ namespace CoreGUIElement
 		}
 	}
 
-	void GUIElement::updateImGuiWindows()
+	void GuiElement::updateImGuiWindows()
 	{
 		//ImGui SCAFFOLD APP HERE //
 		{
@@ -118,7 +127,7 @@ namespace CoreGUIElement
 		}
 	}
 
-	void GUIElement::terminate()
+	void GuiElement::terminate()
 	{
 		ImGui_ImplOpenGL3_Shutdown();
 		ImGui_ImplSDL2_Shutdown();
