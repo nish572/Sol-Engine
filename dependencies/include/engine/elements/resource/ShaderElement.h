@@ -40,11 +40,6 @@ namespace CoreShaderElement
 
 		void checkCompileErrors(unsigned int shader, const std::string& type);
 
-		//Terminate ShaderElement
-		//Call this to deallocate any of ShaderElement's resources
-		//Call this when amending Core's detachElement function and inside Core's terminate function
-		void terminate();
-
 	private:
 		//Pointer to Core
 		std::weak_ptr<Sol::Core> m_core;

@@ -89,7 +89,7 @@ namespace Sol
 		}
 		if (elementName == "Ecs" && !m_ecsElement)
 		{
-			m_ecsElement = std::make_unique<CoreEcsElement::EcsElement>(shared_from_this());
+			m_ecsElement = std::make_shared<CoreEcsElement::EcsElement>(shared_from_this());
 			if (m_logElement)
 			{
 				m_logElement->logInfo(std::string("[Core] Successfully Attached ") + elementName + " Element");
@@ -160,7 +160,7 @@ namespace Sol
 			m_logElement->logInfo(std::string("[Core] Successfully Detached ") + elementName + " Element");
 			return true;
 		}
-		if (elementName == "ECS" && m_ecsElement)
+		if (elementName == "Ecs" && m_ecsElement)
 		{
 			//m_ecsElement->terminate();
 			m_ecsElement = nullptr;

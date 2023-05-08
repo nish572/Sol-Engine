@@ -66,7 +66,10 @@
     <ClCompile Include="src\elements\ShaderElement.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\EcsElement.cpp">
+    <ClCompile Include="src\elements\EcsElement.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\systems\RenderSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -99,6 +102,9 @@
       <Filter>Header Files\core</Filter>
     </ClInclude>
     <ClInclude Include="..\dependencies\include\engine\elements\ecs\Components.h">
+      <Filter>Header Files\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\dependencies\include\engine\systems\RenderSystem.h">
       <Filter>Header Files\core</Filter>
     </ClInclude>
   </ItemGroup>

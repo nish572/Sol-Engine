@@ -21,7 +21,7 @@ const Entity MAX_ENTITIES = 5000;
 
 namespace CoreEcsElement
 {
-    class EcsElement {
+    class EcsElement : public std::enable_shared_from_this<EcsElement> {
     public:
         EcsElement(std::shared_ptr<Sol::Core> core);
         ~EcsElement();
@@ -42,6 +42,8 @@ namespace CoreEcsElement
         void removeComponent(Entity entity);
         template<typename T>
         T& getComponent(Entity entity);
+        template <typename T>
+        std::vector<std::pair<Entity, std::shared_ptr<T>>> getAllComponentsOfType();
 
         // System management functions
         template<typename T, typename... Args>
@@ -58,6 +60,7 @@ namespace CoreEcsElement
         // Data structures for entity-component-system management
         std::vector<Entity> m_entities;
         std::unordered_map<Entity, std::unordered_map<std::type_index, std::shared_ptr<void>>> m_entityComponentMap;
+        std::unordered_map<std::type_index, std::vector<std::pair<Entity, std::shared_ptr<void>>>> m_componentEntityMap;
         std::unordered_map<std::type_index, std::function<void(double)>> m_systems;
         std::unordered_map<std::type_index, std::function<void(double)>> m_fixedUpdateSystems;
 

@@ -1,17 +1,20 @@
 #include "ecs/EcsElement.h"
 #include "ecs/Components.h"
+//#include any systems here
+#include "systems/RenderSystem.h"
 
 #include "Core.h"
 
-// INCLUDE ANY SYSTEM.H HERE
-// INCLUDE ANY COMPONENT .H HERE
-
 namespace CoreEcsElement
 {
-    EcsElement::EcsElement(std::shared_ptr<Sol::Core> core) : m_core(core) {
+    EcsElement::EcsElement(std::shared_ptr<Sol::Core> core) : m_core(core),
+        m_resourceElement(nullptr),
+        m_renderElement(nullptr),
+        m_eventElement(nullptr)
+    {
         //Initialize data structures and systems
         //Add any necessary systems here (e.g., RenderSystem, PhysicsSystem, etc.)
-        //m_systems[std::type_index(typeid(YourSystem))] = std::make_shared<YourSystem>(); // REPLACE WITH NAME OF SYSTEM E.G. RENDER SYSTEM
+        registerSystem<EcsRenderSystem::RenderSystem>(shared_from_this());
     }
 
     EcsElement::~EcsElement() {
@@ -73,25 +76,30 @@ namespace CoreEcsElement
 
     template<typename T>
     void EcsElement::addComponent(Entity entity, T component) {
-        //Get the type index for the component
         std::type_index componentTypeIndex(typeid(T));
-        //Add the component to the entity-component map
         m_entityComponentMap[entity][componentTypeIndex] = std::make_shared<T>(component);
+
+        // Add the entity and component pointer to the componentEntityMap
+        m_componentEntityMap[componentTypeIndex].push_back({ entity, m_entityComponentMap[entity][componentTypeIndex] });
     }
+
 
     template<typename T>
     void EcsElement::removeComponent(Entity entity) {
-        //Get the type index for the component
         std::type_index componentTypeIndex(typeid(T));
-        //Remove the component from the entity-component map
         m_entityComponentMap[entity].erase(componentTypeIndex);
+
+        // Remove the entity and component pointer from the componentEntityMap
+        auto& componentEntityList = m_componentEntityMap[componentTypeIndex];
+        componentEntityList.erase(std::remove_if(componentEntityList.begin(), componentEntityList.end(),
+            [&](const auto& pair) { return pair.first == entity; }),
+            componentEntityList.end());
     }
 
+    //Return reference to the specified component type associated with the given entity
     template<typename T>
     T& EcsElement::getComponent(Entity entity) {
-        //Get the type index for the component
         std::type_index componentTypeIndex(typeid(T));
-        //Get the component from the entity-component map
         return *std::static_pointer_cast<T>(m_entityComponentMap[entity][componentTypeIndex]);
     }
 
@@ -107,6 +115,18 @@ namespace CoreEcsElement
         };
     }
 
+    template <typename T>
+    std::vector<std::pair<Entity, std::shared_ptr<T>>> EcsElement::getAllComponentsOfType() {
+        std::type_index componentTypeIndex(typeid(T));
+        std::vector<std::pair<Entity, std::shared_ptr<T>>> components;
+
+        for (const auto& pair : m_componentEntityMap[componentTypeIndex]) {
+            components.emplace_back(pair.first, std::static_pointer_cast<T>(pair.second));
+        }
+
+        return components;
+    }
+
     void EcsElement::updateSystems(double deltaTime) {
         for (const auto& system : m_systems) {
             system.second(deltaTime);
@@ -119,15 +139,29 @@ namespace CoreEcsElement
         }
     }
 
-    //Explicit template instantiation for the components and systems using (FOR EACH COMPONENT WRITE THE FOLLOWING)
-    //REPLACE YOURCOMPONENT TYPE WITH THE NAME OF THE COMPONENT TYPE
-    //template void EcsElement::addComponent<YourComponentType>(Entity entity, YourComponentType component);
-    //template void EcsElement::removeComponent<YourComponentType>(Entity entity);
-    //template YourComponentType& EcsElement::getComponent<YourComponentType>(Entity entity);
+    //Explicit template instantiation for the components
+    template void EcsElement::addComponent<TransformComponent>(Entity entity, TransformComponent transformComponent);
+    template void EcsElement::removeComponent<TransformComponent>(Entity entity);
+    template TransformComponent& EcsElement::getComponent<TransformComponent>(Entity entity);
+    template std::vector<std::pair<Entity, std::shared_ptr<TransformComponent>>> EcsElement::getAllComponentsOfType<TransformComponent>();
+
     template void EcsElement::addComponent<SpriteComponent>(Entity entity, SpriteComponent spriteComponent);
     template void EcsElement::removeComponent<SpriteComponent>(Entity entity);
     template SpriteComponent& EcsElement::getComponent<SpriteComponent>(Entity entity);
+    template std::vector<std::pair<Entity, std::shared_ptr<SpriteComponent>>> EcsElement::getAllComponentsOfType<SpriteComponent>();
 
-    //Explicit template instantiation for Each System (FOR EACH SYSTEM WRITE THE FOLLOWING)
-    //template void EcsElement::registerSystem<YourSystem>(/*args*/); // args for the system constructor
+    template void EcsElement::addComponent<ColliderComponent>(Entity entity, ColliderComponent colliderComponent);
+    template void EcsElement::removeComponent<ColliderComponent>(Entity entity);
+    template ColliderComponent& EcsElement::getComponent<ColliderComponent>(Entity entity);
+    template std::vector<std::pair<Entity, std::shared_ptr<ColliderComponent>>> EcsElement::getAllComponentsOfType<ColliderComponent>();
+
+   /* template void EcsElement::addComponent<RigidbodyComponent>(Entity entity, RigidbodyComponent rigidbodyComponent);
+    template void EcsElement::removeComponent<RigidbodyComponent>(Entity entity);
+    template RigidbodyComponent& EcsElement::getComponent<RigidbodyComponent>(Entity entity);
+    template std::vector<std::pair<Entity, std::shared_ptr<RigidbodyComponent>>> EcsElement::getAllComponentsOfType<RigidbodyComponent>();*/
+
+    /*template void EcsElement::addComponent<ScriptableComponent>(Entity entity, ScriptableComponent scriptableComponent);
+    template void EcsElement::removeComponent<ScriptableComponent>(Entity entity);
+    template ScriptableComponent& EcsElement::getComponent<ScriptableComponent>(Entity entity);
+    template std::vector<std::pair<Entity, std::shared_ptr<ScriptableComponent>>> EcsElement::getAllComponentsOfType<ScriptableComponent>();*/
 }

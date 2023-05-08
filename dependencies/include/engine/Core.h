@@ -91,7 +91,7 @@ namespace Sol
 		std::unique_ptr<CoreEventElement::EventElement> m_eventElement;
 		std::unique_ptr<CoreResourceElement::ResourceElement> m_resourceElement;
 		std::unique_ptr<CoreShaderElement::ShaderElement> m_shaderElement;
-		std::unique_ptr<CoreEcsElement::EcsElement> m_ecsElement;
+		std::shared_ptr<CoreEcsElement::EcsElement> m_ecsElement;
 		// ---
 	};
 }
