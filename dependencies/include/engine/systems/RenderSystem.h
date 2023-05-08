@@ -1,19 +1,16 @@
 #pragma once
 
 #include <memory>
+
 #include <glad.h>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-// Forward declarations to avoid circular dependencies
-#pragma once
+#include "ecs/Components.h"
 
-#include <memory>
-#include <glad.h>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
+using Entity = std::uint32_t;
 
-// Forward declarations to avoid circular dependencies
+//Forward declarations to avoid circular dependencies
 namespace CoreEcsElement {
     class EcsElement;
     struct SpriteComponent;
@@ -26,17 +23,20 @@ namespace EcsRenderSystem
     public:
         RenderSystem(std::shared_ptr<CoreEcsElement::EcsElement> ecsElement);
 
+        ~RenderSystem();
+
+        bool initialize();
+
         void update(double deltaTime);
-        void addSpriteComponent(Entity entity, std::shared_ptr<CoreEcsElement::SpriteComponent> spriteComponent, GLuint textureID);
-        void renderSprite(std::shared_ptr<CoreEcsElement::SpriteComponent> spriteComponent);
+
+        void fixedUpdate(double fixedTimestep);
+
+        void renderSprite(std::shared_ptr<TransformComponent> transformComponent, std::shared_ptr<SpriteComponent> spriteComponent);
 
     private:
         std::shared_ptr<CoreEcsElement::EcsElement> m_ecsElement;
-        ;
-        GLuint m_spriteVAO;
-        GLuint m_spriteEBO;
-        GLuint m_spriteVBO;
-        std::vector<GLfloat> vertices;
-        std::vector<GLuint> indices;
+        unsigned int m_sharedVAO;
+        unsigned int m_sharedVBO;
+        unsigned int m_sharedEBO;
     };
 }

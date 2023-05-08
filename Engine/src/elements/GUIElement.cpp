@@ -39,20 +39,20 @@ namespace CoreGuiElement
 			}
 		}
 
-		// Setup Dear ImGui context
+		//Setup Dear ImGui context
 		IMGUI_CHECKVERSION();
 		ImGui::CreateContext();
 		ImGuiIO& io = ImGui::GetIO();
-		io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
-		io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
-		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;         // Enable Docking
-		io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;       // Enable Multi-Viewport / Platform Windows
+		io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     //Enable Keyboard Controls
+		io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      //Enable Gamepad Controls
+		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;         //Enable Docking
+		io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;       //Enable Multi-Viewport / Platform Windows
 
-		// Setup Dear ImGui style
+		//Setup Dear ImGui style
 		ImGui::StyleColorsDark();
 		//ImGui::StyleColorsLight();
 
-		// When viewports are enabled we tweak WindowRounding/WindowBg so platform windows can look identical to regular ones.
+		//When viewports are enabled we tweak WindowRounding/WindowBg so platform windows can look identical to regular ones.
 		ImGuiStyle& style = ImGui::GetStyle();
 		if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
 		{
@@ -60,7 +60,7 @@ namespace CoreGuiElement
 			style.Colors[ImGuiCol_WindowBg].w = 1.0f;
 		}
 
-		// Setup Platform/Renderer backends
+		//Setup Platform/Renderer backends
 		if (corePtr)
 		{
 			//If RenderElement is not attached to Core, then GuiElement cannot be initialized
@@ -93,7 +93,7 @@ namespace CoreGuiElement
 		ImGui_ImplSDL2_NewFrame();
 		ImGui::NewFrame();
 
-		// UPDATE Gui ELEMENTS IN THIS FUNCTION //
+		//UPDATE Gui ELEMENTS IN THIS FUNCTION //
 		updateImGuiWindows();
 
 		ImGui::Render();
@@ -117,9 +117,9 @@ namespace CoreGuiElement
 			static float f = 0.0f;
 			static int counter = 0;
 
-			ImGui::Begin("Hello, world!"); // Create a window called "Hello, world!" and append into it.
+			ImGui::Begin("Hello, world!"); //Create a window called "Hello, world!" and append into it.
 
-			if (ImGui::Button("Button")) // Buttons return true when clicked (most widgets return true when edited/activated)
+			if (ImGui::Button("Button")) //Buttons return true when clicked (most widgets return true when edited/activated)
 				counter++;
 			ImGui::SameLine();
 			ImGui::Text("counter = %d", counter);

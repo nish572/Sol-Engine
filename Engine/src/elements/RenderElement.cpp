@@ -135,17 +135,17 @@ namespace CoreRenderElement
 
 	SDL_Window* RenderElement::getWindow() const
 	{
-		// If SDL window is found, return m_sdlWindow
+		//If SDL window is found, return m_sdlWindow
 		if (m_sdlWindow)
 		{
 			return m_sdlWindow;
 		}
 
-		// If no SDL window found, log error and return nullptr
+		//If no SDL window found, log error and return nullptr
 		auto corePtr = m_core.lock();
 		if (m_logElementAttached)
 		{
-			// Get LogElement to log error
+			//Get LogElement to log error
 			if (corePtr)
 			{
 				corePtr->getLogElement()->logError("[Render] Failed To Get SDL Window: nullptr found");
@@ -158,17 +158,17 @@ namespace CoreRenderElement
 
 	SDL_GLContext RenderElement::getGLContext() const
 	{
-		// If m_glContext is found, return m_glContext
+		//If m_glContext is found, return m_glContext
 		if (m_glContext)
 		{
 			return m_glContext;
 		}
 
-		// If no OpenGL context found, log error and return nullptr
+		//If no OpenGL context found, log error and return nullptr
 		auto corePtr = m_core.lock();
 		if (m_logElementAttached)
 		{
-			// Get LogElement to log error
+			//Get LogElement to log error
 			if (corePtr)
 			{
 				corePtr->getLogElement()->logError("[Render] Failed To Get OpenGL Context: nullptr found");

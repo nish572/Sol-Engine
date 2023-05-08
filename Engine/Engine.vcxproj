@@ -64,7 +64,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)dependencies\lib;$(SolutionDir)dependencies\lib\sdl2;$(SolutionDir)dependencies\lib\freetype;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>freetype.lib;SDL2.lib;SDL2_mixer.lib;SDL2main.lib;SDL2test.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>freetype.lib;SDL2.lib;SDL2_mixer.lib;SDL2main.lib;SDL2test.lib;box2d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>xcopy /y /d "$(TargetPath)" "$(SolutionDir)bin\$(Configuration)-$(Platform)\Editor\"</Command>
@@ -87,7 +87,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)dependencies\lib;$(SolutionDir)dependencies\lib\sdl2;$(SolutionDir)dependencies\lib\freetype;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>freetype.lib;SDL2.lib;SDL2_mixer.lib;SDL2main.lib;SDL2test.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>freetype.lib;SDL2.lib;SDL2_mixer.lib;SDL2main.lib;SDL2test.lib;box2d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>xcopy /y /d "$(TargetPath)" "$(SolutionDir)bin\$(Configuration)-$(Platform)\Editor\"</Command>

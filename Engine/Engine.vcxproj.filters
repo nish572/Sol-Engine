@@ -89,9 +89,6 @@
     <ClInclude Include="..\dependencies\include\engine\elements\debuglog\LogElement.h">
       <Filter>Header Files\core</Filter>
     </ClInclude>
-    <ClInclude Include="..\dependencies\include\engine\elements\render\RenderElement.h">
-      <Filter>Header Files\core</Filter>
-    </ClInclude>
     <ClInclude Include="..\dependencies\include\engine\elements\resource\ResourceElement.h">
       <Filter>Header Files\core</Filter>
     </ClInclude>
@@ -106,6 +103,9 @@
     </ClInclude>
     <ClInclude Include="..\dependencies\include\engine\systems\RenderSystem.h">
       <Filter>Header Files\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\dependencies\include\engine\elements\render\RenderElement.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

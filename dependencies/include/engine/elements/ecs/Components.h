@@ -8,62 +8,68 @@
 #include <string>
 #include "resource/ResourceElement.h"
 #include <glm/glm.hpp>
+#include <box2D/Box2D.h>
+
+struct InputComponent
+{
+    glm::vec2 moveDirection;
+    bool jump;
+};
 
 struct TransformComponent {
     glm::vec3 position;
-    glm::vec3 rotation;
+    float rotation;
     glm::vec3 scale;
 
     TransformComponent()
         : position(0.0f), rotation(0.0f), scale(1.0f) {}
 
-    TransformComponent(const glm::vec3& pos, const glm::vec3& rot, const glm::vec3& scl)
+    TransformComponent(const glm::vec3& pos, float rot, const glm::vec3& scl)
         : position(pos), rotation(rot), scale(scl) {}
 };
 
 struct ColliderComponent {
-    glm::vec3 size;
+    b2Shape* shape;
+    float density;
+    float friction;
+    float restitution;
 
     ColliderComponent()
-        : size(1.0f) {}
+        : shape(nullptr), density(1.0f), friction(0.3f), restitution(0.1f) {}
 
-    ColliderComponent(const glm::vec3& colliderSize)
-        : size(colliderSize) {}
+    ColliderComponent(b2Shape* colliderShape, float colliderDensity, float colliderFriction, float colliderRestitution)
+        : shape(colliderShape), density(colliderDensity), friction(colliderFriction), restitution(colliderRestitution) {}
 };
 
-enum class RigidBodyType {
+enum class BodyType {
     Static,
     Dynamic,
     Kinematic
 };
 
-struct RigidBodyComponent {
-    RigidBodyType type;
-    float mass;
+struct PhysicsBodyComponent {
+    BodyType type;
+    glm::vec2 linearVelocity;
+    float angularVelocity;
+    float linearDamping;
+    float angularDamping;
 
-    RigidBodyComponent()
-        : type(RigidBodyType::Static), mass(0.0f) {}
+    PhysicsBodyComponent()
+        : type(BodyType::Static), linearVelocity(0.0f), angularVelocity(0.0f), linearDamping(0.0f), angularDamping(0.0f) {}
 
-    RigidBodyComponent(RigidBodyType rbType, float rbMass)
-        : type(rbType), mass(rbMass) {}
+    PhysicsBodyComponent(BodyType rbType, const glm::vec2& rbLinearVelocity, float rbAngularVelocity, float rbLinearDamping, float rbAngularDamping)
+        : type(rbType), linearVelocity(rbLinearVelocity), angularVelocity(rbAngularVelocity), linearDamping(rbLinearDamping), angularDamping(rbAngularDamping) {}
 };
-
-//struct ScriptableComponent {
-//    std::unordered_map<std::string, boost::variant<bool, int, float, std::string>> customData;
-//};
 
 struct SpriteComponent {
     unsigned int textureID;
     glm::vec2 size;
     glm::vec4 color;
-
-    unsigned int VAO;
-    unsigned int instanceVBO;
-    unsigned int shaderProgram; // Add this line
+    unsigned int shaderProgram;
 
     SpriteComponent()
-        : textureID(0), size(1.0f), color(1.0f), VAO(0), instanceVBO(0), shaderProgram(0) {} // Update this line
+        : textureID(0), size(1.0f), color(1.0f), shaderProgram(0) {}
 
-    SpriteComponent(unsigned int texID, const glm::vec2& spriteSize, const glm::vec4& spriteColor, unsigned int programID) // Update this line
-        : textureID(texID), size(spriteSize), color(spriteColor), VAO(0), instanceVBO(0), shaderProgram(programID) {} // Update this line
+    SpriteComponent(unsigned int texID, const glm::vec2& spriteSize, const glm::vec4& spriteColor, unsigned int programID)
+        : textureID(texID), size(spriteSize), color(spriteColor), shaderProgram(programID) {}
 };

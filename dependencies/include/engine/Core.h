@@ -35,8 +35,8 @@ namespace Sol
 
 		//Detach an Element
 		//Preferably, do so ONLY from Core's terminate function as this checks to see if each Element is not a nullptr
-		// i.e. if the Element is still attached, and if so, call Element's terminate function
-		// which automatically calls detachElement once Element's termination complete
+		//i.e. if the Element is still attached, and if so, call Element's terminate function
+		//which automatically calls detachElement once Element's termination complete
 		//However, if detachElement call desired prior to terminating Core, ensure the Element's terminate function has been called first
 		ENGINE_API bool detachElement(const std::string& elementName);
 
@@ -50,7 +50,7 @@ namespace Sol
 		//Call terminate functions for all Elements, first checking they're not nullptrs
 		ENGINE_API void terminate();
 
-		// ---
+		//---
 
 		//Get functions for Elements
 
@@ -73,9 +73,9 @@ namespace Sol
 		ENGINE_API CoreShaderElement::ShaderElement* getShaderElement() const;
 
 		//Return a pointer to the EcsElement instance managed by the Core
-		ENGINE_API CoreEcsElement::EcsElement* getEcsElement() const;
+		ENGINE_API std::shared_ptr<CoreEcsElement::EcsElement> getEcsElement() const;
 
-		// ---
+		//---
 
 	private:
 		//Smart pointers provide automatic memory management
@@ -84,7 +84,7 @@ namespace Sol
 		//This ensures no memory leaks there
 		
 		//Smart pointer(s) for an instance of the each Element
-		// --- 
+		//--- 
 		std::unique_ptr<CoreLogElement::LogElement> m_logElement;
 		std::unique_ptr<CoreRenderElement::RenderElement> m_renderElement;
 		std::unique_ptr<CoreGuiElement::GuiElement> m_guiElement;
@@ -92,6 +92,6 @@ namespace Sol
 		std::unique_ptr<CoreResourceElement::ResourceElement> m_resourceElement;
 		std::unique_ptr<CoreShaderElement::ShaderElement> m_shaderElement;
 		std::shared_ptr<CoreEcsElement::EcsElement> m_ecsElement;
-		// ---
+		//---
 	};
 }

@@ -45,10 +45,10 @@ struct TextureResource : public Resource {
 };
 
 //Fill in struct AudioResource here
-// ... 
+//... 
 
 //Fill in struct ShaderResource here
-// Shader resource struct
+//Shader resource struct
 struct ShaderResource : public Resource {
 	int shaderProgramID;
 
@@ -73,7 +73,7 @@ namespace CoreResourceElement
 		std::shared_ptr<Resource> loadImage(const std::string& filePath);
 
 		//Load audio resource by the file path
-		// ...
+		//...
 
 		//Load shader resource by the file path
 		std::shared_ptr<Resource> loadShader(const std::string& vertexPath, const std::string& fragmentPath);

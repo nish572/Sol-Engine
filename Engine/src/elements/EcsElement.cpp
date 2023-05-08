@@ -7,14 +7,9 @@
 
 namespace CoreEcsElement
 {
-    EcsElement::EcsElement(std::shared_ptr<Sol::Core> core) : m_core(core),
-        m_resourceElement(nullptr),
-        m_renderElement(nullptr),
-        m_eventElement(nullptr)
+    EcsElement::EcsElement(std::shared_ptr<Sol::Core> core) : m_core(core)
     {
-        //Initialize data structures and systems
-        //Add any necessary systems here (e.g., RenderSystem, PhysicsSystem, etc.)
-        registerSystem<EcsRenderSystem::RenderSystem>(shared_from_this());
+        
     }
 
     EcsElement::~EcsElement() {
@@ -24,14 +19,13 @@ namespace CoreEcsElement
 
     bool EcsElement::initialize() {
         //Initialize the EcsElement
-
+        //Initialize data structures and systems
+        //Add any necessary systems here (e.g., RenderSystem, PhysicsSystem, etc.)
+        registerSystem<EcsRenderSystem::RenderSystem>(shared_from_this());
         //Access other elements as needed
         auto corePtr = m_core.lock();
         if (corePtr)
         {
-            m_resourceElement = corePtr->getResourceElement();
-            m_renderElement = corePtr->getRenderElement();
-            m_eventElement = corePtr->getEventElement();
             return true;
         }
 
@@ -58,7 +52,7 @@ namespace CoreEcsElement
     }
 
     Entity EcsElement::createEntity() {
-        // Get a new entity ID
+        //Get a new entity ID
         Entity entity = m_entityID++;
         return entity;
     }
@@ -79,17 +73,16 @@ namespace CoreEcsElement
         std::type_index componentTypeIndex(typeid(T));
         m_entityComponentMap[entity][componentTypeIndex] = std::make_shared<T>(component);
 
-        // Add the entity and component pointer to the componentEntityMap
+        //Add the entity and component pointer to the componentEntityMap
         m_componentEntityMap[componentTypeIndex].push_back({ entity, m_entityComponentMap[entity][componentTypeIndex] });
     }
-
 
     template<typename T>
     void EcsElement::removeComponent(Entity entity) {
         std::type_index componentTypeIndex(typeid(T));
         m_entityComponentMap[entity].erase(componentTypeIndex);
 
-        // Remove the entity and component pointer from the componentEntityMap
+        //Remove the entity and component pointer from the componentEntityMap
         auto& componentEntityList = m_componentEntityMap[componentTypeIndex];
         componentEntityList.erase(std::remove_if(componentEntityList.begin(), componentEntityList.end(),
             [&](const auto& pair) { return pair.first == entity; }),
@@ -139,29 +132,37 @@ namespace CoreEcsElement
         }
     }
 
+    std::shared_ptr<Sol::Core> EcsElement::getCore()
+    {
+        auto corePtr = m_core.lock();
+        if (corePtr)
+        {
+            return corePtr;
+        }
+        else
+        {
+            return nullptr;
+        }
+    }
+
     //Explicit template instantiation for the components
     template void EcsElement::addComponent<TransformComponent>(Entity entity, TransformComponent transformComponent);
     template void EcsElement::removeComponent<TransformComponent>(Entity entity);
     template TransformComponent& EcsElement::getComponent<TransformComponent>(Entity entity);
     template std::vector<std::pair<Entity, std::shared_ptr<TransformComponent>>> EcsElement::getAllComponentsOfType<TransformComponent>();
 
-    template void EcsElement::addComponent<SpriteComponent>(Entity entity, SpriteComponent spriteComponent);
-    template void EcsElement::removeComponent<SpriteComponent>(Entity entity);
-    template SpriteComponent& EcsElement::getComponent<SpriteComponent>(Entity entity);
-    template std::vector<std::pair<Entity, std::shared_ptr<SpriteComponent>>> EcsElement::getAllComponentsOfType<SpriteComponent>();
+    template void EcsElement::addComponent<::SpriteComponent>(Entity entity, ::SpriteComponent spriteComponent);
+    template void EcsElement::removeComponent<::SpriteComponent>(Entity entity);
+    template ::SpriteComponent& EcsElement::getComponent<::SpriteComponent>(Entity entity);
+    template std::vector<std::pair<Entity, std::shared_ptr<::SpriteComponent>>> EcsElement::getAllComponentsOfType<::SpriteComponent>();
 
     template void EcsElement::addComponent<ColliderComponent>(Entity entity, ColliderComponent colliderComponent);
     template void EcsElement::removeComponent<ColliderComponent>(Entity entity);
     template ColliderComponent& EcsElement::getComponent<ColliderComponent>(Entity entity);
     template std::vector<std::pair<Entity, std::shared_ptr<ColliderComponent>>> EcsElement::getAllComponentsOfType<ColliderComponent>();
 
-   /* template void EcsElement::addComponent<RigidbodyComponent>(Entity entity, RigidbodyComponent rigidbodyComponent);
-    template void EcsElement::removeComponent<RigidbodyComponent>(Entity entity);
-    template RigidbodyComponent& EcsElement::getComponent<RigidbodyComponent>(Entity entity);
-    template std::vector<std::pair<Entity, std::shared_ptr<RigidbodyComponent>>> EcsElement::getAllComponentsOfType<RigidbodyComponent>();*/
-
-    /*template void EcsElement::addComponent<ScriptableComponent>(Entity entity, ScriptableComponent scriptableComponent);
-    template void EcsElement::removeComponent<ScriptableComponent>(Entity entity);
-    template ScriptableComponent& EcsElement::getComponent<ScriptableComponent>(Entity entity);
-    template std::vector<std::pair<Entity, std::shared_ptr<ScriptableComponent>>> EcsElement::getAllComponentsOfType<ScriptableComponent>();*/
+    template void EcsElement::addComponent<PhysicsBodyComponent>(Entity entity, PhysicsBodyComponent colliderComponent);
+    template void EcsElement::removeComponent<PhysicsBodyComponent>(Entity entity);
+    template PhysicsBodyComponent& EcsElement::getComponent<PhysicsBodyComponent>(Entity entity);
+    template std::vector<std::pair<Entity, std::shared_ptr<PhysicsBodyComponent>>> EcsElement::getAllComponentsOfType<PhysicsBodyComponent>();
 }

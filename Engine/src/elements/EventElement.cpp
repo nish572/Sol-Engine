@@ -71,14 +71,14 @@ namespace CoreEventElement
 	//Process event
 	void EventElement::processEvent(const SDL_Event& event)
 	{
-		// Check if the event belongs to ImGui
+		//Check if the event belongs to ImGui
 		if (ImGui_ImplSDL2_ProcessEvent(&event))
 		{
 			//Event is related to ImGui, so we can skip it
 			return;
 		}
 
-		// Check for application close events
+		//Check for application close events
 		if (event.type == SDL_QUIT)
 		{
 			m_running = false;

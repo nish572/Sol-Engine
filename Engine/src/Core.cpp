@@ -23,8 +23,8 @@ namespace Sol
 		//Check elementName and check if Core's respective Element unique_ptr is a nullptr
 		//(elementName should only be in Capitalization case e.g. 'Render', and should not include 'Element')
 		//If Core's respective Element unique_ptr is a nullptr
-		//  Call make_unique to instantiate the Element class, giving shared_from_this to the Element's constructor
-		//  Log success and return true
+		// Call make_unique to instantiate the Element class, giving shared_from_this to the Element's constructor
+		// Log success and return true
 
 		if (elementName == "Log" && !m_logElement)
 		{
@@ -116,8 +116,8 @@ namespace Sol
 		//Check elementName and check if Core's respective Element unique_ptr is not a nullptr
 		//(elementName should only be in Capitalization case e.g. 'Render', and should not include 'Element')
 		//If Core's respective Element unique_ptr is not a nullptr
-		//  Set Core's respective Element unique_ptr to a nullptr
-		//  Log success
+		// Set Core's respective Element unique_ptr to a nullptr
+		// Log success
 
 		if (elementName == "Log" && m_logElement)
 		{
@@ -168,7 +168,7 @@ namespace Sol
 			return true;
 		}
 
-		// ... ///
+		//... ///
 
 		//If Element can't be detached then
 		m_logElement->logError(std::string("[Core] Failed To Detach ") + elementName + " Element"); //Due to left-to-right associativity and operator precedence, only implicit conversion of first literal necessary
@@ -193,7 +193,7 @@ namespace Sol
 			//deltaTime = std::min(deltaTime, 0.25); //Prevent deltaTime from being too large
 			accumulatedTime += deltaTime;
 
-			// Handle events at a fixed timestep
+			//Handle events at a fixed timestep
 			while (accumulatedTime >= fixedTimestep)
 			{
 				std::vector<SDL_Event> events;
@@ -208,7 +208,7 @@ namespace Sol
 				accumulatedTime -= fixedTimestep;
 			}
 
-			// Render using delta timestep
+			//Render using delta timestep
 			if (m_ecsElement) { m_ecsElement->update(deltaTime); }
 			if (m_renderElement) { m_renderElement->update(deltaTime); }
 			if (!m_eventElement->isRunning()) { break; }
@@ -223,12 +223,12 @@ namespace Sol
 		if (m_eventElement) { detachElement("Event"); }
 		if (m_resourceElement) { detachElement("Resource"); }
 		if (m_shaderElement) { detachElement("Shader"); }
-		if (m_ecsElement) { detachElement("ECS"); }
+		if (m_ecsElement) { detachElement("Ecs"); }
 		if (m_logElement) { detachElement("Log"); }
 		std::cout << "[Core] Successfully Terminated" << std::endl;
 	}
 
-	// ---
+	//---
 
 	//Get functions for Elements
 
@@ -322,11 +322,11 @@ namespace Sol
 		return nullptr;
 	}
 
-	CoreEcsElement::EcsElement* Core::getEcsElement() const
+	std::shared_ptr<CoreEcsElement::EcsElement> Core::getEcsElement() const
 	{
 		if (m_ecsElement)
 		{
-			return m_ecsElement.get();
+			return m_ecsElement;
 		}
 		if (m_logElement)
 		{
@@ -337,5 +337,5 @@ namespace Sol
 		return nullptr;
 	}
 
-	// ---
+	//---
 }

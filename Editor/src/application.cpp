@@ -1,7 +1,7 @@
-// ------- Sol Editor -------
-// An Game Editor Utilizing
-// The Sol Core
-// --------------------------
+//------- Sol Editor -------
+//An Game Editor Utilizing
+//The Sol Core
+//--------------------------
 #include "Core.h"
 
 int main(int argc, char* args[]) {
