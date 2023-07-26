@@ -3,12 +3,12 @@
 namespace Sol
 {
 	//Create an instance of LogElement with a unique pointer to it, other elements use nullptr until attached via attachElement
+	//test
 	Core::Core()
 	{
 	}
 	Core::~Core()
 	{
-		terminate();
 	}
 
 	bool Core::initialize()
@@ -130,41 +130,41 @@ namespace Sol
 		{
 			m_renderElement->terminate();
 			m_renderElement = nullptr;
-			m_logElement->logInfo(std::string("[Core] Successfully Detached ") + elementName + " Element");
+			std::cout << "[Core] Successfully Detached " << elementName << " Element" << std::endl;
 			return true;
 		}
 		if (elementName == "Gui" && m_guiElement)
 		{
 			m_guiElement->terminate();
 			m_guiElement = nullptr;
-			m_logElement->logInfo(std::string("[Core] Successfully Detached ") + elementName + " Element");
+			std::cout  << "[Core] Successfully Detached " << elementName << " Element" << std::endl;
 			return true;
 		}
 		if (elementName == "Event" && m_eventElement)
 		{
 			m_eventElement->terminate();
 			m_eventElement = nullptr;
-			m_logElement->logInfo(std::string("[Core] Successfully Detached ") + elementName + " Element");
+			std::cout << "[Core] Successfully Detached " << elementName << " Element" << std::endl;
 			return true;
 		}
 		if (elementName == "Resource" && m_resourceElement)
 		{
 			m_resourceElement->terminate();
 			m_resourceElement = nullptr;
-			m_logElement->logInfo(std::string("[Core] Successfully Detached ") + elementName + " Element");
+			std::cout << "[Core] Successfully Detached " << elementName << " Element" << std::endl;
 			return true;
 		}
 		if (elementName == "Shader" && m_shaderElement)
 		{
 			m_shaderElement = nullptr;
-			m_logElement->logInfo(std::string("[Core] Successfully Detached ") + elementName + " Element");
+			std::cout << "[Core] Successfully Detached " << elementName << " Element" << std::endl;
 			return true;
 		}
 		if (elementName == "Ecs" && m_ecsElement)
 		{
 			//m_ecsElement->terminate();
 			m_ecsElement = nullptr;
-			m_logElement->logInfo(std::string("[Core] Successfully Detached ") + elementName + " Element");
+			std::cout << "[Core] Successfully Detached " << elementName << " Element" << std::endl;
 			return true;
 		}
 
@@ -203,6 +203,7 @@ namespace Sol
 					events.push_back(event);
 				}
 				if (m_eventElement) { m_eventElement->handleEvents(events); }
+				if (m_ecsElement) { m_ecsElement->fixedUpdate(fixedTimestep); }
 				if (!m_eventElement->isRunning()) { break; }
 
 				accumulatedTime -= fixedTimestep;
@@ -243,7 +244,7 @@ namespace Sol
 		{
 			return m_logElement.get();
 		}
-		std::cout << "[Core] Failed To Get Log Element: nullptr found" << std::endl;
+		std::cerr << "[Core] Failed To Get Log Element: nullptr found" << std::endl;
 		return nullptr;
 	}
 
@@ -258,7 +259,7 @@ namespace Sol
 			m_logElement->logError("[Core] Failed To Get Render Element: nullptr found");
 			return nullptr;
 		}
-		m_logElement->logError("[Core] Failed To Get Render Element: nullptr found");
+		std::cerr << "[Core] Failed To Get Render Element: nullptr found" << std::endl;
 		return nullptr;
 	}
 
@@ -273,7 +274,7 @@ namespace Sol
 			m_logElement->logError("[Core] Failed To Get Gui Element: nullptr found");
 			return nullptr;
 		}
-		m_logElement->logError("[Core] Failed To Get Gui Element: nullptr found");
+		std::cerr << "[Core] Failed To Get Gui Element: nullptr found" << std::endl;
 		return nullptr;
 	}
 
@@ -288,7 +289,7 @@ namespace Sol
 			m_logElement->logError("[Core] Failed To Get Event Element: nullptr found");
 			return nullptr;
 		}
-		m_logElement->logError("[Core] Failed To Get Event Element: nullptr found");
+		std::cerr << "[Core] Failed To Get Event Element: nullptr found" << std::endl;
 		return nullptr;
 	}
 
@@ -303,7 +304,7 @@ namespace Sol
 			m_logElement->logError("[Core] Failed To Get Resource Element: nullptr found");
 			return nullptr;
 		}
-		m_logElement->logError("[Core] Failed To Get Resource Element: nullptr found");
+		std::cerr << "[Core] Failed To Get Resource Element: nullptr found" << std::endl;
 		return nullptr;
 	}
 
@@ -318,7 +319,7 @@ namespace Sol
 			m_logElement->logError("[Core] Failed To Get Shader Element: nullptr found");
 			return nullptr;
 		}
-		m_logElement->logError("[Core] Failed To Get Shader Element: nullptr found");
+		std::cerr << "[Core] Failed To Get Shader Element: nullptr found" << std::endl;
 		return nullptr;
 	}
 
@@ -333,7 +334,7 @@ namespace Sol
 			m_logElement->logError("[Core] Failed To Get ECS Element: nullptr found");
 			return nullptr;
 		}
-		m_logElement->logError("[Core] Failed To Get ECS Element: nullptr found");
+		std::cerr << "[Core] Failed To Get ECS Element: nullptr found" << std::endl;
 		return nullptr;
 	}
 

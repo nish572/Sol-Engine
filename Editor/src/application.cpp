@@ -44,7 +44,7 @@ int main(int argc, char* args[]) {
 
 	//Good practice to
 	//Call Core's terminate function in case any Elements are still attached
-	//appCore->terminate();
+	appCore->terminate();
 
 	//Reset appCore as this will destroy appCore's instance of Core
 	appCore.reset();

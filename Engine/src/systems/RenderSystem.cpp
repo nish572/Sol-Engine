@@ -4,15 +4,16 @@
 namespace EcsRenderSystem
 {
     RenderSystem::RenderSystem(std::shared_ptr<CoreEcsElement::EcsElement> ecsElement)
-        : m_ecsElement(ecsElement)
+        : m_ecsElement(ecsElement), m_sharedVAO(0), m_sharedVBO(0), m_sharedEBO(0)
     {
+        initialize();
     }
 
     RenderSystem::~RenderSystem()
     {
     }
 
-    bool RenderSystem::initialize()
+    void RenderSystem::initialize()
     {//Initialize the shared VAO, VBO, and EBO
         glGenVertexArrays(1, &m_sharedVAO);
         glBindVertexArray(m_sharedVAO);
@@ -47,8 +48,6 @@ namespace EcsRenderSystem
 
         //Unbind the VAO
         glBindVertexArray(0);
-
-        return true;
     }
 
     void RenderSystem::update(double deltaTime) {

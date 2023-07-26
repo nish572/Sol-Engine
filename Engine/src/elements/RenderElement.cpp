@@ -2,6 +2,7 @@
 
 #include "Core.h"
 
+
 namespace CoreRenderElement
 {
 	RenderElement::RenderElement(std::shared_ptr<Sol::Core> core) : m_core(core), m_sdlWindow(nullptr), m_glContext(0)
@@ -154,7 +155,6 @@ namespace CoreRenderElement
 		std::cerr << "[Render] Failed To Get SDL Window: nullptr found" << std::endl;
 		return nullptr;
 	}
-
 
 	SDL_GLContext RenderElement::getGLContext() const
 	{

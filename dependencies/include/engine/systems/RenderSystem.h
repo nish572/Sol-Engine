@@ -13,8 +13,9 @@ using Entity = std::uint32_t;
 //Forward declarations to avoid circular dependencies
 namespace CoreEcsElement {
     class EcsElement;
-    struct SpriteComponent;
 }
+
+struct SpriteComponent;
 
 namespace EcsRenderSystem
 {
@@ -25,7 +26,7 @@ namespace EcsRenderSystem
 
         ~RenderSystem();
 
-        bool initialize();
+        void initialize();
 
         void update(double deltaTime);
 

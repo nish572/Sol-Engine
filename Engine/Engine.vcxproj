@@ -111,6 +111,7 @@
     <ClCompile Include="src\elements\RenderElement.cpp" />
     <ClCompile Include="src\elements\ResourceElement.cpp" />
     <ClCompile Include="src\elements\ShaderElement.cpp" />
+    <ClCompile Include="src\systems\PhysicsSystem.cpp" />
     <ClCompile Include="src\systems\RenderSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -124,6 +125,7 @@
     <ClInclude Include="..\dependencies\include\engine\elements\resource\ResourceElement.h" />
     <ClInclude Include="..\dependencies\include\engine\elements\resource\ShaderElement.h" />
     <ClInclude Include="..\dependencies\include\engine\EngineAPI.h" />
+    <ClInclude Include="..\dependencies\include\engine\systems\PhysicsSystem.h" />
     <ClInclude Include="..\dependencies\include\engine\systems\RenderSystem.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

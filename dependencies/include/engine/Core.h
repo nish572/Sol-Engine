@@ -7,7 +7,6 @@
 #include <string>
 
 #include "debuglog/LogElement.h"
-
 #include "render/RenderElement.h"
 #include "render/GuiElement.h"
 #include "event/EventElement.h"

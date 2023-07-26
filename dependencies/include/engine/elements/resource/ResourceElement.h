@@ -104,4 +104,4 @@ namespace CoreResourceElement
 		//Resource cache
 		std::unordered_map<std::string, std::shared_ptr<Resource>> m_resourceCache;
 	};
-}
+} 

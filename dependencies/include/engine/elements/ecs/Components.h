@@ -53,12 +53,13 @@ struct PhysicsBodyComponent {
     float angularVelocity;
     float linearDamping;
     float angularDamping;
+    b2Body* body;
 
     PhysicsBodyComponent()
-        : type(BodyType::Static), linearVelocity(0.0f), angularVelocity(0.0f), linearDamping(0.0f), angularDamping(0.0f) {}
+        : type(BodyType::Static), linearVelocity(0.0f), angularVelocity(0.0f), linearDamping(0.0f), angularDamping(0.0f), body(nullptr) {}
 
-    PhysicsBodyComponent(BodyType rbType, const glm::vec2& rbLinearVelocity, float rbAngularVelocity, float rbLinearDamping, float rbAngularDamping)
-        : type(rbType), linearVelocity(rbLinearVelocity), angularVelocity(rbAngularVelocity), linearDamping(rbLinearDamping), angularDamping(rbAngularDamping) {}
+    PhysicsBodyComponent(BodyType rbType, const glm::vec2& rbLinearVelocity, float rbAngularVelocity, float rbLinearDamping, float rbAngularDamping, b2Body* rbBody)
+        : type(rbType), linearVelocity(rbLinearVelocity), angularVelocity(rbAngularVelocity), linearDamping(rbLinearDamping), angularDamping(rbAngularDamping), body(rbBody) {}
 };
 
 struct SpriteComponent {
