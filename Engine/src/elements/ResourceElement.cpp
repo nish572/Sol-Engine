@@ -144,7 +144,7 @@ namespace CoreResourceElement
     //Load audio resource from a file path, returns shared pointer to AudioResource
 
 	//Load a shader from a file path, returns a ShaderResource object
-	std::shared_ptr<Resource> ResourceElement::loadShader(const std::string& vertexPath, const std::string& fragmentPath)
+	std::shared_ptr<ShaderResource> ResourceElement::loadShader(const std::string& vertexPath, const std::string& fragmentPath)
 	{
 		//Check if the shader is already in the cache
 		std::string combinedPath = vertexPath + "_" + fragmentPath;
@@ -153,7 +153,7 @@ namespace CoreResourceElement
 		{
 			//Shader already in cache, increment refCount and return the resource
 			it->second->refCount++;
-			return it->second;
+			return std::static_pointer_cast<ShaderResource>(it->second);
 		}
 
 		//Create a ShaderResource object with the texture ID and other necessary information
@@ -189,10 +189,10 @@ namespace CoreResourceElement
 				{
 					corePtr->getLogElement()->logInfo("[Resource] Successfully Loaded New Shader");
 				}
-				return shaderResource;
+				return std::static_pointer_cast<ShaderResource>(shaderResource);
 			}
 			std::cout << "[Resource] Successfully Loaded New Shader: " << combinedPath << std::endl;
-			return shaderResource;
+			return std::static_pointer_cast<ShaderResource>(shaderResource);
 		}
 		//If the resource is not created and stored in cache properly, return nullptr
 		if (m_logElementAttached)
@@ -264,17 +264,17 @@ namespace CoreResourceElement
 	}
 
 	//Clear all resources from the cache
-	//.clear() would only release resources from resource element's cache, but not delete them as their refCount would not reach zero=
 	void ResourceElement::clearCache()
 	{
-		//Iterate through the cache and unload resource data for each resource
-		for (auto it = m_resourceCache.begin(); it != m_resourceCache.end(); ++it)
+		//While there is still elements in the cache, unload resource data for each resource
+		while (!m_resourceCache.empty())
 		{
-			unloadResource(it->first);
+			unloadResource(m_resourceCache.begin()->first);
 		}
 		//Clear unordered map
 		m_resourceCache.clear();
 	}
+
 
 	void ResourceElement::terminate()
 	{

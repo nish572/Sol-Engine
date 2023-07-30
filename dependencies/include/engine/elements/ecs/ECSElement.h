@@ -12,6 +12,7 @@
 #include "resource/ResourceElement.h"
 #include "render/RenderElement.h"
 #include "event/EventElement.h"
+#include "ecs/Components.h"
 
 namespace Sol {
     class Core;
@@ -33,7 +34,7 @@ namespace CoreEcsElement
         void terminate();
 
         //Entity management functions
-        Entity createEntity();
+        ENGINE_API Entity createEntity();
         void destroyEntity(Entity entity);
 
         //Component management functions
@@ -97,6 +98,22 @@ namespace CoreEcsElement
         void fixedUpdateSystems(double fixedTimestep);
 
         std::shared_ptr<Sol::Core> getCore();
+
+        //Sprite functions
+        ENGINE_API void addSprite(Entity entity) {
+            SpriteComponent tmp = SpriteComponent{};
+            addComponent<SpriteComponent>(entity, tmp);
+        }
+        ENGINE_API void removeSprite(Entity entity) {removeComponent<SpriteComponent>(entity);}
+        ENGINE_API SpriteComponent& getSprite(Entity entity) {return getComponent<SpriteComponent>(entity);}
+
+        //Transform functions
+        ENGINE_API void addTransform(Entity entity) {
+            TransformComponent tmp = TransformComponent{};
+            addComponent<TransformComponent>(entity, tmp);
+        }
+        ENGINE_API void removeTransform(Entity entity) {removeComponent<TransformComponent>(entity);}
+        ENGINE_API TransformComponent& getTransform(Entity entity) {return getComponent<TransformComponent>(entity);}
 
     private:
         //Pointer to Core

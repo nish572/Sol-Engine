@@ -33,6 +33,12 @@ int main(int argc, char* args[]) {
 
 	//Runtime loop
 	bool appRunning = true;
+	auto testShader = appCore->getResourceElement()->loadShader("C:\\Software Development\\Sol-Engine\\Sol-Engine\\Engine\\shaders\\shader.vert", "C:\\Software Development\\Sol-Engine\\Sol-Engine\\Engine\\shaders\\shader.frag");
+	Entity testEntity = appCore->getEcsElement()->createEntity();
+	appCore->getEcsElement()->addSprite(testEntity);
+	appCore->getEcsElement()->addTransform(testEntity);
+	auto& sprite = appCore->getEcsElement()->getSprite(testEntity);
+
 	while (appRunning)
 	{
 		//Run Core, passing event (so EventElement can process events)

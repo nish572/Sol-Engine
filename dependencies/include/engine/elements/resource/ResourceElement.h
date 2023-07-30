@@ -76,7 +76,7 @@ namespace CoreResourceElement
 		//...
 
 		//Load shader resource by the file path
-		std::shared_ptr<Resource> loadShader(const std::string& vertexPath, const std::string& fragmentPath);
+		ENGINE_API std::shared_ptr<ShaderResource> loadShader(const std::string& vertexPath, const std::string& fragmentPath);
 
 		//Load texture resource by the file path
 		std::shared_ptr<TextureResource> loadTextureResource(const std::string& filePath);

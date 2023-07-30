@@ -13,6 +13,7 @@
 #include "resource/ResourceElement.h"
 #include "resource/ShaderElement.h"
 #include "ecs/EcsElement.h"
+#include "ecs/Components.h"
 
 namespace Sol
 {

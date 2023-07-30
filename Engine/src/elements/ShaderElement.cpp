@@ -102,18 +102,18 @@ namespace CoreShaderElement
         vertex = glCreateShader(GL_VERTEX_SHADER);
         glShaderSource(vertex, 1, &vShaderCode, NULL);
         glCompileShader(vertex);
-        checkCompileErrors(vertex, "VERTEX");
+        checkShaderCompilationErrors(vertex, "VERTEX");
         //Fragment shader
         fragment = glCreateShader(GL_FRAGMENT_SHADER);
         glShaderSource(fragment, 1, &fShaderCode, NULL);
         glCompileShader(fragment);
-        checkCompileErrors(fragment, "FRAGMENT");
+        checkShaderCompilationErrors(fragment, "FRAGMENT");
         //Shader program
         shaderProgramID = glCreateProgram();
         glAttachShader(shaderProgramID, vertex);
         glAttachShader(shaderProgramID, fragment);
         glLinkProgram(shaderProgramID);
-        checkCompileErrors(shaderProgramID, "PROGRAM");
+        checkProgramLinkErrors(shaderProgramID);
         //Delete the shaders as both linked into program now and no longer necessary
         glDetachShader(shaderProgramID, vertex);
         glDetachShader(shaderProgramID, fragment);
@@ -131,46 +131,51 @@ namespace CoreShaderElement
         return shaderProgramID;        
     }
 
-    void ShaderElement::checkCompileErrors(unsigned int shader, const std::string& type)
+    void ShaderElement::checkShaderCompilationErrors(unsigned int shader, const std::string& type)
     {
         int success;
         char infoLog[1024];
 
         auto corePtr = m_core.lock();
 
-        if (type != "PROGRAM")
+        glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
+        if (!success)
         {
-            glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
-            if (!success)
-            {
-                glGetShaderInfoLog(shader, 1024, NULL, infoLog);
-                if (corePtr)
-                {
-                    corePtr->getLogElement()->logError(std::string("[Shader] Cannot Compile Shader Of Type: ") + type);
-                    corePtr->getLogElement()->logInfo(std::string("[Shader] Info Log: ") + infoLog);
-                }
-            }
+            glGetShaderInfoLog(shader, 1024, NULL, infoLog);
             if (corePtr)
             {
-                corePtr->getLogElement()->logInfo(std::string("[Shader] Successfully Compiled Shader Of Type: ") + type);
+                corePtr->getLogElement()->logError("[Shader] Cannot Compile Shader Of Type: " + type);
+                corePtr->getLogElement()->logInfo(std::string("[Shader] Info Log: ") + infoLog);
             }
+            throw std::runtime_error("Shader compilation of type " + type + " failed");
         }
-        else
+        if (corePtr)
         {
-            glGetProgramiv(shader, GL_LINK_STATUS, &success);
-            if (!success)
-            {
-                glGetProgramInfoLog(shader, 1024, NULL, infoLog);
-                if (corePtr)
-                {
-                    corePtr->getLogElement()->logError("[Shader] Cannot Link Program");
-                    corePtr->getLogElement()->logInfo(std::string("[Shader] Info Log: ") + infoLog);
-                }
-            }
+            corePtr->getLogElement()->logInfo("[Shader] Successfully Compiled Shader Of Type: " + type);
+        }
+    }
+
+    void ShaderElement::checkProgramLinkErrors(unsigned int program)
+    {
+        int success;
+        char infoLog[1024];
+
+        auto corePtr = m_core.lock();
+
+        glGetProgramiv(program, GL_LINK_STATUS, &success);
+        if (!success)
+        {
+            glGetProgramInfoLog(program, 1024, NULL, infoLog);
             if (corePtr)
             {
-                corePtr->getLogElement()->logInfo("[Shader] Successfully Linked Program");
+                corePtr->getLogElement()->logError("[Shader] Cannot Link Program");
+                corePtr->getLogElement()->logInfo(std::string("[Shader] Info Log: ") + infoLog);
             }
+            throw std::runtime_error("Program linking failed");
+        }
+        if (corePtr)
+        {
+            corePtr->getLogElement()->logInfo("[Shader] Successfully Linked Program");
         }
     }
 }

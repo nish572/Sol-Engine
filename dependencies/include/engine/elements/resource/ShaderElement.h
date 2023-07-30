@@ -38,7 +38,8 @@ namespace CoreShaderElement
 		//Returns program ID of Vert-Frag Shader program
 		unsigned int createShaderProgram(const std::string& vertexPath, const std::string& fragmentPath);
 
-		void checkCompileErrors(unsigned int shader, const std::string& type);
+		void checkShaderCompilationErrors(unsigned int shader, const std::string& type);
+		void checkProgramLinkErrors(unsigned int program);
 
 	private:
 		//Pointer to Core

@@ -10,6 +10,21 @@
 #include <glm/glm.hpp>
 #include <box2D/Box2D.h>
 
+//Either I upgrade to c++17 to use below, or use boost::any, however boost is rather large
+//struct ScriptableComponent
+//{
+//    std::unordered_map<std::string, std::any> fields;
+//
+//    void setField(const std::string& name, const std::any& value) {
+//        fields[name] = value;
+//    }
+//
+//    std::any getField(const std::string& name) {
+//        return fields[name];
+//    }
+//};
+
+
 struct InputComponent
 {
     glm::vec2 moveDirection;

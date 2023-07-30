@@ -3,7 +3,6 @@
 namespace Sol
 {
 	//Create an instance of LogElement with a unique pointer to it, other elements use nullptr until attached via attachElement
-	//test
 	Core::Core()
 	{
 	}

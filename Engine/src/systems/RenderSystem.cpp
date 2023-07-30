@@ -1,5 +1,6 @@
 #include "systems/RenderSystem.h"
 #include "ecs/EcsElement.h"
+#include <iostream>
 
 namespace EcsRenderSystem
 {
@@ -14,7 +15,8 @@ namespace EcsRenderSystem
     }
 
     void RenderSystem::initialize()
-    {//Initialize the shared VAO, VBO, and EBO
+    {   
+        //Initialize the 'shared' VAO, VBO, and EBO
         glGenVertexArrays(1, &m_sharedVAO);
         glBindVertexArray(m_sharedVAO);
 
@@ -60,6 +62,7 @@ namespace EcsRenderSystem
             for (const auto& spritePair : spriteComponents) {
                 if (transformPair.first == spritePair.first) {
                     //Render the sprite with the given entity's TransformComponent and SpriteComponent
+                    std::cout << spritePair.second;
                     renderSprite(transformPair.second, spritePair.second);
                 }
             }

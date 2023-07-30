@@ -1,5 +1,4 @@
 #include "ecs/EcsElement.h"
-#include "ecs/Components.h"
 //#include any systems here
 #include "systems/RenderSystem.h"
 //#include "systems/PhysicsSystem.h"
@@ -24,10 +23,10 @@ namespace CoreEcsElement
         registerSystem<EcsRenderSystem::RenderSystem>(shared_from_this());
         //registerSystem<EcsPhysicsSystem::PhysicsSystem>(shared_from_this());
         //Access other elements as needed
+
         auto corePtr = m_core.lock();
         if (corePtr)
         {
-            //
             return true;
         }
         return false;
