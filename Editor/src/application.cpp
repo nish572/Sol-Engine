@@ -38,6 +38,9 @@ int main(int argc, char* args[]) {
 	appCore->getEcsElement()->addSprite(testEntity);
 	appCore->getEcsElement()->addTransform(testEntity);
 	auto& sprite = appCore->getEcsElement()->getSprite(testEntity);
+	auto testImg = appCore->getResourceElement()->loadTextureResource("C:\\Software Development\\Sol-Engine\\Sol-Engine\\downloads\\dogfortesting.jpg");
+	sprite.shaderProgram = testShader->shaderProgramID;
+	sprite.textureID = testImg->textureID;
 
 	while (appRunning)
 	{

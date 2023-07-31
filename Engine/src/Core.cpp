@@ -209,8 +209,9 @@ namespace Sol
 			}
 
 			//Render using delta timestep
-			if (m_ecsElement) { m_ecsElement->update(deltaTime); }
 			if (m_renderElement) { m_renderElement->update(deltaTime); }
+			if (m_ecsElement) { m_ecsElement->update(deltaTime); }
+			if (m_renderElement) { m_renderElement->swap(); }
 			if (!m_eventElement->isRunning()) { break; }
 		}
 	}

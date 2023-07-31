@@ -15,6 +15,10 @@ namespace CoreEcsElement {
     class EcsElement;
 }
 
+namespace Sol {
+    class Core;
+}
+
 struct SpriteComponent;
 
 namespace EcsRenderSystem
@@ -32,7 +36,7 @@ namespace EcsRenderSystem
 
         void fixedUpdate(double fixedTimestep);
 
-        void renderSprite(std::shared_ptr<TransformComponent> transformComponent, std::shared_ptr<SpriteComponent> spriteComponent);
+        void renderSprites(std::vector<std::pair<std::shared_ptr<SpriteComponent>, std::shared_ptr<TransformComponent>>> tmpSpriteTransformPairs);
 
     private:
         std::shared_ptr<CoreEcsElement::EcsElement> m_ecsElement;

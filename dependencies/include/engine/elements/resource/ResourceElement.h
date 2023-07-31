@@ -79,7 +79,7 @@ namespace CoreResourceElement
 		ENGINE_API std::shared_ptr<ShaderResource> loadShader(const std::string& vertexPath, const std::string& fragmentPath);
 
 		//Load texture resource by the file path
-		std::shared_ptr<TextureResource> loadTextureResource(const std::string& filePath);
+		ENGINE_API std::shared_ptr<TextureResource> loadTextureResource(const std::string& filePath);
 
 		//Unload resource, decrement refCount and unload resource if refCount is 0
 		void unloadResource(const std::string& filePath);

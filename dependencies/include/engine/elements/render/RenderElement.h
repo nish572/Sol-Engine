@@ -32,7 +32,7 @@ namespace CoreRenderElement
 		//Initialize RenderElement by creating an SDL window and OpenGL context
 		ENGINE_API bool initialize(const std::string& windowName, int width, int height, SDL_WindowFlags window_flags, int vsync);
 
-		//void drawTexture(const std::string& texturePath, float x, float y, float width, float height);
+		void swap();
 
 		//Update RenderElement
 		void update(double deltaTime);

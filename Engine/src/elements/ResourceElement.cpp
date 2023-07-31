@@ -80,6 +80,7 @@ namespace CoreResourceElement
 		//Load the image using stb_image
 		int width, height, nrChannels;
 		//stbi_load returns a pointer to the image data
+		stbi_set_flip_vertically_on_load(true);
 		unsigned char* data = stbi_load(filePath.c_str(), &width, &height, &nrChannels, 0);
 
 		//Create the texture with OpenGL and get the texture ID
@@ -88,6 +89,15 @@ namespace CoreResourceElement
 		glGenTextures(1, &textureID);
 		//Bind the texture
 		glBindTexture(GL_TEXTURE_2D, textureID);
+
+		//Texture filtering and wrapping
+		//linear filtering is smooth but provide option for gl_nearest if making pixel game
+		//for now clamp to edge is fine which may stretch edges hypothetically but for now that's not an issue
+		//currently not making use of mipmaps, to implement shortly
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
 		//Set the internal format and format parameters based on the number of channels
 		GLenum internalFormat = (nrChannels == 4) ? GL_RGBA : GL_RGB;

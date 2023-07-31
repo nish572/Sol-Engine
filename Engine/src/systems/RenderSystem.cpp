@@ -1,6 +1,7 @@
 #include "systems/RenderSystem.h"
 #include "ecs/EcsElement.h"
 #include <iostream>
+#include <algorithm>
 
 namespace EcsRenderSystem
 {
@@ -74,6 +75,8 @@ namespace EcsRenderSystem
         auto transformComponents = m_ecsElement->getAllComponentsOfType<TransformComponent>();
         auto spriteComponents = m_ecsElement->getAllComponentsOfType<SpriteComponent>();
 
+        std::vector<std::pair<std::shared_ptr<SpriteComponent>, std::shared_ptr<TransformComponent>>> tmpSpriteTransformPairs;
+
         //Iterate over all SpriteComponents
         for (const auto& spritePair : spriteComponents) {
             auto entityID = spritePair.first;
@@ -85,41 +88,86 @@ namespace EcsRenderSystem
             //If the transform does exist, then execute below
             if (transformPair != transformComponents.end()) {
                 auto transformComponent = transformPair->second;
-                
+                tmpSpriteTransformPairs.push_back(std::make_pair(spritePair.second, transformPair->second));
             }
             //Otherwise log an error message
         }
+
+        //Sort the temporary vector of sprite-transform pairs
+        std::sort(tmpSpriteTransformPairs.begin(), tmpSpriteTransformPairs.end(), //Provides the range of the sort
+            [](const auto& a, const auto& b) { //Input parameters to the lambda function
+                return a.first->textureID < b.first->textureID; //Condition for sorting, i.e. sorting by textureID of sprite
+            });
+
+        //Calculate model matrices
+        std::vector<glm::mat4> modelMatrices;
+        for (size_t i = 0; i < tmpSpriteTransformPairs.size(); i++) {
+            auto& tmpPair = tmpSpriteTransformPairs[i];
+
+            //Calculate the model matrix (transformation) using the position, rotation, and scale from the TransformComponent
+            glm::mat4 modelMatrix = glm::mat4(1.0f);
+            modelMatrix = glm::translate(modelMatrix, tmpSpriteTransformPairs[i].second->position);
+            modelMatrix = glm::rotate(modelMatrix, glm::radians(tmpSpriteTransformPairs[i].second->rotation), glm::vec3(0.0f, 0.0f, 1.0f));
+            modelMatrix = glm::scale(modelMatrix, tmpSpriteTransformPairs[i].second->scale);
+
+            modelMatrices.push_back(modelMatrix);
+        }
+
+        //Buffer this model matrix data to the GPY to be used for rendering
+        glBindBuffer(GL_ARRAY_BUFFER, m_modelVBO);
+        glBufferData(GL_ARRAY_BUFFER, modelMatrices.size() * sizeof(glm::mat4), modelMatrices.data(), GL_DYNAMIC_DRAW);
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+        renderSprites(tmpSpriteTransformPairs);
     }
 
     void RenderSystem::fixedUpdate(double fixedTimestep) {
         //Not necessary for the RenderSystem as it doesn't require fixed updates
+        //Could have done a base class and inherited from this however that would have required a big chunk of refactoring that is unnecessary right now
     }
-
 
     //Need to rewrite this to not calculate model matrices as they're done beforehand
     //Need to rewrite this to make only one draw call per texture id
-    void RenderSystem::renderSprite(std::shared_ptr<TransformComponent> transformComponent, std::shared_ptr<SpriteComponent> spriteComponent) {
-        //Calculate the model matrix (transformation) using the position, rotation, and scale from the TransformComponent
-        glm::mat4 modelMatrix = glm::mat4(1.0f);
-        modelMatrix = glm::translate(modelMatrix, transformComponent->position);
-        modelMatrix = glm::rotate(modelMatrix, glm::radians(transformComponent->rotation), glm::vec3(0.0f, 0.0f, 1.0f));
-        modelMatrix = glm::scale(modelMatrix, transformComponent->scale);
+    void RenderSystem::renderSprites(std::vector<std::pair<std::shared_ptr<SpriteComponent>, std::shared_ptr<TransformComponent>>> tmpSpriteTransformPairs) {
+
+        unsigned int numSpritesByTexture = 0;
+        unsigned int currentTexture = tmpSpriteTransformPairs[0].first->textureID;
+
+        for (size_t i = 0; i < tmpSpriteTransformPairs.size(); i++) {
+            if (tmpSpriteTransformPairs[i].first->textureID != currentTexture) {
+                //Bind the shared VAO
+                glBindVertexArray(m_sharedVAO);
+
+                //Bind the texture for this batch of sprites
+                glActiveTexture(GL_TEXTURE0);
+                glBindTexture(GL_TEXTURE_2D, currentTexture);
+
+                //Use the shader program for the sprite
+                glUseProgram(tmpSpriteTransformPairs[i].first->shaderProgram);
+
+                //Draw the batch of sprites
+                glDrawElementsInstanced(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr, numSpritesByTexture);
+
+                currentTexture = tmpSpriteTransformPairs[i].first->textureID;
+                numSpritesByTexture = 1;
+            }
+            else {
+                numSpritesByTexture++;
+            }
+        }
 
         //Bind the shared VAO
         glBindVertexArray(m_sharedVAO);
 
-        //Bind the texture for the sprite
-        glBindTexture(GL_TEXTURE_2D, spriteComponent->textureID);
+        //Bind the texture for this batch of sprites
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, currentTexture);
 
         //Use the shader program for the sprite
-        glUseProgram(spriteComponent->shaderProgram);
+        glUseProgram(tmpSpriteTransformPairs[tmpSpriteTransformPairs.size()-1].first->shaderProgram);
 
-        //Set the model matrix in the shader program
-        GLuint modelLocation = glGetUniformLocation(spriteComponent->shaderProgram, "model");
-        glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(modelMatrix));
-
-        //Draw the sprite
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        //Draw the batch of sprites
+        glDrawElementsInstanced(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr, numSpritesByTexture);
 
         //Unbind the VAO
         glBindVertexArray(0);
