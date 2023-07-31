@@ -16,7 +16,7 @@ namespace EcsRenderSystem
 
     void RenderSystem::initialize()
     {   
-        //Initialize the 'shared' VAO, VBO, and EBO
+        //Initialize the VAO, VBO, and EBO to be used for instanced rendering
         glGenVertexArrays(1, &m_sharedVAO);
         glBindVertexArray(m_sharedVAO);
 
@@ -48,23 +48,46 @@ namespace EcsRenderSystem
         glEnableVertexAttribArray(1);
         glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
 
+        //Initialise the instance buffer for model matrices
+        const int MAX_SPRITES = 1000;
+        glGenBuffers(1, &m_modelVBO);
+        glBindBuffer(GL_ARRAY_BUFFER, m_modelVBO);
+        glBufferData(GL_ARRAY_BUFFER, MAX_SPRITES * sizeof(glm::mat4), NULL, GL_DYNAMIC_DRAW);
+
+        //Specify instance attribute data
+        //Loop 4 times since the mat4 is split into 4 lots of vec4
+        //So effectively each vec4 is a vertex attribute and 4 of those make up the mat4
+        for (unsigned int i = 0; i < 4; i++) {
+            glEnableVertexAttribArray(i + 2);
+            glVertexAttribPointer(i + 2, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(i * sizeof(glm::vec4)));
+            glVertexAttribDivisor(i + 2, 1);
+        }
+
         //Unbind the VAO
         glBindVertexArray(0);
     }
+
+    //Need some form of model matrix calculations then buffering
 
     void RenderSystem::update(double deltaTime) {
         //Get all entities with both TransformComponent and SpriteComponent
         auto transformComponents = m_ecsElement->getAllComponentsOfType<TransformComponent>();
         auto spriteComponents = m_ecsElement->getAllComponentsOfType<SpriteComponent>();
 
-        //Iterate over all entities with TransformComponent and SpriteComponent
-        for (const auto& transformPair : transformComponents) {
-            for (const auto& spritePair : spriteComponents) {
-                if (transformPair.first == spritePair.first) {
-                    //Render the sprite with the given entity's TransformComponent and SpriteComponent
-                    renderSprite(transformPair.second, spritePair.second);
-                }
+        //Iterate over all SpriteComponents
+        for (const auto& spritePair : spriteComponents) {
+            auto entityID = spritePair.first;
+            auto spriteComponent = spritePair.second;
+
+            //Find the corresponding TransformComponent
+            auto transformPair = transformComponents.find(entityID);
+
+            //If the transform does exist, then execute below
+            if (transformPair != transformComponents.end()) {
+                auto transformComponent = transformPair->second;
+                
             }
+            //Otherwise log an error message
         }
     }
 
@@ -72,6 +95,9 @@ namespace EcsRenderSystem
         //Not necessary for the RenderSystem as it doesn't require fixed updates
     }
 
+
+    //Need to rewrite this to not calculate model matrices as they're done beforehand
+    //Need to rewrite this to make only one draw call per texture id
     void RenderSystem::renderSprite(std::shared_ptr<TransformComponent> transformComponent, std::shared_ptr<SpriteComponent> spriteComponent) {
         //Calculate the model matrix (transformation) using the position, rotation, and scale from the TransformComponent
         glm::mat4 modelMatrix = glm::mat4(1.0f);

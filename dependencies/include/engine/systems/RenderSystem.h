@@ -39,5 +39,6 @@ namespace EcsRenderSystem
         unsigned int m_sharedVAO;
         unsigned int m_sharedVBO;
         unsigned int m_sharedEBO;
+        unsigned int m_modelVBO;
     };
 }
