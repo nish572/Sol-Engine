@@ -62,7 +62,6 @@ namespace EcsRenderSystem
             for (const auto& spritePair : spriteComponents) {
                 if (transformPair.first == spritePair.first) {
                     //Render the sprite with the given entity's TransformComponent and SpriteComponent
-                    std::cout << spritePair.second;
                     renderSprite(transformPair.second, spritePair.second);
                 }
             }

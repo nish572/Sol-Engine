@@ -32,15 +32,16 @@ struct InputComponent
 };
 
 struct TransformComponent {
+    bool hasChanged;
     glm::vec3 position;
     float rotation;
     glm::vec3 scale;
 
     TransformComponent()
-        : position(0.0f), rotation(0.0f), scale(1.0f) {}
+        : hasChanged(false), position(0.0f), rotation(0.0f), scale(1.0f) {}
 
-    TransformComponent(const glm::vec3& pos, float rot, const glm::vec3& scl)
-        : position(pos), rotation(rot), scale(scl) {}
+    TransformComponent(bool changed, const glm::vec3& pos, float rot, const glm::vec3& scl)
+        : hasChanged(changed), position(pos), rotation(rot), scale(scl) {}
 };
 
 struct ColliderComponent {

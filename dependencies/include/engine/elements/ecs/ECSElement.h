@@ -67,12 +67,12 @@ namespace CoreEcsElement
         }
 
         template <typename T>
-        std::vector<std::pair<Entity, std::shared_ptr<T>>> getAllComponentsOfType() {
+        std::unordered_map<Entity, std::shared_ptr<T>> getAllComponentsOfType() {
             std::type_index componentTypeIndex(typeid(T));
-            std::vector<std::pair<Entity, std::shared_ptr<T>>> components;
+            std::unordered_map<Entity, std::shared_ptr<T>> components;
 
             for (const auto& pair : m_componentEntityMap[componentTypeIndex]) {
-                components.emplace_back(pair.first, std::static_pointer_cast<T>(pair.second));
+                components.emplace(pair.first, std::static_pointer_cast<T>(pair.second));
             }
 
             return components;
