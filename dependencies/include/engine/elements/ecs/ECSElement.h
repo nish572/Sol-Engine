@@ -28,7 +28,7 @@ namespace CoreEcsElement
         EcsElement(std::shared_ptr<Sol::Core> core);
         ~EcsElement();
 
-        ENGINE_API bool initialize();
+        ENGINE_API bool initialize(bool renderSys, bool physSys, bool eventSys);
         void update(double deltaTime);
         void fixedUpdate(double fixedTimestep);
         void terminate();

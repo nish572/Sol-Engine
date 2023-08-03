@@ -189,7 +189,7 @@ namespace Sol
 			lastTime = currentTime;
 			currentTime = SDL_GetPerformanceCounter();
 			deltaTime = static_cast<double>(currentTime - lastTime) / SDL_GetPerformanceFrequency();
-			//deltaTime = std::min(deltaTime, 0.25); //Prevent deltaTime from being too large
+			deltaTime = std::min(deltaTime, 0.25); //Prevent deltaTime from being too large, essentially the 'spiral of death' safeguard.
 			accumulatedTime += deltaTime;
 
 			//Handle events at a fixed timestep
@@ -209,9 +209,10 @@ namespace Sol
 			}
 
 			//Render using delta timestep
-			if (m_renderElement) { m_renderElement->update(deltaTime); }
+			if (m_renderElement) { m_renderElement->clearScreen(); }
 			if (m_ecsElement) { m_ecsElement->update(deltaTime); }
-			if (m_renderElement) { m_renderElement->swap(); }
+			if (m_guiElement) { m_guiElement->update(deltaTime); }
+			if (m_renderElement) { m_renderElement->swapBuffers(); }
 			if (!m_eventElement->isRunning()) { break; }
 		}
 	}

@@ -113,7 +113,7 @@ namespace EcsRenderSystem
             modelMatrices.push_back(modelMatrix);
         }
 
-        //Buffer this model matrix data to the GPY to be used for rendering
+        //Buffer this model matrix data to the GPU to be used for rendering
         glBindBuffer(GL_ARRAY_BUFFER, m_modelVBO);
         glBufferData(GL_ARRAY_BUFFER, modelMatrices.size() * sizeof(glm::mat4), modelMatrices.data(), GL_DYNAMIC_DRAW);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -126,14 +126,13 @@ namespace EcsRenderSystem
         //Could have done a base class and inherited from this however that would have required a big chunk of refactoring that is unnecessary right now
     }
 
-    //Need to rewrite this to not calculate model matrices as they're done beforehand
-    //Need to rewrite this to make only one draw call per texture id
     void RenderSystem::renderSprites(std::vector<std::pair<std::shared_ptr<SpriteComponent>, std::shared_ptr<TransformComponent>>> tmpSpriteTransformPairs) {
-
-        unsigned int numSpritesByTexture = 0;
+        unsigned int numSpritesByTexture = 1;
         unsigned int currentTexture = tmpSpriteTransformPairs[0].first->textureID;
+        GLuint currentShaderProgram = tmpSpriteTransformPairs[0].first->shaderProgram;  // <-- Store the current shader program ID
 
         for (size_t i = 0; i < tmpSpriteTransformPairs.size(); i++) {
+            //std::cout << currentTexture << std::endl;
             if (tmpSpriteTransformPairs[i].first->textureID != currentTexture) {
                 //Bind the shared VAO
                 glBindVertexArray(m_sharedVAO);
@@ -143,15 +142,17 @@ namespace EcsRenderSystem
                 glBindTexture(GL_TEXTURE_2D, currentTexture);
 
                 //Use the shader program for the sprite
-                glUseProgram(tmpSpriteTransformPairs[i].first->shaderProgram);
+                glUseProgram(currentShaderProgram);
 
                 //Draw the batch of sprites
                 glDrawElementsInstanced(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr, numSpritesByTexture);
 
                 currentTexture = tmpSpriteTransformPairs[i].first->textureID;
+                currentShaderProgram = tmpSpriteTransformPairs[i].first->shaderProgram;  // <-- Store the new shader program ID
                 numSpritesByTexture = 1;
             }
-            else {
+            //Checking the one after, but also making sure the one after won't be out of bounds
+            if (i != tmpSpriteTransformPairs.size() - 1 && tmpSpriteTransformPairs[i + 1].first->textureID == currentTexture) {
                 numSpritesByTexture++;
             }
         }
@@ -164,7 +165,7 @@ namespace EcsRenderSystem
         glBindTexture(GL_TEXTURE_2D, currentTexture);
 
         //Use the shader program for the sprite
-        glUseProgram(tmpSpriteTransformPairs[tmpSpriteTransformPairs.size()-1].first->shaderProgram);
+        glUseProgram(currentShaderProgram);
 
         //Draw the batch of sprites
         glDrawElementsInstanced(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr, numSpritesByTexture);

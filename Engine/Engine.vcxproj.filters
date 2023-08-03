@@ -75,6 +75,9 @@
     <ClCompile Include="src\systems\PhysicsSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\elements\PhysicsElement.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\dependencies\include\engine\Core.h">
@@ -111,6 +114,9 @@
       <Filter>Header Files\core</Filter>
     </ClInclude>
     <ClInclude Include="..\dependencies\include\engine\systems\PhysicsSystem.h">
+      <Filter>Header Files\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\dependencies\include\engine\elements\physics\PhysicsElement.h">
       <Filter>Header Files\core</Filter>
     </ClInclude>
   </ItemGroup>

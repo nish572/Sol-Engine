@@ -107,22 +107,13 @@ namespace CoreRenderElement
 		return true;
 	}
 
-	void RenderElement::update(double deltaTime)
+	void RenderElement::clearScreen()
 	{
 		glClearColor(0.9f, 0.5f, 0.3f, 0.0f);
 		glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
-		auto corePtr = m_core.lock();
-		if (corePtr)
-		{
-			auto guiElement = corePtr->getGuiElement();
-			if (guiElement)
-			{
-				guiElement->update(deltaTime);
-			}
-		}
 	}
 
-	void RenderElement::swap() {
+	void RenderElement::swapBuffers() {
 		SDL_GL_SwapWindow(m_sdlWindow);
 	}
 

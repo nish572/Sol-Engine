@@ -16,11 +16,14 @@ namespace CoreEcsElement
         terminate();
     }
 
-    bool EcsElement::initialize() {
+    bool EcsElement::initialize(bool renderSys, bool physSys, bool eventSys) {
         //Initialize the EcsElement
         //Initialize data structures and systems
         //Add any necessary systems here (e.g., RenderSystem, PhysicsSystem, etc.)
-        registerSystem<EcsRenderSystem::RenderSystem>(shared_from_this());
+        if (renderSys)
+        {
+            registerSystem<EcsRenderSystem::RenderSystem>(shared_from_this());
+        }
         //registerSystem<EcsPhysicsSystem::PhysicsSystem>(shared_from_this());
         //Access other elements as needed
 
@@ -53,8 +56,7 @@ namespace CoreEcsElement
 
     Entity EcsElement::createEntity() {
         //Get a new entity ID
-        Entity entity = m_entityID++;
-        return entity;
+        return m_entityID++;
     }
 
     void EcsElement::destroyEntity(Entity entity) {

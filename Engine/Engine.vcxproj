@@ -108,6 +108,7 @@
     <ClCompile Include="src\elements\GUIElement.cpp" />
     <ClCompile Include="src\elements\EventElement.cpp" />
     <ClCompile Include="src\elements\LogElement.cpp" />
+    <ClCompile Include="src\elements\PhysicsElement.cpp" />
     <ClCompile Include="src\elements\RenderElement.cpp" />
     <ClCompile Include="src\elements\ResourceElement.cpp" />
     <ClCompile Include="src\elements\ShaderElement.cpp" />
@@ -120,6 +121,7 @@
     <ClInclude Include="..\dependencies\include\engine\elements\ecs\Components.h" />
     <ClInclude Include="..\dependencies\include\engine\elements\ecs\EcsElement.h" />
     <ClInclude Include="..\dependencies\include\engine\elements\event\EventElement.h" />
+    <ClInclude Include="..\dependencies\include\engine\elements\physics\PhysicsElement.h" />
     <ClInclude Include="..\dependencies\include\engine\elements\render\GUIElement.h" />
     <ClInclude Include="..\dependencies\include\engine\elements\render\RenderElement.h" />
     <ClInclude Include="..\dependencies\include\engine\elements\resource\ResourceElement.h" />

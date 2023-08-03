@@ -1,7 +1,6 @@
 #pragma once
 
 #include "EngineAPI.h"
-#include "EngineAPI.h"
 
 #include <memory>
 #include <string>
@@ -32,10 +31,11 @@ namespace CoreRenderElement
 		//Initialize RenderElement by creating an SDL window and OpenGL context
 		ENGINE_API bool initialize(const std::string& windowName, int width, int height, SDL_WindowFlags window_flags, int vsync);
 
-		void swap();
-
-		//Update RenderElement
-		void update(double deltaTime);
+		//Clear the screen 
+		void clearScreen();
+		
+		//Swap frame buffers
+		void swapBuffers();
 
 		//Terminate RenderElement by destroying the SDL window and the OpenGL context
 		void terminate();
