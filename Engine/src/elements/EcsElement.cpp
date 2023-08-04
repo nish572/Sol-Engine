@@ -18,18 +18,15 @@ namespace CoreEcsElement
 
     bool EcsElement::initialize(bool renderSys, bool physSys, bool eventSys) {
         //Initialize the EcsElement
-        //Initialize data structures and systems
-        //Add any necessary systems here (e.g., RenderSystem, PhysicsSystem, etc.)
-        if (renderSys)
-        {
-            registerSystem<EcsRenderSystem::RenderSystem>(shared_from_this());
-        }
-        //registerSystem<EcsPhysicsSystem::PhysicsSystem>(shared_from_this());
-        //Access other elements as needed
-
         auto corePtr = m_core.lock();
         if (corePtr)
         {
+            //Add any necessary systems here (e.g., RenderSystem, PhysicsSystem, etc.)
+            //registerSystem<EcsPhysicsSystem::PhysicsSystem>(shared_from_this());
+            if (renderSys)
+            {
+                registerSystem<EcsRenderSystem::RenderSystem>(shared_from_this());
+            }
             return true;
         }
         return false;
@@ -82,19 +79,6 @@ namespace CoreEcsElement
     void EcsElement::fixedUpdateSystems(double fixedTimestep) {
         for (const auto& system : m_fixedUpdateSystems) {
             system.second(fixedTimestep);
-        }
-    }
-
-    std::shared_ptr<Sol::Core> EcsElement::getCore()
-    {
-        auto corePtr = m_core.lock();
-        if (corePtr)
-        {
-            return corePtr;
-        }
-        else
-        {
-            return nullptr;
         }
     }
 }

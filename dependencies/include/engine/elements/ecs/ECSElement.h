@@ -97,8 +97,6 @@ namespace CoreEcsElement
         void updateSystems(double deltaTime);
         void fixedUpdateSystems(double fixedTimestep);
 
-        std::shared_ptr<Sol::Core> getCore();
-
         //Sprite functions
         ENGINE_API void addSprite(Entity entity) {
             SpriteComponent tmp = SpriteComponent{};

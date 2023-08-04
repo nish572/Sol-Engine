@@ -96,7 +96,7 @@ namespace CoreResourceElement
 		//currently not making use of mipmaps, to implement shortly
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
 		//Set the internal format and format parameters based on the number of channels
@@ -284,7 +284,6 @@ namespace CoreResourceElement
 		//Clear unordered map
 		m_resourceCache.clear();
 	}
-
 
 	void ResourceElement::terminate()
 	{

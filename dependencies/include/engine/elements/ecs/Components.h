@@ -24,7 +24,6 @@
 //    }
 //};
 
-
 struct InputComponent
 {
     glm::vec2 moveDirection;

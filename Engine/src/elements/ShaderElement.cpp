@@ -80,6 +80,7 @@ namespace CoreShaderElement
             {
                 std::cerr << "[Shader] Failed to Read Shader File(s): " << e.what() << std::endl;
             }
+            throw std::runtime_error("[Shader] Failed to Read Shader File(s)");
         }
         //Log success if shader files successfully read
         if (m_logElementAttached)
@@ -142,16 +143,26 @@ namespace CoreShaderElement
         if (!success)
         {
             glGetShaderInfoLog(shader, 1024, NULL, infoLog);
-            if (corePtr)
-            {
-                corePtr->getLogElement()->logError("[Shader] Cannot Compile Shader Of Type: " + type);
-                corePtr->getLogElement()->logInfo(std::string("[Shader] Info Log: ") + infoLog);
+            if (m_logElementAttached) {
+                if (corePtr)
+                {
+                    corePtr->getLogElement()->logError("[Shader] Cannot Compile Shader Of Type: " + type);
+                    corePtr->getLogElement()->logInfo(std::string("[Shader] Info Log: ") + infoLog);
+                }
             }
-            throw std::runtime_error("Shader compilation of type " + type + " failed");
+            else {
+                std::cerr << "[Shader] Cannot Compile Shader Of Type: " << type << std::endl;
+                std::cout << "[Shader] Info Log : " << infoLog << std::endl;
+            }
+            throw std::runtime_error("[Shader] Cannot Compile Shader Of Type: " + type);
         }
-        if (corePtr)
-        {
-            corePtr->getLogElement()->logInfo("[Shader] Successfully Compiled Shader Of Type: " + type);
+        if (m_logElementAttached) {
+            {
+                corePtr->getLogElement()->logInfo("[Shader] Successfully Compiled Shader Of Type: " + type);
+            }
+        }
+        else {
+            std::cout << "[Shader] Successfully Compiled Shader Of Type: " << std::endl;
         }
     }
 
@@ -166,16 +177,27 @@ namespace CoreShaderElement
         if (!success)
         {
             glGetProgramInfoLog(program, 1024, NULL, infoLog);
+            if (m_logElementAttached) {
+                if (corePtr)
+                {
+                    corePtr->getLogElement()->logError("[Shader] Cannot Link Program");
+                    corePtr->getLogElement()->logInfo(std::string("[Shader] Info Log: ") + infoLog);
+                }
+            }
+            else {
+                std::cerr << "[Shader] Cannot Link Program" << std::endl;
+                std::cout << "[Shader] Info Log : " << infoLog << std::endl;
+            }
+            throw std::runtime_error("[Shader] Cannot Link Program");
+        }
+        if (m_logElementAttached) {
             if (corePtr)
             {
-                corePtr->getLogElement()->logError("[Shader] Cannot Link Program");
-                corePtr->getLogElement()->logInfo(std::string("[Shader] Info Log: ") + infoLog);
+                corePtr->getLogElement()->logInfo("[Shader] Successfully Linked Program");
             }
-            throw std::runtime_error("Program linking failed");
         }
-        if (corePtr)
-        {
-            corePtr->getLogElement()->logInfo("[Shader] Successfully Linked Program");
+        else {
+            std::cout << "[Shader] Successfully Linked Program" << std::endl;
         }
     }
 }

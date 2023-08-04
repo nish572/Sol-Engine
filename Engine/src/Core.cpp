@@ -31,6 +31,17 @@ namespace Sol
 			std::cout << "[Core] Successfully Attached " << elementName << " Element" << std::endl;
 			return true;
 		}
+		if (elementName == "Shader" && !m_shaderElement)
+		{
+			m_shaderElement = std::make_unique<CoreShaderElement::ShaderElement>(shared_from_this());
+			if (m_logElement)
+			{
+				m_logElement->logInfo(std::string("[Core] Successfully Attached ") + elementName + " Element");
+				return true;
+			}
+			std::cout << "[Core] Successfully Attached " << elementName << " Element" << std::endl;
+			return true;
+		}
 		if (elementName == "Render" && !m_renderElement)
 		{
 			m_renderElement = std::make_unique<CoreRenderElement::RenderElement>(shared_from_this());
@@ -75,17 +86,6 @@ namespace Sol
 			std::cout << "[Core] Successfully Attached " << elementName << " Element" << std::endl;
 			return true;
 		}
-		if (elementName == "Shader" && !m_shaderElement)
-		{
-			m_shaderElement = std::make_unique<CoreShaderElement::ShaderElement>(shared_from_this());
-			if (m_logElement)
-			{
-				m_logElement->logInfo(std::string("[Core] Successfully Attached ") + elementName + " Element");
-				return true;
-			}
-			std::cout << "[Core] Successfully Attached " << elementName << " Element" << std::endl;
-			return true;
-		}
 		if (elementName == "Ecs" && !m_ecsElement)
 		{
 			m_ecsElement = std::make_shared<CoreEcsElement::EcsElement>(shared_from_this());
@@ -104,7 +104,7 @@ namespace Sol
 			m_logElement->logError(std::string("[Core] Failed To Attach ") + elementName + " Element"); //Due to left-to-right associativity and operator precedence, only implicit conversion of first literal necessary
 			return false;
 		}
-		std::cout << "[Core] Failed To Attach " << elementName << " Element" << std::endl;
+		std::cerr << "[Core] Failed To Attach " << elementName << " Element" << std::endl;
 		return false;
 	}	
 
@@ -115,8 +115,8 @@ namespace Sol
 		//Check elementName and check if Core's respective Element unique_ptr is not a nullptr
 		//(elementName should only be in Capitalization case e.g. 'Render', and should not include 'Element')
 		//If Core's respective Element unique_ptr is not a nullptr
-		// Set Core's respective Element unique_ptr to a nullptr
-		// Log success
+		//Set Core's respective Element unique_ptr to a nullptr
+		//Log success
 
 		if (elementName == "Log" && m_logElement)
 		{

@@ -36,13 +36,37 @@ namespace EcsRenderSystem
 
         void fixedUpdate(double fixedTimestep);
 
+        unsigned int createShader(const char* vertexShaderSource, const char* fragmentShaderSource);
+
         void renderSprites(std::vector<std::pair<std::shared_ptr<SpriteComponent>, std::shared_ptr<TransformComponent>>> tmpSpriteTransformPairs);
 
+        void singleDraw(int currentTexture, size_t numSpritesByTexture, size_t numSpritesRenderedBeforeThisBatch);
+        void multiDraw(int currentTexture, size_t numSpritesByTexture, size_t numSpritesRenderedBeforeThisBatch);
+
     private:
+        //Pointer to EcsElement
         std::shared_ptr<CoreEcsElement::EcsElement> m_ecsElement;
-        unsigned int m_sharedVAO;
-        unsigned int m_sharedVBO;
-        unsigned int m_sharedEBO;
+        //Pointer to Core
+        std::weak_ptr<Sol::Core> m_core;
+
+        //Main VAO, quad VBO/EBO, and model matrices' VBO
+        unsigned int m_mainVAO;
+        unsigned int m_quadVBO;
+        unsigned int m_quadEBO;
         unsigned int m_modelVBO;
+
+        //Shader program ID's for default rendering of a sprite
+        //One for if the draw call is per sprite, one for if the draw call is for a batch to be drawn via instancing
+        unsigned int m_defaultShaderID;
+        unsigned int m_defaultInstanceShaderID;
+
+        //Max number of spites that can be drawn total
+        const int m_MAX_SPRITES = 100000;
+
+        //Cache for the calculated modelMatrices
+        std::vector<glm::mat4> m_modelMatricesCache;
+
+        //Minimum number of sprites required for instanced rendering to be used instead of individual draw calls
+        const unsigned int m_MIN_SPRITES_FOR_INSTANCING = 100;
     };
 }
