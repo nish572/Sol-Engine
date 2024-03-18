@@ -75,6 +75,17 @@ namespace Sol
 			std::cout << "[Core] Successfully Attached " << elementName << " Element" << std::endl;
 			return true;
 		}
+		if (elementName == "Physics" && !m_physicsElement)
+		{
+			m_physicsElement = std::make_unique<CorePhysicsElement::PhysicsElement>(shared_from_this());
+			if (m_logElement)
+			{
+				m_logElement->logInfo(std::string("[Core] Successfully Attached ") + elementName + " Element");
+				return true;
+			}
+			std::cout << "[Core] Successfully Attached " << elementName << " Element" << std::endl;
+			return true;
+		}
 		if (elementName == "Resource" && !m_resourceElement)
 		{
 			m_resourceElement = std::make_unique<CoreResourceElement::ResourceElement>(shared_from_this());
@@ -143,6 +154,13 @@ namespace Sol
 		{
 			m_eventElement->terminate();
 			m_eventElement = nullptr;
+			std::cout << "[Core] Successfully Detached " << elementName << " Element" << std::endl;
+			return true;
+		}
+		if (elementName == "Physics" && m_physicsElement)
+		{
+			m_physicsElement->terminate();
+			m_physicsElement = nullptr;
 			std::cout << "[Core] Successfully Detached " << elementName << " Element" << std::endl;
 			return true;
 		}
@@ -223,6 +241,7 @@ namespace Sol
 		if (m_guiElement) { detachElement("Gui"); }
 		if (m_renderElement) { detachElement("Render"); }
 		if (m_eventElement) { detachElement("Event"); }
+		if (m_physicsElement) { detachElement("Physics"); }
 		if (m_resourceElement) { detachElement("Resource"); }
 		if (m_shaderElement) { detachElement("Shader"); }
 		if (m_ecsElement) { detachElement("Ecs"); }
@@ -284,6 +303,21 @@ namespace Sol
 		if (m_eventElement)
 		{
 			return m_eventElement.get();
+		}
+		if (m_logElement)
+		{
+			m_logElement->logError("[Core] Failed To Get Event Element: nullptr found");
+			return nullptr;
+		}
+		std::cerr << "[Core] Failed To Get Event Element: nullptr found" << std::endl;
+		return nullptr;
+	}
+
+	CorePhysicsElement::PhysicsElement* Core::getPhysicsElement() const
+	{
+		if (m_eventElement)
+		{
+			return m_physicsElement.get();
 		}
 		if (m_logElement)
 		{

@@ -17,7 +17,7 @@ int main(int argc, char* args[]) {
 
 	appCore->attachElement("Render");
 	appCore->attachElement("Gui");
-
+	appCore->attachElement("Physics");
 	appCore->attachElement("Event");
 	appCore->attachElement("Ecs");
 
@@ -30,7 +30,7 @@ int main(int argc, char* args[]) {
 	appCore->getGuiElement()->initialize(); //Gui element depends upon render element, render element must be initialized first
 	//Physics element
 	appCore->getEventElement()->initialize(); //Event element depends upon render element, render element must be initialized first
-	appCore->getEcsElement()->initialize(true, false, false); //Ecs element depends on render element, event element, resource element, and possibly shader element
+	appCore->getEcsElement()->initialize(true, true, false); //Ecs element depends on render element, event element, resource element, and possibly shader element
 
 	//Runtime loop
 	bool appRunning = true;
@@ -43,32 +43,52 @@ int main(int argc, char* args[]) {
 	// Vector containing the texture pointers
 	std::vector<std::shared_ptr<TextureResource>> textures = { testImg, testImg2, testImg3 };
 
-	for (int i = 0; i < 10; i++) {
-		Entity newEntity = appCore->getEcsElement()->createEntity();
-		appCore->getEcsElement()->addSprite(newEntity);
-		appCore->getEcsElement()->addTransform(newEntity);
+	//for (int i = 0; i < 10; i++) {
+		//Entity newEntity = appCore->getEcsElement()->createEntity();
+		//appCore->getEcsElement()->addSprite(newEntity);
+		//appCore->getEcsElement()->addTransform(newEntity);
 
-		auto& sprite = appCore->getEcsElement()->getSprite(newEntity);
+		//auto& sprite = appCore->getEcsElement()->getSprite(newEntity);
 
 		// Select random texture from the textures vector
-		int randomTextureIndex = rand() % textures.size();
-		sprite.textureID = textures[randomTextureIndex]->textureID;
-		auto& trans = appCore->getEcsElement()->getTransform(newEntity);
+		//int randomTextureIndex = rand() % textures.size();
+		//sprite.textureID = textures[randomTextureIndex]->textureID;
+		//auto& trans = appCore->getEcsElement()->getTransform(newEntity);
 
 		// For the position, assign a random float within some range
-		float posX = static_cast<float>(rand()) / static_cast<float>(RAND_MAX) - 0.5f;
-		float posY = static_cast<float>(rand()) / static_cast<float>(RAND_MAX) - 0.5f;
+		//float posX = static_cast<float>(rand()) / static_cast<float>(RAND_MAX) - 0.5f;
+		//float posY = static_cast<float>(rand()) / static_cast<float>(RAND_MAX) - 0.5f;
 		//std::cout << i << std::endl;
 
-		trans.position = glm::vec3(posX, posY, 0);
-		std::cout << "Dog: " << i << ", textureIndex: " << randomTextureIndex << ", textureID: " << sprite.textureID << std::endl;
-	}
+		//trans.position = glm::vec3(posX, posY, 0);
+		//trans.scale = glm::vec3(0.1, 0.1, 0.1);
+		//std::cout << "Dog: " << i << ", textureIndex: " << randomTextureIndex << ", textureID: " << sprite.textureID << std::endl;
+
+	Entity dogEntity = appCore->getEcsElement()->createEntity();
+	appCore->getEcsElement()->addSprite(dogEntity);
+	appCore->getEcsElement()->addTransform(dogEntity);
+	appCore->getEcsElement()->addCollider(dogEntity);
+	appCore->getEcsElement()->addPhysicsBody(dogEntity);
+
+	auto& sprite = appCore->getEcsElement()->getSprite(dogEntity);
+	int randomTextureIndex = rand() % textures.size();
+	sprite.textureID = textures[randomTextureIndex]->textureID;
+	auto& trans = appCore->getEcsElement()->getTransform(dogEntity);
+	trans.position = glm::vec3(0, 0, 0);
+	trans.scale = glm::vec3(0.5, 0.5, 0.5);
+	auto& collider = appCore->getEcsElement()->getCollider(dogEntity);
+	//b2Shape* colliderShape, float colliderDensity, float colliderFriction, float colliderRestitution
+	b2PolygonShape* square = new b2PolygonShape(); //Be careful where I call this since if it is out of scope, it's lifetime is over and the physics won't work
+	square->SetAsBox(0.5f, 0.5f); // Half-width and half-height
+	collider.shape = square;
+	auto& physBod = appCore->getEcsElement()->getPhysicsBody(dogEntity);
+	physBod.type = BodyType::Dynamic;
+	//}
 
 	while (appRunning)
 	{
 		//Run Core, passing event (so EventElement can process events)
 		appCore->run();
-
 		//Keep app running unless SDL_QUIT event received or SDL_WINDOWEVENT_CLOSE event received for appCore's window
 		appRunning = appCore->getEventElement()->isRunning();
 	}

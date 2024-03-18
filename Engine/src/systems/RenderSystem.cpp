@@ -262,7 +262,7 @@ namespace EcsRenderSystem
     }
 
     void RenderSystem::renderSprites(std::vector<std::pair<std::shared_ptr<SpriteComponent>, std::shared_ptr<TransformComponent>>> tmpSpriteTransformPairs) {
-        size_t numSpritesByTexture = 1;
+        GLsizei numSpritesByTexture = 1;
         int currentTexture = tmpSpriteTransformPairs[0].first->textureID;
         size_t numSpritesRenderedBeforeThisBatch = 0;
 
@@ -317,7 +317,7 @@ namespace EcsRenderSystem
         glBindVertexArray(0);
     }
 
-    void RenderSystem::singleDraw(int currentTexture, size_t numSpritesByTexture, size_t numSpritesRenderedBeforeThisBatch) {
+    void RenderSystem::singleDraw(int currentTexture, GLsizei numSpritesByTexture, size_t numSpritesRenderedBeforeThisBatch) {
         //Bind the texture for this batch of sprites
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, currentTexture);
@@ -335,7 +335,7 @@ namespace EcsRenderSystem
         glBindBuffer(GL_ARRAY_BUFFER, 0);
     }
 
-    void RenderSystem::multiDraw(int currentTexture, size_t numSpritesByTexture, size_t numSpritesRenderedBeforeThisBatch) {
+    void RenderSystem::multiDraw(int currentTexture, GLsizei numSpritesByTexture, size_t numSpritesRenderedBeforeThisBatch) {
         //Buffer the model matrix data of these sprites to the GPU to be used for instanced rendering
         //Add all model matrices in the appropriate range to a temporary store, to be used to buffer sub data
         std::vector<glm::mat4> tmpModelMatricesVec(m_modelMatricesCache.begin() + numSpritesRenderedBeforeThisBatch,

@@ -11,6 +11,7 @@
 
 #include "resource/ResourceElement.h"
 #include "render/RenderElement.h"
+#include "physics/PhysicsElement.h"
 #include "event/EventElement.h"
 #include "ecs/Components.h"
 
@@ -19,7 +20,7 @@ namespace Sol {
 }
 
 using Entity = std::uint32_t;
-const Entity MAX_ENTITIES = 5000;
+//const Entity MAX_ENTITIES = 5000; //would be global and i don't want that, also currently not in use
 
 namespace CoreEcsElement
 {
@@ -112,6 +113,22 @@ namespace CoreEcsElement
         }
         ENGINE_API void removeTransform(Entity entity) {removeComponent<TransformComponent>(entity);}
         ENGINE_API TransformComponent& getTransform(Entity entity) {return getComponent<TransformComponent>(entity);}
+
+        //Body functions
+        ENGINE_API void addPhysicsBody(Entity entity) {
+            PhysicsBodyComponent tmp = PhysicsBodyComponent{};
+            addComponent<PhysicsBodyComponent>(entity, tmp);
+        }
+        ENGINE_API void removePhysicsBody(Entity entity) {removeComponent<PhysicsBodyComponent>(entity);}
+        ENGINE_API PhysicsBodyComponent& getPhysicsBody(Entity entity) {return getComponent<PhysicsBodyComponent>(entity);}
+
+        //Collider functions
+        ENGINE_API void addCollider(Entity entity) {
+            ColliderComponent tmp = ColliderComponent{};
+            addComponent<ColliderComponent>(entity, tmp);
+        }
+        ENGINE_API void removeCollider(Entity entity) { removeComponent<ColliderComponent>(entity); }
+        ENGINE_API ColliderComponent& getCollider(Entity entity) { return getComponent<ColliderComponent>(entity); }
 
     private:
         //Pointer to Core

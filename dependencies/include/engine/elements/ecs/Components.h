@@ -56,24 +56,21 @@ struct ColliderComponent {
 };
 
 enum class BodyType {
-    Static,
     Dynamic,
+    Static,
     Kinematic
 };
 
 struct PhysicsBodyComponent {
     BodyType type;
-    glm::vec2 linearVelocity;
-    float angularVelocity;
-    float linearDamping;
-    float angularDamping;
+    b2Vec2 position;
     b2Body* body;
 
     PhysicsBodyComponent()
-        : type(BodyType::Static), linearVelocity(0.0f), angularVelocity(0.0f), linearDamping(0.0f), angularDamping(0.0f), body(nullptr) {}
+        : type(BodyType::Static), position(0,0), body(nullptr) {}
 
-    PhysicsBodyComponent(BodyType rbType, const glm::vec2& rbLinearVelocity, float rbAngularVelocity, float rbLinearDamping, float rbAngularDamping, b2Body* rbBody)
-        : type(rbType), linearVelocity(rbLinearVelocity), angularVelocity(rbAngularVelocity), linearDamping(rbLinearDamping), angularDamping(rbAngularDamping), body(rbBody) {}
+    PhysicsBodyComponent(BodyType rbType, b2Vec2 pos, b2Body* rbBody)
+        : type(rbType), position(pos), body(rbBody) {}
 };
 
 struct SpriteComponent {

@@ -40,8 +40,8 @@ namespace EcsRenderSystem
 
         void renderSprites(std::vector<std::pair<std::shared_ptr<SpriteComponent>, std::shared_ptr<TransformComponent>>> tmpSpriteTransformPairs);
 
-        void singleDraw(int currentTexture, size_t numSpritesByTexture, size_t numSpritesRenderedBeforeThisBatch);
-        void multiDraw(int currentTexture, size_t numSpritesByTexture, size_t numSpritesRenderedBeforeThisBatch);
+        void singleDraw(int currentTexture, GLsizei numSpritesByTexture, size_t numSpritesRenderedBeforeThisBatch);
+        void multiDraw(int currentTexture, GLsizei numSpritesByTexture, size_t numSpritesRenderedBeforeThisBatch);
 
     private:
         //Pointer to EcsElement

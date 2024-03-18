@@ -9,6 +9,7 @@
 #include "debuglog/LogElement.h"
 #include "render/RenderElement.h"
 #include "render/GuiElement.h"
+#include "physics/PhysicsElement.h"
 #include "event/EventElement.h"
 #include "resource/ResourceElement.h"
 #include "resource/ShaderElement.h"
@@ -66,6 +67,9 @@ namespace Sol
 		//Return a pointer to the EventElement instance managed by the Core
 		ENGINE_API CoreEventElement::EventElement* getEventElement() const;
 
+		//Return a pointer to the PhysicsElement instance managed by the Core
+		ENGINE_API CorePhysicsElement::PhysicsElement* getPhysicsElement() const;
+
 		//Return a pointer to the ResourceElement instance managed by the Core
 		ENGINE_API CoreResourceElement::ResourceElement* getResourceElement() const;
 
@@ -89,6 +93,7 @@ namespace Sol
 		std::unique_ptr<CoreRenderElement::RenderElement> m_renderElement;
 		std::unique_ptr<CoreGuiElement::GuiElement> m_guiElement;
 		std::unique_ptr<CoreEventElement::EventElement> m_eventElement;
+		std::unique_ptr<CorePhysicsElement::PhysicsElement> m_physicsElement;
 		std::unique_ptr<CoreResourceElement::ResourceElement> m_resourceElement;
 		std::unique_ptr<CoreShaderElement::ShaderElement> m_shaderElement;
 		std::shared_ptr<CoreEcsElement::EcsElement> m_ecsElement;

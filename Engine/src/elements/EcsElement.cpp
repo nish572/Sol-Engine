@@ -1,7 +1,7 @@
 #include "ecs/EcsElement.h"
 //#include any systems here
 #include "systems/RenderSystem.h"
-//#include "systems/PhysicsSystem.h"
+#include "systems/PhysicsSystem.h"
 
 #include "Core.h"
 
@@ -21,11 +21,12 @@ namespace CoreEcsElement
         auto corePtr = m_core.lock();
         if (corePtr)
         {
-            //Add any necessary systems here (e.g., RenderSystem, PhysicsSystem, etc.)
-            //registerSystem<EcsPhysicsSystem::PhysicsSystem>(shared_from_this());
             if (renderSys)
             {
                 registerSystem<EcsRenderSystem::RenderSystem>(shared_from_this());
+            }
+            if (physSys) {
+                registerSystem<EcsPhysicsSystem::PhysicsSystem>(shared_from_this());
             }
             return true;
         }
@@ -81,4 +82,4 @@ namespace CoreEcsElement
             system.second(fixedTimestep);
         }
     }
-}
+} 
