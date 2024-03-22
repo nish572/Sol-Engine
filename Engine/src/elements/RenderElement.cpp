@@ -12,7 +12,7 @@ namespace CoreRenderElement
 	{
 	}
 
-	bool RenderElement::initialize(const std::string& windowName, int width, int height, SDL_WindowFlags window_flags, int vsync)
+	bool RenderElement::initialize(const std::string& windowName, float width, float height, SDL_WindowFlags window_flags, int vsync)
 	{
 		auto corePtr = m_core.lock();
 		if (corePtr)

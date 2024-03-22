@@ -29,7 +29,7 @@ namespace CoreRenderElement
 		~RenderElement();
 
 		//Initialize RenderElement by creating an SDL window and OpenGL context
-		ENGINE_API bool initialize(const std::string& windowName, int width, int height, SDL_WindowFlags window_flags, int vsync);
+		ENGINE_API bool initialize(const std::string& windowName, float width, float height, SDL_WindowFlags window_flags, int vsync);
 
 		//Clear the screen 
 		void clearScreen();

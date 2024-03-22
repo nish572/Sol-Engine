@@ -19,6 +19,11 @@ namespace Sol {
     class Core;
 }
 
+namespace ApplicationConfig
+{
+    class Config;
+}
+
 struct SpriteComponent;
 
 namespace EcsRenderSystem
@@ -55,6 +60,10 @@ namespace EcsRenderSystem
         unsigned int m_quadEBO;
         unsigned int m_modelVBO;
 
+        //Calculate model an view matrices
+        glm::mat4 m_viewMatrix = glm::mat4(1.0f);
+        glm::mat4 m_projectionMatrix = glm::mat4(1.0f);
+
         //Shader program ID's for default rendering of a sprite
         //One for if the draw call is per sprite, one for if the draw call is for a batch to be drawn via instancing
         unsigned int m_defaultShaderID;
@@ -68,5 +77,8 @@ namespace EcsRenderSystem
 
         //Minimum number of sprites required for instanced rendering to be used instead of individual draw calls
         const unsigned int m_MIN_SPRITES_FOR_INSTANCING = 100;
+
+        //Scaling factor for translation of Box2D coords into OpenGL appropriate
+        const float m_scalingFactor = 100.0f; //100 pixels per metre
     };
 }

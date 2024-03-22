@@ -36,5 +36,8 @@ namespace EcsPhysicsSystem
         std::shared_ptr<CoreEcsElement::EcsElement> m_ecsElement;
         std::shared_ptr<b2World> m_world;
         std::unordered_map<BodyType, b2BodyDef> m_bodyDefs;
+
+        //Scaling factor for translation of Box2D coords into OpenGL appropriate
+        const float m_scalingFactor = 100.0f; //100 pixels per metre
     };
 }

@@ -21,6 +21,11 @@ namespace EcsRenderSystem
         //One for if instances are being used, one for if not
         //Check though to see if the sprite's shaderProgram field is 0, if it isn't then render using that shader but do so in a single draw call not instanced draw call
 
+        float aspect = ApplicationConfig::Config::screenWidth / ApplicationConfig::Config::screenHeight;
+        float halfHeight = ApplicationConfig::Config::screenHeight / 2.0f;
+        float halfWidth = halfHeight * aspect;
+
+        m_projectionMatrix = glm::ortho(-halfWidth, halfWidth, -halfHeight, halfHeight, -1.0f, 1.0f);
         //Vertex and fragment shader source for single drawing
         const char* singleDrawVertexShaderSource = R"glsl(
         #version 330 core
@@ -28,12 +33,15 @@ namespace EcsRenderSystem
         layout (location = 1) in vec2 aTexCoords;
 
         uniform mat4 uModelMatrix;
+        
+        uniform mat4 view;
+        uniform mat4 projection;
 
         out vec2 TexCoords;
 
         void main()
         {
-            gl_Position = uModelMatrix * vec4(aPos, 0.0, 1.0);
+            gl_Position = projection * view * uModelMatrix * vec4(aPos, 0.0, 1.0);
             TexCoords = aTexCoords;
         }
         )glsl";
@@ -59,11 +67,14 @@ namespace EcsRenderSystem
         layout (location = 1) in vec2 aTexCoords;
         layout (location = 2) in mat4 aModelMatrix;
 
+        uniform mat4 view;
+        uniform mat4 projection;
+
         out vec2 TexCoords;
 
         void main()
         {
-            gl_Position = aModelMatrix * vec4(aPos, 0.0, 1.0);
+            gl_Position = projection * view * aModelMatrix * vec4(aPos, 0.0, 1.0);
             TexCoords = aTexCoords;
         }
         )glsl";
@@ -90,7 +101,7 @@ namespace EcsRenderSystem
         //VAO for managing VBOs
         //VBO as data container for vertex or instance attributes
         //EBO for indices to process vertices
-         
+
         //Generate VAO
         glGenVertexArrays(1, &m_mainVAO);
         glBindVertexArray(m_mainVAO);
@@ -130,7 +141,7 @@ namespace EcsRenderSystem
         glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
 
         //Initialise the instance buffer for model matrices
-       
+
         glGenBuffers(1, &m_modelVBO);
         glBindBuffer(GL_ARRAY_BUFFER, m_modelVBO);
         //Required for OpenGL to allocate the maximum potential memory possibly needed
@@ -193,10 +204,9 @@ namespace EcsRenderSystem
 
             //Calculate the model matrix (transformation) using the position, rotation, and scale from the TransformComponent
             glm::mat4 modelMatrix = glm::mat4(1.0f);
-            modelMatrix = glm::translate(modelMatrix, tmpSpriteTransformPairs[i].second->position);
-            modelMatrix = glm::rotate(modelMatrix, glm::radians(tmpSpriteTransformPairs[i].second->rotation), glm::vec3(0.0f, 0.0f, 1.0f));
             modelMatrix = glm::scale(modelMatrix, tmpSpriteTransformPairs[i].second->scale);
-
+            modelMatrix = glm::translate(modelMatrix, tmpSpriteTransformPairs[i].second->position / m_scalingFactor);
+            modelMatrix = glm::rotate(modelMatrix, glm::radians(tmpSpriteTransformPairs[i].second->rotation), glm::vec3(0.0f, 0.0f, 1.0f));
             m_modelMatricesCache.push_back(modelMatrix);
         }
 
@@ -275,7 +285,7 @@ namespace EcsRenderSystem
             //If the number of sprites in the batch is too little for instanced rendering by the textureID to be worth it, then draw individually
             //If the number of sprites in the batch is high enough for instanced rendering by the textureID to be worth it, buffer the batch, then draw instanced
             if (tmpSpriteTransformPairs[i].first->textureID != currentTexture) {
-                
+
                 //If there aren't enough sprites in this batch to make the benefit of instanced rendering greater than the deficit of the overhead of buffering the model matrices then
                 //For every sprite in the right range (essentially offset by the number of sprites already rendered in this frame before this batch (not including any in this batch)
                 //Render those sprites one by one
@@ -324,9 +334,13 @@ namespace EcsRenderSystem
         glUseProgram(m_defaultShaderID);
         //Get uniform location
         GLint modelLoc = glGetUniformLocation(m_defaultShaderID, "uModelMatrix");
+        GLint viewLoc = glGetUniformLocation(m_defaultShaderID, "view");
+        GLint projLoc = glGetUniformLocation(m_defaultShaderID, "projection");
+        glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(m_viewMatrix));
+        glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(m_projectionMatrix));
         //Looping through the correct section of the model matrices cache, and rendering one by one
         for (size_t j = numSpritesRenderedBeforeThisBatch; j < numSpritesRenderedBeforeThisBatch + numSpritesByTexture; j++) {
-            
+
             glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(m_modelMatricesCache[j]));
             glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
         }
@@ -347,6 +361,11 @@ namespace EcsRenderSystem
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, currentTexture);
         glUseProgram(m_defaultInstanceShaderID);
+        //Get uniform location
+        GLint viewLoc = glGetUniformLocation(m_defaultInstanceShaderID, "view");
+        GLint projLoc = glGetUniformLocation(m_defaultInstanceShaderID, "projection");
+        glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(m_viewMatrix));
+        glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(m_projectionMatrix));
         //Draw the batch of sprites via instanced rendering
         glDrawElementsInstanced(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr, numSpritesByTexture);
         //Unbind

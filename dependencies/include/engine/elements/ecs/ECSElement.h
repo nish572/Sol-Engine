@@ -15,6 +15,8 @@
 #include "event/EventElement.h"
 #include "ecs/Components.h"
 
+#include "Config.h"
+
 namespace Sol {
     class Core;
 }

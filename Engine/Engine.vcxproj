@@ -95,6 +95,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\shared\glad.c" />
+    <ClCompile Include="src\Config.cpp" />
     <ClCompile Include="src\Core.cpp" />
     <ClCompile Include="src\dearimgui\imgui.cpp" />
     <ClCompile Include="src\dearimgui\imgui_demo.cpp" />

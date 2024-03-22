@@ -58,14 +58,25 @@ namespace EcsPhysicsSystem
             Entity entity = physicsPair.first;
             auto& physicsComponent = physicsPair.second;
 
+            auto transformIt = transformComponents.find(entity);
+            //std::cout << "entity is" << transformIt->first << std::endl;
+            if (transformIt == transformComponents.end()) {
+                continue;
+            }
+
+            auto& transformComponent = transformIt->second; //potential error, reorder
+
+            physicsComponent->position.x = ((transformComponent->position.x) - (ApplicationConfig::Config::screenWidth / 2.0f)) / m_scalingFactor;
+            physicsComponent->position.y = ((transformComponent->position.y) - (ApplicationConfig::Config::screenHeight / 2.0f)) / m_scalingFactor;
+
             //If the body has not been created yet, create it.
             if (physicsComponent->body == nullptr) {
                 b2BodyDef& bodyDef = m_bodyDefs[physicsComponent->type];
-                std::cout << bodyDef.type << std::endl;
                 physicsComponent->body = m_world->CreateBody(&bodyDef);
                 //Set the new position of the body
                 b2Vec2 newPosition(physicsComponent->position.x, physicsComponent->position.y);
-                //physicsComponent->body->SetTransform(newPosition, physicsComponent->body->GetAngle());
+                physicsComponent->body->SetTransform(newPosition, physicsComponent->body->GetAngle());
+                //std::cout << physicsComponent->body->GetPosition().y;
             }
 
             //Check for the ColliderComponent of the entity
@@ -84,20 +95,20 @@ namespace EcsPhysicsSystem
                 //Err
             }
 
-            auto transformIt = transformComponents.find(entity);
-            if (transformIt == transformComponents.end()) {
-                continue;
-            }
-
-            auto& transformComponent = transformIt->second; //potential error, reorder
-
             //Sync the physics body's position and rotation with the TransformComponent
             b2Vec2 pos = physicsComponent->body->GetPosition();
             //float angle = physicsComponent->body->GetAngle();
-            transformComponent->position.x = pos.x;
-            transformComponent->position.y = pos.y;
+            transformComponent->position.x = (pos.x * m_scalingFactor) + (ApplicationConfig::Config::screenWidth / 2.0f);
+            transformComponent->position.y = (pos.y * m_scalingFactor) + (ApplicationConfig::Config::screenHeight / 2.0f);
             //transformComponent->rotation = angle;
             std::cout << pos.y << std::endl;
+
+            b2BodyDef groundBodyDef;
+            groundBodyDef.position.Set(0.0f, -5.0f);
+            b2Body* groundBody = m_world->CreateBody(&groundBodyDef);
+            b2PolygonShape groundBox;
+            groundBox.SetAsBox(20.0f, 1.0f);
+            groundBody->CreateFixture(&groundBox, 0.0f);
         }
 
         //Apply forces/impulses/torque based on InputComponent
