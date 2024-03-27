@@ -77,22 +77,22 @@ namespace EcsPhysicsSystem
                 b2Vec2 newPosition(physicsComponent->position.x, physicsComponent->position.y);
                 physicsComponent->body->SetTransform(newPosition, physicsComponent->body->GetAngle());
                 //std::cout << physicsComponent->body->GetPosition().y;
-            }
 
-            //Check for the ColliderComponent of the entity
-            auto colliderIt = colliderComponents.find(entity);
-            if (colliderIt != colliderComponents.end()) {
-                auto& colliderComponent = colliderIt->second;
-                if (colliderComponent->shape != nullptr) { //Ensure there's a shape defined
-                    b2FixtureDef fixtureDef;
-                    fixtureDef.shape = colliderComponent->shape;
-                    fixtureDef.density = colliderComponent->density;
-                    fixtureDef.friction = colliderComponent->friction;
-                    fixtureDef.restitution = colliderComponent->restitution;
+                //Check for the ColliderComponent of the entity
+                auto colliderIt = colliderComponents.find(entity);
+                if (colliderIt != colliderComponents.end()) {
+                    auto& colliderComponent = colliderIt->second;
+                    if (colliderComponent->shape != nullptr) { //Ensure there's a shape defined
+                        b2FixtureDef fixtureDef;
+                        fixtureDef.shape = colliderComponent->shape;
+                        fixtureDef.density = colliderComponent->density;
+                        fixtureDef.friction = colliderComponent->friction;
+                        fixtureDef.restitution = colliderComponent->restitution;
 
-                    physicsComponent->body->CreateFixture(&fixtureDef);
+                        physicsComponent->body->CreateFixture(&fixtureDef);
+                    }
+                    //Err
                 }
-                //Err
             }
 
             //Sync the physics body's position and rotation with the TransformComponent
@@ -101,13 +101,12 @@ namespace EcsPhysicsSystem
             transformComponent->position.x = (pos.x * m_scalingFactor) + (ApplicationConfig::Config::screenWidth / 2.0f);
             transformComponent->position.y = (pos.y * m_scalingFactor) + (ApplicationConfig::Config::screenHeight / 2.0f);
             //transformComponent->rotation = angle;
-            std::cout << pos.y << std::endl;
 
             b2BodyDef groundBodyDef;
-            groundBodyDef.position.Set(0.0f, -5.0f);
+            groundBodyDef.position.Set(0.0f, -9.0f);
             b2Body* groundBody = m_world->CreateBody(&groundBodyDef);
             b2PolygonShape groundBox;
-            groundBox.SetAsBox(20.0f, 1.0f);
+            groundBox.SetAsBox(100.0f, 1.0f);
             groundBody->CreateFixture(&groundBox, 0.0f);
         }
 

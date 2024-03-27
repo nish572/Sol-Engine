@@ -201,12 +201,15 @@ namespace EcsRenderSystem
         //Calculate model matrices
         for (size_t i = 0; i < tmpSpriteTransformPairs.size(); i++) {
             auto& tmpPair = tmpSpriteTransformPairs[i];
-
             //Calculate the model matrix (transformation) using the position, rotation, and scale from the TransformComponent
             glm::mat4 modelMatrix = glm::mat4(1.0f);
-            modelMatrix = glm::scale(modelMatrix, tmpSpriteTransformPairs[i].second->scale);
-            modelMatrix = glm::translate(modelMatrix, tmpSpriteTransformPairs[i].second->position / m_scalingFactor);
-            modelMatrix = glm::rotate(modelMatrix, glm::radians(tmpSpriteTransformPairs[i].second->rotation), glm::vec3(0.0f, 0.0f, 1.0f));
+            
+            modelMatrix = glm::translate(modelMatrix, tmpPair.second->position);
+            modelMatrix = glm::rotate(modelMatrix, glm::radians(tmpPair.second->rotation), glm::vec3(0.0f, 0.0f, 1.0f));
+               
+            modelMatrix = glm::scale(modelMatrix, tmpPair.second->scale);
+            modelMatrix = glm::scale(modelMatrix, glm::vec3(tmpPair.first->size.x, tmpPair.first->size.y, 0));
+
             m_modelMatricesCache.push_back(modelMatrix);
         }
 

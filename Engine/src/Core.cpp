@@ -207,7 +207,7 @@ namespace Sol
 			lastTime = currentTime;
 			currentTime = SDL_GetPerformanceCounter();
 			deltaTime = static_cast<double>(currentTime - lastTime) / SDL_GetPerformanceFrequency();
-			deltaTime = std::min(deltaTime, 0.25); //Prevent deltaTime from being too large, essentially the 'spiral of death' safeguard.
+			deltaTime = std::min(deltaTime, 0.25); //Prevent deltaTime from being too large, essentially the 'spiral of death' safeguard
 			accumulatedTime += deltaTime;
 
 			//Handle events at a fixed timestep

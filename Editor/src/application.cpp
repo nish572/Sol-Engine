@@ -76,13 +76,14 @@ int main(int argc, char* args[]) {
 
 	auto& sprite = appCore->getEcsElement()->getSprite(dogEntity);
 	sprite.textureID = currentImg->textureID;
+	sprite.size = glm::vec2 (currentImg->width, currentImg->height);
 	auto& trans = appCore->getEcsElement()->getTransform(dogEntity);
-	trans.position = glm::vec3(-500, 500, 0);
-	trans.scale = glm::vec3(100, 100, 100);
+	trans.position = glm::vec3(300, 500, 0);
+	trans.scale = glm::vec3(0.2, 0.2, 0);
 	auto& collider = appCore->getEcsElement()->getCollider(dogEntity);
 	//b2Shape* colliderShape, float colliderDensity, float colliderFriction, float colliderRestitution
 	b2PolygonShape* square = new b2PolygonShape(); //Be careful where I call this since if it is out of scope, it's lifetime is over and the physics won't work
-	square->SetAsBox(0.5f, 0.5f); // Half-width and half-height
+	square->SetAsBox(3.06f, 2.04f); // Half-width and half-height
 	collider.shape = square;
 	auto& physBod = appCore->getEcsElement()->getPhysicsBody(dogEntity);
 	physBod.type = BodyType::Dynamic;

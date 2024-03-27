@@ -82,6 +82,7 @@ namespace CoreResourceElement
 		//stbi_load returns a pointer to the image data
 		stbi_set_flip_vertically_on_load(true);
 		unsigned char* data = stbi_load(filePath.c_str(), &width, &height, &nrChannels, 0);
+		std::cout << "sprite size " << width << " and also " << height << std::endl;
 
 		//Create the texture with OpenGL and get the texture ID
 		GLuint textureID;
