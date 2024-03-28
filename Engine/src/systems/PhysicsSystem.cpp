@@ -26,7 +26,7 @@ namespace EcsPhysicsSystem
         m_bodyDefs[BodyType::Dynamic] = dynamicBodyDef;
 
         b2BodyDef staticBodyDef;
-        staticBodyDef.type = b2_staticBody; 
+        staticBodyDef.type = b2_staticBody;
         m_bodyDefs[BodyType::Static] = staticBodyDef;
 
         b2BodyDef kinematicBodyDef;
@@ -45,20 +45,30 @@ namespace EcsPhysicsSystem
         const int32 positionIterations = 3;
 
         float timeStep = static_cast<float>(fixedTimestep);
-        m_world->Step(fixedTimestep, velocityIterations, positionIterations);
 
         //Get components of the PhysicsBodyComponent and TransformComponent types
         auto physicsComponents = m_ecsElement->getAllComponentsOfType<PhysicsBodyComponent>();
         auto transformComponents = m_ecsElement->getAllComponentsOfType<TransformComponent>();
         auto colliderComponents = m_ecsElement->getAllComponentsOfType<ColliderComponent>();
+        auto inputComponents = m_ecsElement->getAllComponentsOfType<InputComponent>();
+        auto currentInputComponents = m_ecsElement->getCore()->getEventElement()->getInputsForPhysics();
+
+        //Temporary groundbox definition
+        b2BodyDef groundBodyDef;
+        groundBodyDef.position.Set(0.0f, -9.0f);
+        b2Body* groundBody = m_world->CreateBody(&groundBodyDef);
+        b2PolygonShape groundBox;
+        groundBox.SetAsBox(100.0f, 1.0f);
+        groundBody->CreateFixture(&groundBox, 0.0f);
 
         //Iterate through entities with PhysicsBodyComponent and TransformComponent
+        //This is to ensure all bodies are created with the appropriate fixtures and at the appropriate positions
         for (const auto& physicsPair : physicsComponents) {
             Entity entity = physicsPair.first;
             auto& physicsComponent = physicsPair.second;
 
             auto transformIt = transformComponents.find(entity);
-            //std::cout << "entity is" << transformIt->first << std::endl;
+
             if (transformIt == transformComponents.end()) {
                 continue;
             }
@@ -94,22 +104,38 @@ namespace EcsPhysicsSystem
                 }
             }
 
+            //Now loop through input components and for every input component find the physics body and apply the force/impulse to it
+            auto inputIt = inputComponents.find(entity);
+            auto& inputComponent = inputIt->second;
+            for (const auto& input : currentInputComponents)
+            {
+                if (input == inputComponent)
+                {
+                    //Normalize the move direction
+                    b2Vec2 moveDirection(input->moveDirection.x, input->moveDirection.y);
+                    moveDirection.Normalize();
+                    float magnitude = input->magnitude;
+
+                    if (input->fType == ForceType::Force)
+                    {
+                        physicsComponent->body->ApplyForceToCenter(magnitude * moveDirection, true);
+                    }
+                    if (input->fType == ForceType::Impulse)
+                    {
+                        physicsComponent->body->ApplyLinearImpulseToCenter(magnitude * moveDirection, true);
+                    }                    
+                }
+            }
+
             //Sync the physics body's position and rotation with the TransformComponent
             b2Vec2 pos = physicsComponent->body->GetPosition();
             //float angle = physicsComponent->body->GetAngle();
             transformComponent->position.x = (pos.x * m_scalingFactor) + (ApplicationConfig::Config::screenWidth / 2.0f);
             transformComponent->position.y = (pos.y * m_scalingFactor) + (ApplicationConfig::Config::screenHeight / 2.0f);
             //transformComponent->rotation = angle;
-
-            b2BodyDef groundBodyDef;
-            groundBodyDef.position.Set(0.0f, -9.0f);
-            b2Body* groundBody = m_world->CreateBody(&groundBodyDef);
-            b2PolygonShape groundBox;
-            groundBox.SetAsBox(100.0f, 1.0f);
-            groundBody->CreateFixture(&groundBox, 0.0f);
         }
 
-        //Apply forces/impulses/torque based on InputComponent
-        //...
+        //Physics step
+        m_world->Step(fixedTimestep, velocityIterations, positionIterations);
     }
 }

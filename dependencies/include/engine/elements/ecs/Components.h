@@ -31,18 +31,25 @@ enum class InputType
     MouseMovement
 };
 
+enum class ForceType
+{
+    Force,
+    Impulse
+};
+
 struct InputComponent
 {
-    InputType type;
+    InputType iType;
+    ForceType fType;
     SDL_Keycode key;
 
     glm::vec2 moveDirection; //(x,y) of direction of force, remember to normalise the direction if both x and y are non-zero
     float magnitude; //Amount of force to apply
 
     InputComponent()
-        : type(InputType::Keyboard), key(SDLK_UNKNOWN), moveDirection(0.0f), magnitude(0.0f) {}
-    InputComponent(InputType inputType, SDL_Keycode sdlKey, glm::vec2 moveDirec, float forceMagnitude)
-        : type(inputType), key(sdlKey), moveDirection(moveDirec), magnitude(forceMagnitude) {}
+        : iType(InputType::Keyboard), fType(ForceType::Force), key(SDLK_UNKNOWN), moveDirection(0.0f), magnitude(0.0f) {}
+    InputComponent(InputType inputType, ForceType forceType, SDL_Keycode sdlKey, glm::vec2 moveDirec, float forceMagnitude)
+        : iType(inputType), fType(forceType), key(sdlKey), moveDirection(moveDirec), magnitude(forceMagnitude) {}
 };
 
 struct TransformComponent {

@@ -9,6 +9,8 @@
 #include <SDL.h>
 #include <imgui_impl_sdl2.h>
 
+#include "ecs/Components.h"
+
 //Forward declaration of Core class
 //This tells compiler Sol::Core exists without providing full definition
 //This means pointers to Core class can be used without including Core.h
@@ -45,6 +47,9 @@ namespace CoreEventElement
 
 		void resetInputEvents();
 
+		void setInputsForPhysics(std::vector<std::shared_ptr<InputComponent>> inputs);
+		std::vector<std::shared_ptr<InputComponent>> getInputsForPhysics();
+
 		//Terminate EventElement
 		//Call this to deallocate any of EventElement's resources
 		//Call this when amending Core's detachElement function and inside Core's terminate function
@@ -58,5 +63,6 @@ namespace CoreEventElement
 		bool m_running;
 
 		std::vector<SDL_Event> m_inputEvents;
+		std::vector<std::shared_ptr<InputComponent>> m_inputsForPhysics;
 	};
 }

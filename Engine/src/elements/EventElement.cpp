@@ -108,6 +108,15 @@ namespace CoreEventElement
 		m_inputEvents.clear();
 	}
 
+	void EventElement::setInputsForPhysics(std::vector<std::shared_ptr<InputComponent>> inputs)
+	{
+		m_inputsForPhysics = inputs;
+	}
+
+	std::vector<std::shared_ptr<InputComponent>> EventElement::getInputsForPhysics()
+	{
+		return m_inputsForPhysics;
+	}
 
 	void EventElement::terminate()
 	{

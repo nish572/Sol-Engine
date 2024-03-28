@@ -30,7 +30,7 @@ int main(int argc, char* args[]) {
 	appCore->getGuiElement()->initialize(); //Gui element depends upon render element, render element must be initialized first
 	appCore->getPhysicsElement()->initialize(); //Physics element//Physics element
 	appCore->getEventElement()->initialize(); //Event element depends upon render element, render element must be initialized first
-	appCore->getEcsElement()->initialize(true, true, false); //Ecs element depends on render element, event element, resource element, and possibly shader element
+	appCore->getEcsElement()->initialize(true, true, true); //Ecs element depends on render element, event element, resource element, and possibly shader element
 
 	//Runtime loop
 	bool appRunning = true;
@@ -89,10 +89,21 @@ int main(int argc, char* args[]) {
 	auto& physBod = appCore->getEcsElement()->getPhysicsBody(dogEntity);
 	physBod.type = BodyType::Dynamic;
 
-	auto& input = appCore->getEcsElement()->getInput(dogEntity);
+	/*auto& input = appCore->getEcsElement()->getInput(dogEntity);
 	input.key = SDLK_LEFT;
 	input.moveDirection = glm::vec2(-1, 0);
-	input.magnitude = 5.0f;
+	input.magnitude = 5.0f;*/
+
+	/*auto& input2 = appCore->getEcsElement()->getInput(dogEntity);
+	input2.key = SDLK_RIGHT;
+	input2.moveDirection = glm::vec2(1, 0);
+	input2.magnitude = 5.0f;*/
+
+	auto& input3 = appCore->getEcsElement()->getInput(dogEntity);
+	input3.key = SDLK_SPACE;
+	input3.moveDirection = glm::vec2(0, 1);
+	input3.magnitude = 2.0f;
+	input3.fType = ForceType::Impulse;
 
 	while (appRunning)
 	{

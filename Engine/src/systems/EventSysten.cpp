@@ -17,7 +17,6 @@ namespace EcsEventSystem
 
     void EventSystem::initialize()
     {
-        m_inputEvents = m_ecsElement->getCore()->getEventElement()->getInputEvents();
     }
 
     void EventSystem::update(double deltaTime)
@@ -27,12 +26,12 @@ namespace EcsEventSystem
 
     void EventSystem::fixedUpdate(double fixedTimestep)
     {
+        m_inputEvents = m_ecsElement->getCore()->getEventElement()->getInputEvents();
         auto inputComponents = m_ecsElement->getAllComponentsOfType<InputComponent>();
 
         for (const auto& event : m_inputEvents)
         {
             SDL_Keycode eventKey = event.key.keysym.sym;
-
             for (const auto& inputPair : inputComponents) 
             {
                 auto entity = inputPair.first;
@@ -45,6 +44,7 @@ namespace EcsEventSystem
                 }
             }
         }
+        m_ecsElement->getCore()->getEventElement()->setInputsForPhysics(m_currentInputs);
     }
 
     std::vector <std::shared_ptr<InputComponent>> EventSystem::getCurrentInputs()
