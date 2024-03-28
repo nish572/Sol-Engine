@@ -36,6 +36,8 @@ namespace CoreEcsElement
         void fixedUpdate(double fixedTimestep);
         void terminate();
 
+        std::shared_ptr<Sol::Core> getCore();
+
         //Entity management functions
         ENGINE_API Entity createEntity();
         void destroyEntity(Entity entity);
@@ -131,6 +133,14 @@ namespace CoreEcsElement
         }
         ENGINE_API void removeCollider(Entity entity) { removeComponent<ColliderComponent>(entity); }
         ENGINE_API ColliderComponent& getCollider(Entity entity) { return getComponent<ColliderComponent>(entity); }
+
+        //Input functions
+        ENGINE_API void addInput(Entity entity) {
+            InputComponent tmp = InputComponent{};
+            addComponent<InputComponent>(entity, tmp);
+        }
+        ENGINE_API void removeInput(Entity entity) { removeComponent<InputComponent>(entity); }
+        ENGINE_API InputComponent& getInput(Entity entity) { return getComponent<InputComponent>(entity); }
 
     private:
         //Pointer to Core

@@ -41,6 +41,10 @@ namespace CoreEventElement
 		//Process events
 		void processEvent(const SDL_Event& event);
 
+		std::vector<SDL_Event> getInputEvents();
+
+		void resetInputEvents();
+
 		//Terminate EventElement
 		//Call this to deallocate any of EventElement's resources
 		//Call this when amending Core's detachElement function and inside Core's terminate function
@@ -52,5 +56,7 @@ namespace CoreEventElement
 		//Is LogElement present
 		bool m_logElementAttached{ false };
 		bool m_running;
+
+		std::vector<SDL_Event> m_inputEvents;
 	};
 }

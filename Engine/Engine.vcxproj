@@ -113,6 +113,7 @@
     <ClCompile Include="src\elements\RenderElement.cpp" />
     <ClCompile Include="src\elements\ResourceElement.cpp" />
     <ClCompile Include="src\elements\ShaderElement.cpp" />
+    <ClCompile Include="src\systems\EventSysten.cpp" />
     <ClCompile Include="src\systems\PhysicsSystem.cpp" />
     <ClCompile Include="src\systems\RenderSystem.cpp" />
   </ItemGroup>
@@ -128,6 +129,7 @@
     <ClInclude Include="..\dependencies\include\engine\elements\resource\ResourceElement.h" />
     <ClInclude Include="..\dependencies\include\engine\elements\resource\ShaderElement.h" />
     <ClInclude Include="..\dependencies\include\engine\EngineAPI.h" />
+    <ClInclude Include="..\dependencies\include\engine\systems\EventSystem.h" />
     <ClInclude Include="..\dependencies\include\engine\systems\PhysicsSystem.h" />
     <ClInclude Include="..\dependencies\include\engine\systems\RenderSystem.h" />
   </ItemGroup>

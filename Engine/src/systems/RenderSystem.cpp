@@ -3,6 +3,8 @@
 #include <iostream>
 #include <algorithm>
 
+#include "Core.h"
+
 namespace EcsRenderSystem
 {
     RenderSystem::RenderSystem(std::shared_ptr<CoreEcsElement::EcsElement> ecsElement)

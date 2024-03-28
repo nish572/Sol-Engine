@@ -2,7 +2,6 @@
 
 #include "Core.h"
 
-
 namespace CorePhysicsElement
 {
 	PhysicsElement::PhysicsElement(std::shared_ptr<Sol::Core> core) : m_core(core)

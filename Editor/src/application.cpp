@@ -73,6 +73,7 @@ int main(int argc, char* args[]) {
 	appCore->getEcsElement()->addTransform(dogEntity);
 	appCore->getEcsElement()->addCollider(dogEntity);
 	appCore->getEcsElement()->addPhysicsBody(dogEntity);
+	appCore->getEcsElement()->addInput(dogEntity);
 
 	auto& sprite = appCore->getEcsElement()->getSprite(dogEntity);
 	sprite.textureID = currentImg->textureID;
@@ -87,6 +88,11 @@ int main(int argc, char* args[]) {
 	collider.shape = square;
 	auto& physBod = appCore->getEcsElement()->getPhysicsBody(dogEntity);
 	physBod.type = BodyType::Dynamic;
+
+	auto& input = appCore->getEcsElement()->getInput(dogEntity);
+	input.key = SDLK_LEFT;
+	input.moveDirection = glm::vec2(-1, 0);
+	input.magnitude = 5.0f;
 
 	while (appRunning)
 	{

@@ -1,6 +1,8 @@
 #include "systems/PhysicsSystem.h"
 #include "ecs/EcsElement.h"
 
+#include "Core.h"
+
 namespace EcsPhysicsSystem
 {
     PhysicsSystem::PhysicsSystem(std::shared_ptr<CoreEcsElement::EcsElement> ecsElement)
@@ -15,11 +17,8 @@ namespace EcsPhysicsSystem
 
     void PhysicsSystem::initialize()
     {
-        // Define the gravity vector
-        b2Vec2 gravity(0.0f, -9.8f); // Earth's gravity in the negative y direction
-
         // Create the world with the specified gravity
-        m_world = std::make_shared<b2World>(gravity);
+        m_world = m_ecsElement->getCore()->getPhysicsElement()->getWorld();
 
         //Create body definitions
         b2BodyDef dynamicBodyDef;

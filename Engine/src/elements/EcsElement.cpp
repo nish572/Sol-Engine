@@ -2,6 +2,7 @@
 //#include any systems here
 #include "systems/RenderSystem.h"
 #include "systems/PhysicsSystem.h"
+#include "systems/EventSystem.h"
 
 #include "Core.h"
 
@@ -25,6 +26,9 @@ namespace CoreEcsElement
             {
                 registerSystem<EcsRenderSystem::RenderSystem>(shared_from_this());
             }
+            if (eventSys) {
+                registerSystem<EcsEventSystem::EventSystem>(shared_from_this());
+            }
             if (physSys) {
                 registerSystem<EcsPhysicsSystem::PhysicsSystem>(shared_from_this());
             }
@@ -33,6 +37,12 @@ namespace CoreEcsElement
         return false;
     }
 
+    std::shared_ptr<Sol::Core> EcsElement::getCore()
+    {
+        auto corePtr = m_core.lock();
+        return corePtr;
+    }
+    
     void EcsElement::update(double deltaTime) {
         //Call updateSystems(deltaTime) to update all systems
         updateSystems(deltaTime);

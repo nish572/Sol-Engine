@@ -81,6 +81,9 @@
     <ClCompile Include="src\Config.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\systems\EventSysten.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\dependencies\include\engine\Core.h">
@@ -121,6 +124,9 @@
     </ClInclude>
     <ClInclude Include="..\dependencies\include\engine\elements\physics\PhysicsElement.h">
       <Filter>Header Files\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\dependencies\include\engine\systems\EventSystem.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

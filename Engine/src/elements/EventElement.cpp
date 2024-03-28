@@ -70,12 +70,15 @@ namespace CoreEventElement
 
 	//Process event
 	void EventElement::processEvent(const SDL_Event& event)
-	{
-		//Check if the event belongs to ImGui
+	{		
 		if (ImGui_ImplSDL2_ProcessEvent(&event))
 		{
 			//Event is related to ImGui, so we can skip it
-			return;
+			//Check if the event belongs to ImGui
+			if (ImGui::GetIO().WantCaptureKeyboard || ImGui::GetIO().WantCaptureMouse)
+			{
+				return;
+			}
 		}
 
 		//Check for application close events
@@ -87,7 +90,24 @@ namespace CoreEventElement
 		{
 			m_running = false;
 		}
+
+		//Check for keyboard events
+		if (event.type == SDL_KEYDOWN)
+		{
+			m_inputEvents.push_back(event);
+		}
 	}
+
+	std::vector<SDL_Event> EventElement::getInputEvents()
+	{
+		return m_inputEvents;
+	}
+
+	void EventElement::resetInputEvents()
+	{
+		m_inputEvents.clear();
+	}
+
 
 	void EventElement::terminate()
 	{

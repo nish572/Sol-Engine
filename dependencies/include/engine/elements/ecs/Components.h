@@ -9,6 +9,7 @@
 #include "resource/ResourceElement.h"
 #include <glm/glm.hpp>
 #include <box2D/Box2D.h>
+#include <SDL.h>
 
 //Either I upgrade to c++17 to use below, or use boost::any, however boost is rather large
 //struct ScriptableComponent
@@ -24,10 +25,24 @@
 //    }
 //};
 
+enum class InputType
+{
+    Keyboard,
+    MouseMovement
+};
+
 struct InputComponent
 {
-    glm::vec2 moveDirection;
-    bool jump;
+    InputType type;
+    SDL_Keycode key;
+
+    glm::vec2 moveDirection; //(x,y) of direction of force, remember to normalise the direction if both x and y are non-zero
+    float magnitude; //Amount of force to apply
+
+    InputComponent()
+        : type(InputType::Keyboard), key(SDLK_UNKNOWN), moveDirection(0.0f), magnitude(0.0f) {}
+    InputComponent(InputType inputType, SDL_Keycode sdlKey, glm::vec2 moveDirec, float forceMagnitude)
+        : type(inputType), key(sdlKey), moveDirection(moveDirec), magnitude(forceMagnitude) {}
 };
 
 struct TransformComponent {
