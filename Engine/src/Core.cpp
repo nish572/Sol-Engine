@@ -217,7 +217,6 @@ namespace Sol
 				SDL_Event event;
 				while (SDL_PollEvent(&event))
 				{
-					std::cout << event.type << std::endl;
 					events.push_back(event);
 				}
 				if (m_eventElement) { m_eventElement->handleEvents(events); }

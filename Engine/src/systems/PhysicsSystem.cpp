@@ -50,8 +50,9 @@ namespace EcsPhysicsSystem
         auto physicsComponents = m_ecsElement->getAllComponentsOfType<PhysicsBodyComponent>();
         auto transformComponents = m_ecsElement->getAllComponentsOfType<TransformComponent>();
         auto colliderComponents = m_ecsElement->getAllComponentsOfType<ColliderComponent>();
-        auto inputComponents = m_ecsElement->getAllComponentsOfType<InputComponent>();
-        auto currentInputComponents = m_ecsElement->getCore()->getEventElement()->getInputsForPhysics();
+        
+        // Retrieve actions for this frame
+        auto& actionsPerEntity = m_ecsElement->getCore()->getEventElement()->getActionsForPhysics();
 
         //Temporary groundbox definition
         b2BodyDef groundBodyDef;
@@ -104,26 +105,26 @@ namespace EcsPhysicsSystem
                 }
             }
 
-            //Now loop through input components and for every input component find the physics body and apply the force/impulse to it
-            auto inputIt = inputComponents.find(entity);
-            auto& inputComponent = inputIt->second;
-            for (const auto& input : currentInputComponents)
-            {
-                if (input == inputComponent)
-                {
-                    //Normalize the move direction
-                    b2Vec2 moveDirection(input->moveDirection.x, input->moveDirection.y);
+            //Find and apply actions specific to this entity
+            auto actionsIt = actionsPerEntity.find(entity);
+            if (actionsIt != actionsPerEntity.end()) {
+                const auto& actions = actionsIt->second;
+                for (const ActionData& action : actions) {
+                    //Apply each action
+                    b2Vec2 moveDirection(action.moveDirection.x, action.moveDirection.y);
                     moveDirection.Normalize();
-                    float magnitude = input->magnitude;
-
-                    if (input->fType == ForceType::Force)
-                    {
+                    float magnitude = action.magnitude;
+                    std::cout << action.magnitude << action.moveDirection.x << action.moveDirection.y << std::endl;
+                    //Switch based on the type of force to apply
+                    switch (action.fType) {
+                    case ForceType::Force:
                         physicsComponent->body->ApplyForceToCenter(magnitude * moveDirection, true);
-                    }
-                    if (input->fType == ForceType::Impulse)
-                    {
+                        break;
+                    case ForceType::Impulse:
                         physicsComponent->body->ApplyLinearImpulseToCenter(magnitude * moveDirection, true);
-                    }                    
+                        break;
+                        //Handle other force types as needed
+                    }
                 }
             }
 

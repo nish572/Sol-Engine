@@ -28,12 +28,9 @@ namespace EcsEventSystem
 
         void fixedUpdate(double fixedTimestep);
 
-        std::vector <std::shared_ptr<InputComponent>> getCurrentInputs();
-
     private:
         std::shared_ptr<CoreEcsElement::EcsElement> m_ecsElement;
 
         std::vector<SDL_Event> m_inputEvents;
-        std::vector <std::shared_ptr<InputComponent>> m_currentInputs;
     };
 }

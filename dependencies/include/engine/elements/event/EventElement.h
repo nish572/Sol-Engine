@@ -11,6 +11,8 @@
 
 #include "ecs/Components.h"
 
+using Entity = std::uint32_t;
+
 //Forward declaration of Core class
 //This tells compiler Sol::Core exists without providing full definition
 //This means pointers to Core class can be used without including Core.h
@@ -47,8 +49,8 @@ namespace CoreEventElement
 
 		void resetInputEvents();
 
-		void setInputsForPhysics(std::vector<std::shared_ptr<InputComponent>> inputs);
-		std::vector<std::shared_ptr<InputComponent>> getInputsForPhysics();
+		void setActionsForPhysics(const std::unordered_map<Entity, std::vector<ActionData>>& actionsPerEntity);
+		const std::unordered_map<Entity, std::vector<ActionData>>& getActionsForPhysics() const;
 
 		//Terminate EventElement
 		//Call this to deallocate any of EventElement's resources
@@ -63,6 +65,6 @@ namespace CoreEventElement
 		bool m_running;
 
 		std::vector<SDL_Event> m_inputEvents;
-		std::vector<std::shared_ptr<InputComponent>> m_inputsForPhysics;
+		std::unordered_map<Entity, std::vector<ActionData>> m_actionsForPhysics;
 	};
 }

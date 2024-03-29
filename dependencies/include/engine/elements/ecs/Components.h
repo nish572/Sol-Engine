@@ -37,19 +37,34 @@ enum class ForceType
     Impulse
 };
 
+struct ActionData {
+    glm::vec2 moveDirection; //Direction of force
+    float magnitude; //Amount of force
+    ForceType fType;
+    InputType iType;
+
+    ActionData(glm::vec2 dir, float mag, ForceType forceType, InputType inputType)
+        : moveDirection(dir), magnitude(mag), fType(forceType), iType(inputType) {}
+};
+
 struct InputComponent
 {
-    InputType iType;
-    ForceType fType;
-    SDL_Keycode key;
+    // Map from SDL_Keycode to a list of actions
+    std::unordered_map<SDL_Keycode, std::vector<ActionData>> keyActions;
 
-    glm::vec2 moveDirection; //(x,y) of direction of force, remember to normalise the direction if both x and y are non-zero
-    float magnitude; //Amount of force to apply
-
-    InputComponent()
-        : iType(InputType::Keyboard), fType(ForceType::Force), key(SDLK_UNKNOWN), moveDirection(0.0f), magnitude(0.0f) {}
-    InputComponent(InputType inputType, ForceType forceType, SDL_Keycode sdlKey, glm::vec2 moveDirec, float forceMagnitude)
-        : iType(inputType), fType(forceType), key(sdlKey), moveDirection(moveDirec), magnitude(forceMagnitude) {}
+    void addKeyAction(SDL_Keycode key, const ActionData& action) {
+        keyActions[key].push_back(action);
+    }
+    void removeKeyAction(SDL_Keycode key) {
+        // Example: Removing all actions for a key
+        keyActions.erase(key);
+    }
+    std::vector<ActionData> getActionsForKey(SDL_Keycode key) {
+        if (keyActions.find(key) != keyActions.end()) {
+            return keyActions[key];
+        }
+        return {}; // Return empty vector if no actions found for the key
+    }
 };
 
 struct TransformComponent {

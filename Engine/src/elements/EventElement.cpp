@@ -108,14 +108,12 @@ namespace CoreEventElement
 		m_inputEvents.clear();
 	}
 
-	void EventElement::setInputsForPhysics(std::vector<std::shared_ptr<InputComponent>> inputs)
-	{
-		m_inputsForPhysics = inputs;
+	void EventElement::setActionsForPhysics(const std::unordered_map<Entity, std::vector<ActionData>>& actionsPerEntity) {
+		m_actionsForPhysics = actionsPerEntity;
 	}
 
-	std::vector<std::shared_ptr<InputComponent>> EventElement::getInputsForPhysics()
-	{
-		return m_inputsForPhysics;
+	const std::unordered_map<Entity, std::vector<ActionData>>& EventElement::getActionsForPhysics() const {
+		return m_actionsForPhysics;
 	}
 
 	void EventElement::terminate()
