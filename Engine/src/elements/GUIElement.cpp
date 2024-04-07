@@ -15,7 +15,7 @@ namespace CoreGuiElement
 
 	//Call after Core's attachElement(elementName) has been called
 	//Pass any required parameters for initialization, e.g. RenderElement's initialize function requires window height and width
-	bool GuiElement::initialize()
+	bool GuiElement::initialize(bool debug)
 	{
 		auto corePtr = m_core.lock();
 		if (corePtr)
@@ -38,6 +38,8 @@ namespace CoreGuiElement
 				return false;
 			}
 		}
+
+		m_debugMode = debug;
 
 		//Setup Dear ImGui context
 		IMGUI_CHECKVERSION();
@@ -99,6 +101,18 @@ namespace CoreGuiElement
 		ImGui_ImplSDL2_NewFrame();
 		ImGui::NewFrame();
 
+		//Create dockable background space for all viewports
+		//ImGui::DockSpaceOverViewport();
+
+		if (m_debugMode)
+		{
+			editorViewports();
+		}
+		else
+		{
+			;
+		}
+
 		ImGui::Render();
 		glViewport(0, 0, (int)io.DisplaySize.x, (int)io.DisplaySize.y);
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -111,6 +125,15 @@ namespace CoreGuiElement
 			ImGui::RenderPlatformWindowsDefault();
 			SDL_GL_MakeCurrent(backup_current_window, backup_current_context);
 		}
+
+		ImGui::EndFrame();
+	}
+
+	void GuiElement::editorViewports()
+	{
+		ImGui::Begin("test");
+		ImGui::Text("am i visible?");
+		ImGui::End();
 	}
 
 	void GuiElement::terminate()

@@ -30,21 +30,23 @@ namespace CoreGuiElement
 
 		//Initialize GuiElement
 		//Call this after calling GuiElement's attachElement
-		ENGINE_API bool initialize();
+		ENGINE_API bool initialize(bool debug);
 
 		void update(double deltaTime);
-
-		void updateImGuiWindows();
 
 		//Terminate GuiElement
 		//Call this to deallocate any of GuiElement's resources
 		//Call this when amending Core's detachElement function and inside Core's terminate function
 		void terminate();
 
+		void editorViewports();
+
 	private:
 		//Pointer to Core
 		std::weak_ptr<Sol::Core> m_core;
 		//Is LogElement present
 		bool m_logElementAttached{ false };
+
+		bool m_debugMode;
 	};
 }

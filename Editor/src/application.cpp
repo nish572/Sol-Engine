@@ -27,7 +27,7 @@ int main(int argc, char* args[]) {
 	appCore->getShaderElement()->initialize(); //Shader element does not depend upon any other element
 	appCore->getResourceElement()->initialize(); //Resource element does not depend upon any other element
 	appCore->getRenderElement()->initialize("Sol Editor", 1920, 1080, (SDL_WindowFlags)(SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI), 0); //Render element does not depend upon any other element
-	appCore->getGuiElement()->initialize(); //Gui element depends upon render element, render element must be initialized first
+	appCore->getGuiElement()->initialize(true); //Gui element depends upon render element, render element must be initialized first
 	appCore->getPhysicsElement()->initialize(); //Physics element//Physics element
 	appCore->getEventElement()->initialize(); //Event element depends upon render element, render element must be initialized first
 	appCore->getEcsElement()->initialize(true, true, true); //Ecs element depends on render element, event element, resource element, and possibly shader element
