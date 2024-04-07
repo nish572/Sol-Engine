@@ -80,6 +80,12 @@ namespace CoreGuiElement
 		return true;
 	}
 
+	//Current plan:
+	//Too tightly coupled, but the only working solution right now due to the nature of ImGui
+	//Essentially include a debug flag
+	//When debug is enabled, editor viewports appear and create a new scene (or load existing scene of existing project, but default to new scene I think)
+	//When debug is disabled, editor viewports do not appear and instead load the first scene from the serialised scene data
+
 	//Update
 	void GuiElement::update(double deltaTime)
 	{
@@ -93,9 +99,6 @@ namespace CoreGuiElement
 		ImGui_ImplSDL2_NewFrame();
 		ImGui::NewFrame();
 
-		//UPDATE Gui ELEMENTS IN THIS FUNCTION //
-		updateImGuiWindows();
-
 		ImGui::Render();
 		glViewport(0, 0, (int)io.DisplaySize.x, (int)io.DisplaySize.y);
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -107,23 +110,6 @@ namespace CoreGuiElement
 			ImGui::UpdatePlatformWindows();
 			ImGui::RenderPlatformWindowsDefault();
 			SDL_GL_MakeCurrent(backup_current_window, backup_current_context);
-		}
-	}
-
-	void GuiElement::updateImGuiWindows()
-	{
-		//ImGui SCAFFOLD APP HERE //
-		{
-			static float f = 0.0f;
-			static int counter = 0;
-
-			ImGui::Begin("Hello, world!"); //Create a window called "Hello, world!" and append into it.
-
-			if (ImGui::Button("Button")) //Buttons return true when clicked (most widgets return true when edited/activated)
-				counter++;
-			ImGui::SameLine();
-			ImGui::Text("counter = %d", counter);
-			ImGui::End();
 		}
 	}
 

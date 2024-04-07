@@ -1,5 +1,5 @@
 //------- Sol Editor -------
-//An Game Editor Utilizing
+//A Game Editor Utilizing
 //The Sol Core
 //--------------------------
 #include "Core.h"
