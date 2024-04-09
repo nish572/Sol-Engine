@@ -81,6 +81,11 @@ namespace CoreEcsElement
         //No harm in this since creating an entity only returns the result of m_entityID++, which is always a std::uint32_t;
     }
 
+    std::unordered_map<Entity, std::unordered_map<std::type_index, std::shared_ptr<void>>> EcsElement::getEntityMap()
+    {
+        return m_entityComponentMap;
+    }
+
     void EcsElement::updateSystems(double deltaTime) {
         for (const auto& system : m_systems) {
             system.second(deltaTime);

@@ -102,6 +102,8 @@ namespace CoreEcsElement
         void updateSystems(double deltaTime);
         void fixedUpdateSystems(double fixedTimestep);
 
+        std::unordered_map<Entity, std::unordered_map<std::type_index, std::shared_ptr<void>>> getEntityMap();
+
         //Sprite functions
         ENGINE_API void addSprite(Entity entity) {
             SpriteComponent tmp = SpriteComponent{};

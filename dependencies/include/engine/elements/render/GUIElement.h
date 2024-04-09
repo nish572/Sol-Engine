@@ -40,6 +40,8 @@ namespace CoreGuiElement
 		void terminate();
 
 		void editorViewports();
+		void mainEditorViewport();
+		void sceneHierarchyViewport();
 
 	private:
 		//Pointer to Core

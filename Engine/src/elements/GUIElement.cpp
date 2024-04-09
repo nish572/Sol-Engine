@@ -114,6 +114,7 @@ namespace CoreGuiElement
 		}
 
 		ImGui::Render();
+
 		glViewport(0, 0, (int)io.DisplaySize.x, (int)io.DisplaySize.y);
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 		//Update and Render additional Platform Windows
@@ -124,15 +125,56 @@ namespace CoreGuiElement
 			ImGui::UpdatePlatformWindows();
 			ImGui::RenderPlatformWindowsDefault();
 			SDL_GL_MakeCurrent(backup_current_window, backup_current_context);
-		}
-
-		ImGui::EndFrame();
+		}		
 	}
 
 	void GuiElement::editorViewports()
 	{
-		ImGui::Begin("test");
-		ImGui::Text("am i visible?");
+		//mainEditorViewport();
+		sceneHierarchyViewport();
+	}
+
+	void GuiElement::mainEditorViewport()
+	{
+		ImGui::Begin("Sol Editor");
+		ImGui::End();
+	}
+
+	void GuiElement::sceneHierarchyViewport()
+	{
+		ImGui::Begin("Scene");
+
+		if (ImGui::Button("Add Entity"))
+		{
+			auto corePtr = m_core.lock();
+			if (corePtr)
+			{
+				auto ecsPtr = corePtr->getEcsElement();
+				if (ecsPtr)
+				{
+					Entity dogEntity = ecsPtr->createEntity();
+					ecsPtr->addSprite(dogEntity);
+					ecsPtr->addTransform(dogEntity);
+					auto testImg = corePtr->getResourceElement()->loadTextureResource("C:\\Software Development\\Sol-Engine\\Sol-Engine\\downloads\\fish.jpg");
+					std::shared_ptr<TextureResource> currentImg = testImg;
+					auto& sprite = ecsPtr->getSprite(dogEntity);
+					sprite.textureID = currentImg->textureID;
+					sprite.size = glm::vec2(currentImg->width, currentImg->height);
+					auto& trans = ecsPtr->getTransform(dogEntity);
+					trans.position = glm::vec3(0, 250, 0);
+					trans.scale = glm::vec3(0.2, 0.2, 0);
+					b2PolygonShape* square = new b2PolygonShape(); //Be careful where I call this since if it is out of scope, it's lifetime is over and the physics won't work
+					square->SetAsBox(0.612f, 0.408f); // Half-width and half-height
+					ecsPtr->addCollider(dogEntity);
+					auto& collider = ecsPtr->getCollider(dogEntity);
+					collider.shape = square;
+					ecsPtr->addPhysicsBody(dogEntity);
+					auto& physBod = ecsPtr->getPhysicsBody(dogEntity);
+					physBod.type = BodyType::Dynamic;
+				}
+			}
+		}
+
 		ImGui::End();
 	}
 

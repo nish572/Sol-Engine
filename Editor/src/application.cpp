@@ -26,7 +26,7 @@ int main(int argc, char* args[]) {
 	//window flags to (SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI), and vsync to 0 (disabled)
 	appCore->getShaderElement()->initialize(); //Shader element does not depend upon any other element
 	appCore->getResourceElement()->initialize(); //Resource element does not depend upon any other element
-	appCore->getRenderElement()->initialize("Sol Editor", 1920, 1080, (SDL_WindowFlags)(SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI), 0); //Render element does not depend upon any other element
+	appCore->getRenderElement()->initialize("Sol Engine", 1920, 1080, (SDL_WindowFlags)(SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI), 0); //Render element does not depend upon any other element
 	appCore->getGuiElement()->initialize(true); //Gui element depends upon render element, render element must be initialized first
 	appCore->getPhysicsElement()->initialize(); //Physics element//Physics element
 	appCore->getEventElement()->initialize(); //Event element depends upon render element, render element must be initialized first
@@ -84,19 +84,19 @@ int main(int argc, char* args[]) {
 	auto& collider = appCore->getEcsElement()->getCollider(dogEntity);
 	//b2Shape* colliderShape, float colliderDensity, float colliderFriction, float colliderRestitution
 	b2PolygonShape* square = new b2PolygonShape(); //Be careful where I call this since if it is out of scope, it's lifetime is over and the physics won't work
-	square->SetAsBox(3.06f, 2.04f); // Half-width and half-height
+	square->SetAsBox(0.612f, 0.408f); // Half-width and half-height
 	collider.shape = square;
 	auto& physBod = appCore->getEcsElement()->getPhysicsBody(dogEntity);
 	physBod.type = BodyType::Dynamic;
 
 	// Define an action when the left arrow key is pressed
-	ActionData leftMoveAction(glm::vec2(-1, 0), 200.0f, ForceType::Force, InputType::Keyboard);
+	ActionData leftMoveAction(glm::vec2(-1, 0), 20.0f, ForceType::Force, InputType::Keyboard);
 	appCore->getEcsElement()->getInput(dogEntity).addKeyAction(SDLK_LEFT, leftMoveAction);
 
-	ActionData rightMoveAction(glm::vec2(1, 0), 200.0f, ForceType::Force, InputType::Keyboard);
+	ActionData rightMoveAction(glm::vec2(1, 0), 20.0f, ForceType::Force, InputType::Keyboard);
 	appCore->getEcsElement()->getInput(dogEntity).addKeyAction(SDLK_RIGHT, rightMoveAction);
 
-	ActionData jumpAction(glm::vec2(0, 1), 200.0f, ForceType::Impulse, InputType::Keyboard);
+	ActionData jumpAction(glm::vec2(0, 1), 7.5f, ForceType::Impulse, InputType::Keyboard);
 	appCore->getEcsElement()->getInput(dogEntity).addKeyAction(SDLK_SPACE, jumpAction);
 
 	while (appRunning)
