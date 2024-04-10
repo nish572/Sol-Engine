@@ -32,6 +32,14 @@ namespace EcsPhysicsSystem
         b2BodyDef kinematicBodyDef;
         kinematicBodyDef.type = b2_kinematicBody;
         m_bodyDefs[BodyType::Kinematic] = kinematicBodyDef;
+
+        //Temporary groundbox definition
+        b2BodyDef groundBodyDef;
+        groundBodyDef.position.Set(0.0f, -9.0f);
+        b2Body* groundBody = m_world->CreateBody(&groundBodyDef);
+        b2PolygonShape groundBox;
+        groundBox.SetAsBox(100.0f, 1.0f);
+        groundBody->CreateFixture(&groundBox, 0.0f);
     }
 
     void PhysicsSystem::update(double deltaTime)
@@ -53,14 +61,6 @@ namespace EcsPhysicsSystem
         
         // Retrieve actions for this frame
         auto& actionsPerEntity = m_ecsElement->getCore()->getEventElement()->getActionsForPhysics();
-
-        //Temporary groundbox definition
-        b2BodyDef groundBodyDef;
-        groundBodyDef.position.Set(0.0f, -9.0f);
-        b2Body* groundBody = m_world->CreateBody(&groundBodyDef);
-        b2PolygonShape groundBox;
-        groundBox.SetAsBox(100.0f, 1.0f);
-        groundBody->CreateFixture(&groundBox, 0.0f);
 
         //Iterate through entities with PhysicsBodyComponent and TransformComponent
         //This is to ensure all bodies are created with the appropriate fixtures and at the appropriate positions
