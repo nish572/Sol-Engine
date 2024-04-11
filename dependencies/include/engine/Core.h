@@ -15,6 +15,7 @@
 #include "resource/ShaderElement.h"
 #include "ecs/EcsElement.h"
 #include "ecs/Components.h"
+#include "scene/SceneElement.h"
 
 namespace Sol
 {
@@ -79,6 +80,9 @@ namespace Sol
 		//Return a pointer to the EcsElement instance managed by the Core
 		ENGINE_API std::shared_ptr<CoreEcsElement::EcsElement> getEcsElement() const;
 
+		//Return a pointer to the SceneElement instance managed by the Core
+		ENGINE_API std::shared_ptr<CoreSceneElement::SceneElement> getSceneElement() const;
+
 		//---
 
 	private:
@@ -97,6 +101,7 @@ namespace Sol
 		std::unique_ptr<CoreResourceElement::ResourceElement> m_resourceElement;
 		std::unique_ptr<CoreShaderElement::ShaderElement> m_shaderElement;
 		std::shared_ptr<CoreEcsElement::EcsElement> m_ecsElement;
+		std::shared_ptr<CoreSceneElement::SceneElement> m_sceneElement;
 		//---
 	};
 }

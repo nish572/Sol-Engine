@@ -84,6 +84,9 @@
     <ClCompile Include="src\systems\EventSysten.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\elements\SceneElement.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\dependencies\include\engine\Core.h">
@@ -126,6 +129,9 @@
       <Filter>Header Files\core</Filter>
     </ClInclude>
     <ClInclude Include="..\dependencies\include\engine\systems\EventSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\dependencies\include\engine\elements\scene\SceneElement.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

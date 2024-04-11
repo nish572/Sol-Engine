@@ -108,6 +108,17 @@ namespace Sol
 			std::cout << "[Core] Successfully Attached " << elementName << " Element" << std::endl;
 			return true;
 		}
+		if (elementName == "Scene" && !m_sceneElement)
+		{
+			m_sceneElement = std::make_shared<CoreSceneElement::SceneElement>(shared_from_this());
+			if (m_logElement)
+			{
+				m_logElement->logInfo(std::string("[Core] Successfully Attached ") + elementName + " Element");
+				return true;
+			}
+			std::cout << "[Core] Successfully Attached " << elementName << " Element" << std::endl;
+			return true;
+		}
 		
 		//If Element can't be attached then
 		if (m_logElement)
@@ -179,8 +190,15 @@ namespace Sol
 		}
 		if (elementName == "Ecs" && m_ecsElement)
 		{
-			//m_ecsElement->terminate();
+			m_ecsElement->terminate();
 			m_ecsElement = nullptr;
+			std::cout << "[Core] Successfully Detached " << elementName << " Element" << std::endl;
+			return true;
+		}
+		if (elementName == "Sene" && m_sceneElement)
+		{
+			m_sceneElement->terminate();
+			m_sceneElement = nullptr;
 			std::cout << "[Core] Successfully Detached " << elementName << " Element" << std::endl;
 			return true;
 		}
@@ -245,6 +263,7 @@ namespace Sol
 		if (m_resourceElement) { detachElement("Resource"); }
 		if (m_shaderElement) { detachElement("Shader"); }
 		if (m_ecsElement) { detachElement("Ecs"); }
+		if (m_sceneElement) { detachElement("Scene"); }
 		if (m_logElement) { detachElement("Log"); }
 		std::cout << "[Core] Successfully Terminated" << std::endl;
 	}
@@ -370,6 +389,21 @@ namespace Sol
 			return nullptr;
 		}
 		std::cerr << "[Core] Failed To Get ECS Element: nullptr found" << std::endl;
+		return nullptr;
+	}
+
+	std::shared_ptr<CoreSceneElement::SceneElement> Core::getSceneElement() const
+	{
+		if (m_sceneElement)
+		{
+			return m_sceneElement;
+		}
+		if (m_logElement)
+		{
+			m_logElement->logError("[Core] Failed To Get Scene Element: nullptr found");
+			return nullptr;
+		}
+		std::cerr << "[Core] Failed To Get Scene Element: nullptr found" << std::endl;
 		return nullptr;
 	}
 

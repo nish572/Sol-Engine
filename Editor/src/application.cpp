@@ -20,6 +20,7 @@ int main(int argc, char* args[]) {
 	appCore->attachElement("Physics");
 	appCore->attachElement("Event");
 	appCore->attachElement("Ecs");
+	appCore->attachElement("Scene");
 
 	//Initialize any Element(s) by name
 	//Here I'm setting the window name to "Sol Editor", width to 1920, height to 1080,
@@ -31,6 +32,7 @@ int main(int argc, char* args[]) {
 	appCore->getPhysicsElement()->initialize(); //Physics element//Physics element
 	appCore->getEventElement()->initialize(); //Event element depends upon render element, render element must be initialized first
 	appCore->getEcsElement()->initialize(true, true, true); //Ecs element depends on render element, event element, resource element, and possibly shader element
+	appCore->getSceneElement()->initialize(); //
 
 	//Runtime loop
 	bool appRunning = true;
