@@ -130,13 +130,30 @@ namespace CoreGuiElement
 
 	void GuiElement::editorViewports()
 	{
-		//mainEditorViewport();
+		mainEditorViewport();
 		sceneHierarchyViewport();
+		inspectorViewport();
+		sceneToolbar();
+		debuggerViewport();
+		resourceBrowserViewport();
 	}
 
 	void GuiElement::mainEditorViewport()
 	{
-		ImGui::Begin("Sol Editor");
+		ImGui::Begin("Sol Editor", NULL, ImGuiWindowFlags_MenuBar);
+		ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
+		ImGui::DockSpace(dockspace_id, ImVec2(0, 0), ImGuiDockNodeFlags_None);
+		ImGui::End();
+	}
+
+	void GuiElement::sceneToolbar()
+	{
+		ImGui::Begin("Scene Toolbar");
+		ImGui::Button("Start");
+		ImGui::SameLine();
+		ImGui::Button("Stop");
+		ImGui::SameLine();
+		ImGui::Button("Save");
 		ImGui::End();
 	}
 
@@ -175,6 +192,23 @@ namespace CoreGuiElement
 			}
 		}
 
+		ImGui::End();
+	}
+
+	void GuiElement::inspectorViewport()
+	{
+		ImGui::Begin("Inspector");
+		ImGui::End();
+	}
+
+	void GuiElement::debuggerViewport()
+	{
+		ImGui::Begin("Debug Log");
+		ImGui::End();
+	}
+	void GuiElement::resourceBrowserViewport()
+	{
+		ImGui::Begin("Resource Browser");
 		ImGui::End();
 	}
 

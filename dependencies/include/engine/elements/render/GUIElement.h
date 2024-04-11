@@ -42,6 +42,10 @@ namespace CoreGuiElement
 		void editorViewports();
 		void mainEditorViewport();
 		void sceneHierarchyViewport();
+		void inspectorViewport();
+		void sceneToolbar();
+		void debuggerViewport();
+		void resourceBrowserViewport();
 
 	private:
 		//Pointer to Core
