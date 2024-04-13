@@ -133,13 +133,16 @@ struct PhysicsBodyComponent {
 
 struct SpriteComponent {
     unsigned int textureID;
+    std::string textureFilePath;  //Path to texture for serialization/deserialization
     glm::vec2 size;
     glm::vec4 color;
     unsigned int shaderProgram;
 
     SpriteComponent()
-        : textureID(0), size(1.0f), color(1.0f), shaderProgram(0) {}
+        : textureID(0), textureFilePath(""), size(1.0f), color(1.0f), shaderProgram(0) {}
 
-    SpriteComponent(unsigned int texID, const glm::vec2& spriteSize, const glm::vec4& spriteColor, unsigned int programID)
-        : textureID(texID), size(spriteSize), color(spriteColor), shaderProgram(programID) {}
+    SpriteComponent(unsigned int texID, const std::string& filePath, const glm::vec2& spriteSize,
+        const glm::vec4& spriteColor, unsigned int programID)
+        : textureID(texID), textureFilePath(filePath), size(spriteSize),
+        color(spriteColor), shaderProgram(programID) {}
 };

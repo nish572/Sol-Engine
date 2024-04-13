@@ -206,10 +206,10 @@ namespace CoreSceneElement
 
 	json SceneElement::serializeSprite(const SpriteComponent& component) {
 		return {
-			{"textureID", component.textureID},
+			{"textureFilePath", component.textureFilePath},
 			{"size", {component.size.x, component.size.y}},
 			{"color", {component.color.r, component.color.g, component.color.b, component.color.a}},
-			{"shaderProgram", component.shaderProgram}
+			{"shaderProgram", component.shaderProgram} //Redundant since nowhere we are actually setting this value for the sprite, just here as placeholder for now
 		};
 	}
 
@@ -279,11 +279,23 @@ namespace CoreSceneElement
 	}
 
 	SpriteComponent SceneElement::deserializeSprite(const json& j) {
-		unsigned int textureID = j["textureID"];
+		std::string texturePath = j["textureFilePath"];
 		glm::vec2 size = glm::vec2(j["size"][0], j["size"][1]);
 		glm::vec4 color = glm::vec4(j["color"][0], j["color"][1], j["color"][2], j["color"][3]);
 		unsigned int shaderProgram = j["shaderProgram"];
-		return SpriteComponent(textureID, size, color, shaderProgram);
+
+		auto corePtr = m_core.lock();
+		if (corePtr) {
+			std::shared_ptr<TextureResource> textureResource = corePtr->getResourceElement()->loadTextureResource(texturePath);
+			unsigned int textureID = textureResource ? textureResource->textureID : 0;
+
+			//Adjust size based on texture dimensions
+			if (textureResource) {
+				size = glm::vec2(textureResource->width, textureResource->height);
+			}
+
+			return SpriteComponent(textureID, texturePath, size, color, shaderProgram);
+		}
 	}
 
 	void SceneElement::terminate()
