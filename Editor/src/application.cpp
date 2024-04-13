@@ -70,6 +70,7 @@ int main(int argc, char* args[]) {
 
 	std::shared_ptr<TextureResource> currentImg = testImg3;
 
+	//Test dog entity
 	Entity dogEntity = appCore->getEcsElement()->createEntity();
 	appCore->getEcsElement()->addSprite(dogEntity);
 	appCore->getEcsElement()->addTransform(dogEntity);
@@ -77,17 +78,21 @@ int main(int argc, char* args[]) {
 	appCore->getEcsElement()->addPhysicsBody(dogEntity);
 	appCore->getEcsElement()->addInput(dogEntity);
 
+	//Sprite and transform data for test dog entity
 	auto& sprite = appCore->getEcsElement()->getSprite(dogEntity);
 	sprite.textureID = currentImg->textureID;
 	sprite.size = glm::vec2 (currentImg->width, currentImg->height);
 	auto& trans = appCore->getEcsElement()->getTransform(dogEntity);
 	trans.position = glm::vec3(300, 500, 0);
 	trans.scale = glm::vec3(0.2, 0.2, 0);
+
 	auto& collider = appCore->getEcsElement()->getCollider(dogEntity);
-	//b2Shape* colliderShape, float colliderDensity, float colliderFriction, float colliderRestitution
-	b2PolygonShape* square = new b2PolygonShape(); //Be careful where I call this since if it is out of scope, it's lifetime is over and the physics won't work
-	square->SetAsBox(0.612f, 0.408f); // Half-width and half-height
-	collider.shape = square;
+	collider.shapeType = ShapeType::Box;
+	collider.width = 1.224;  //Full width, physics system will use half-width
+	collider.height = 0.816; //Full height, physics system will use half-height
+	collider.density = 1.0f; //Example density
+	collider.friction = 0.3f; //Example friction
+	collider.restitution = 0.1f; //Example restitution
 	auto& physBod = appCore->getEcsElement()->getPhysicsBody(dogEntity);
 	physBod.type = BodyType::Dynamic;
 

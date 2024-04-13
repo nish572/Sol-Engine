@@ -109,7 +109,7 @@ namespace CoreRenderElement
 
 	void RenderElement::clearScreen()
 	{
-		glClearColor(0.9f, 0.5f, 0.3f, 0.0f);
+		glClearColor(0.059f, 0.059f, 0.059f, 0.0f);
 		glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 	}
 

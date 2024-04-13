@@ -92,16 +92,30 @@ namespace EcsPhysicsSystem
                 auto colliderIt = colliderComponents.find(entity);
                 if (colliderIt != colliderComponents.end()) {
                     auto& colliderComponent = colliderIt->second;
-                    if (colliderComponent->shape != nullptr) { //Ensure there's a shape defined
-                        b2FixtureDef fixtureDef;
-                        fixtureDef.shape = colliderComponent->shape;
-                        fixtureDef.density = colliderComponent->density;
-                        fixtureDef.friction = colliderComponent->friction;
-                        fixtureDef.restitution = colliderComponent->restitution;
 
+                    b2FixtureDef fixtureDef;
+                    fixtureDef.density = colliderComponent->density;
+                    fixtureDef.friction = colliderComponent->friction;
+                    fixtureDef.restitution = colliderComponent->restitution;
+
+                    switch (colliderComponent->shapeType) {
+                    case ShapeType::Box:
+                    {
+                        b2PolygonShape boxShape;
+                        boxShape.SetAsBox(colliderComponent->width / 2.0f, colliderComponent->height / 2.0f); //Box2D uses half-widths and half-heights
+                        fixtureDef.shape = &boxShape;
                         physicsComponent->body->CreateFixture(&fixtureDef);
                     }
-                    //Err
+                    break;
+                    case ShapeType::Circle:
+                    {
+                        b2CircleShape circleShape;
+                        circleShape.m_radius = colliderComponent->radius;
+                        fixtureDef.shape = &circleShape;
+                        physicsComponent->body->CreateFixture(&fixtureDef);
+                    }
+                    break;
+                    }
                 }
             }
 

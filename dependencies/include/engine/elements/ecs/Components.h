@@ -49,14 +49,13 @@ struct ActionData {
 
 struct InputComponent
 {
-    // Map from SDL_Keycode to a list of actions
+    //Map from SDL_Keycode to a list of actions
     std::unordered_map<SDL_Keycode, std::vector<ActionData>> keyActions;
 
     void addKeyAction(SDL_Keycode key, const ActionData& action) {
         keyActions[key].push_back(action);
     }
     void removeKeyAction(SDL_Keycode key) {
-        // Example: Removing all actions for a key
         keyActions.erase(key);
     }
     std::vector<ActionData> getActionsForKey(SDL_Keycode key) {
@@ -79,17 +78,39 @@ struct TransformComponent {
         : position(pos), rotation(rot), scale(scl) {}
 };
 
+enum class ShapeType {
+    Box,
+    Circle,
+    //Expand with other shapes if needed
+};
+
 struct ColliderComponent {
+    ShapeType shapeType;
     b2Shape* shape;
+    float width;  //Used for the width of a box
+    float height; //Used for the height of a box
+    float radius; //Used for the radius of a circle
+
     float density;
     float friction;
     float restitution;
 
+    //Default constructor initializes to a default box shape as a placeholder
     ColliderComponent()
-        : shape(nullptr), density(1.0f), friction(0.3f), restitution(0.1f) {}
+        : shapeType(ShapeType::Box), width(1.0f), height(1.0f), radius(0.5f),
+        density(1.0f), friction(0.3f), restitution(0.1f) {}
 
-    ColliderComponent(b2Shape* colliderShape, float colliderDensity, float colliderFriction, float colliderRestitution)
-        : shape(colliderShape), density(colliderDensity), friction(colliderFriction), restitution(colliderRestitution) {}
+    //Constructor for box shape
+    ColliderComponent(float boxWidth, float boxHeight, float boxDensity,
+        float boxFriction, float boxRestitution)
+        : shapeType(ShapeType::Box), width(boxWidth), height(boxHeight), radius(0),
+        density(boxDensity), friction(boxFriction), restitution(boxRestitution) {}
+
+    //Constructor for circle shape
+    ColliderComponent(float circleRadius, float circleDensity,
+        float circleFriction, float circleRestitution)
+        : shapeType(ShapeType::Circle), width(0), height(0), radius(circleRadius),
+        density(circleDensity), friction(circleFriction), restitution(circleRestitution) {}
 };
 
 enum class BodyType {

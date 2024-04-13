@@ -86,6 +86,12 @@ namespace CoreEcsElement
         return m_entityComponentMap;
     }
 
+    void EcsElement::clear()
+    {
+        m_entityComponentMap.clear();
+        m_componentEntityMap.clear();
+    }
+
     void EcsElement::updateSystems(double deltaTime) {
         for (const auto& system : m_systems) {
             system.second(deltaTime);

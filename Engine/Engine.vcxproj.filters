@@ -134,5 +134,8 @@
     <ClInclude Include="..\dependencies\include\engine\elements\scene\SceneElement.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\dependencies\include\nlohmann\json.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

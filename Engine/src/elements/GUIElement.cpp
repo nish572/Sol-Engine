@@ -178,7 +178,7 @@ namespace CoreGuiElement
 					sprite.textureID = currentImg->textureID;
 					sprite.size = glm::vec2(currentImg->width, currentImg->height);
 					auto& trans = ecsPtr->getTransform(dogEntity);
-					trans.position = glm::vec3(0, 250, 0);
+					trans.position = glm::vec3(0, 0, 0);
 					trans.scale = glm::vec3(0.2, 0.2, 0);
 					b2PolygonShape* square = new b2PolygonShape(); //Be careful where I call this since if it is out of scope, it's lifetime is over and the physics won't work
 					square->SetAsBox(0.612f, 0.408f); // Half-width and half-height

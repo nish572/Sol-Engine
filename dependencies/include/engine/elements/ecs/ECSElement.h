@@ -103,6 +103,7 @@ namespace CoreEcsElement
         void fixedUpdateSystems(double fixedTimestep);
 
         std::unordered_map<Entity, std::unordered_map<std::type_index, std::shared_ptr<void>>> getEntityMap();
+        void clear();
 
         //Sprite functions
         ENGINE_API void addSprite(Entity entity) {
