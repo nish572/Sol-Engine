@@ -50,7 +50,10 @@ namespace CoreEcsElement
 
     void EcsElement::fixedUpdate(double fixedTimestep) {
         //Call fixedUpdateSystems(fixedTimestep) to update fixed update systems
-        fixedUpdateSystems(fixedTimestep);
+        if (m_isSceneRunning)
+        {
+            fixedUpdateSystems(fixedTimestep);
+        }
     }
 
     void EcsElement::terminate() {
@@ -84,6 +87,11 @@ namespace CoreEcsElement
     std::unordered_map<Entity, std::unordered_map<std::type_index, std::shared_ptr<void>>> EcsElement::getEntityMap()
     {
         return m_entityComponentMap;
+    }
+
+    void EcsElement::setSceneRunning(bool runningState)
+    {
+        m_isSceneRunning = runningState;
     }
 
     void EcsElement::clear()

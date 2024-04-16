@@ -8,13 +8,17 @@ int main(int argc, char* args[]) {
 	//Core instance (make_shared allows Elements to have a weak_ptr to Core, important for Element's to access each other if desired)
 	auto appCore = std::make_shared<Sol::Core>();
 
-	//Attach any Element(s) by name
+	//Attach and initialize any Element(s) by name
+	//Setup render before GUI
+	//Setup physics/render/event before ECS
+	//Attach elements before calling initialize functions
+	//Initialize log element (if using) before attaching and initializing other elements to ensure can log from them to the specified txt file
+
 	appCore->attachElement("Log");
 	appCore->getLogElement()->initialize("Sol-Editor.txt");
 
 	appCore->attachElement("Shader");
 	appCore->attachElement("Resource");
-
 	appCore->attachElement("Render");
 	appCore->attachElement("Gui");
 	appCore->attachElement("Physics");
@@ -22,89 +26,20 @@ int main(int argc, char* args[]) {
 	appCore->attachElement("Ecs");
 	appCore->attachElement("Scene");
 
-	//Initialize any Element(s) by name
-	//Here I'm setting the window name to "Sol Editor", width to 1920, height to 1080,
+	appCore->getShaderElement()->initialize();
+	appCore->getResourceElement()->initialize();
+	//Setting the window name to "Sol Editor", width to 1920, height to 1080,
 	//window flags to (SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI), and vsync to 0 (disabled)
-	appCore->getShaderElement()->initialize(); //Shader element does not depend upon any other element
-	appCore->getResourceElement()->initialize(); //Resource element does not depend upon any other element
 	appCore->getRenderElement()->initialize("Sol Engine", 1920, 1080, (SDL_WindowFlags)(SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI), 0); //Render element does not depend upon any other element
 	appCore->getGuiElement()->initialize(true); //Gui element depends upon render element, render element must be initialized first
-	appCore->getPhysicsElement()->initialize(); //Physics element//Physics element
-	appCore->getEventElement()->initialize(); //Event element depends upon render element, render element must be initialized first
-	appCore->getEcsElement()->initialize(true, true, true); //Ecs element depends on render element, event element, resource element, and possibly shader element
-	appCore->getSceneElement()->initialize(); //
+	appCore->getPhysicsElement()->initialize();
+	appCore->getEventElement()->initialize();
+	//Setting each system to true or false depending on whether or not they need to be used (for full ECS functionality, true for each required)
+	appCore->getEcsElement()->initialize(true, true, true);
+	appCore->getSceneElement()->initialize();
 
 	//Runtime loop
 	bool appRunning = true;
-	auto testImg2 = appCore->getResourceElement()->loadTextureResource("C:\\Software Development\\Sol-Engine\\Sol-Engine\\downloads\\fish.jpg");
-	auto testImg = appCore->getResourceElement()->loadTextureResource("C:\\Software Development\\Sol-Engine\\Sol-Engine\\downloads\\cat.jpg");
-	auto testImg3 = appCore->getResourceElement()->loadTextureResource("C:\\Software Development\\Sol-Engine\\Sol-Engine\\downloads\\dog.jpg");
-	auto testImg4 = appCore->getResourceElement()->loadTextureResource("C:\\Software Development\\Sol-Engine\\Sol-Engine\\downloads\\fullsize.jpg");
-
-	//std::cout << "Texture IDs: " << testImg->textureID << ", " << testImg2->textureID << ", " << testImg3->textureID << std::endl;
-
-	// Vector containing the texture pointers
-	//std::vector<std::shared_ptr<TextureResource>> textures = { testImg4 };
-
-	//for (int i = 0; i < 10; i++) {
-	//	Entity newEntity = appCore->getEcsElement()->createEntity();
-	//	appCore->getEcsElement()->addSprite(newEntity);
-	//	appCore->getEcsElement()->addTransform(newEntity);
-
-	//	auto& sprite2 = appCore->getEcsElement()->getSprite(newEntity);
-
-	//	//Select random texture from the textures vector
-	//	int randomTextureIndex2 = rand() % textures.size();
-	//	sprite2.textureID = textures[randomTextureIndex2]->textureID;
-	//	auto& trans2 = appCore->getEcsElement()->getTransform(newEntity);
-
-	//	//For the position, assign a random float within some range
-	//	float posX = static_cast<float>(rand()) / static_cast<float>(RAND_MAX) - 0.5f;
-	//	float posY = static_cast<float>(rand()) / static_cast<float>(RAND_MAX) - 0.5f;
-	//	std::cout << i << std::endl;
-
-	//	trans2.position = glm::vec3(posX, posY, 0);
-	//	trans2.scale = glm::vec3(100, 100, 100);
-	//	std::cout << "Dog: " << i << ", textureIndex: " << randomTextureIndex2 << ", textureID: " << sprite2.textureID << std::endl;
-	//}
-
-	std::shared_ptr<TextureResource> currentImg = testImg3;
-
-	//Test dog entity
-	Entity dogEntity = appCore->getEcsElement()->createEntity();
-	appCore->getEcsElement()->addSprite(dogEntity);
-	appCore->getEcsElement()->addTransform(dogEntity);
-	appCore->getEcsElement()->addCollider(dogEntity);
-	appCore->getEcsElement()->addPhysicsBody(dogEntity);
-	appCore->getEcsElement()->addInput(dogEntity);
-
-	//Sprite and transform data for test dog entity
-	auto& sprite = appCore->getEcsElement()->getSprite(dogEntity);
-	sprite.textureID = currentImg->textureID;
-	sprite.size = glm::vec2 (currentImg->width, currentImg->height);
-	auto& trans = appCore->getEcsElement()->getTransform(dogEntity);
-	trans.position = glm::vec3(300, 500, 0);
-	trans.scale = glm::vec3(0.2, 0.2, 0);
-
-	auto& collider = appCore->getEcsElement()->getCollider(dogEntity);
-	collider.shapeType = ShapeType::Box;
-	collider.width = 1.224;  //Full width, physics system will use half-width
-	collider.height = 0.816; //Full height, physics system will use half-height
-	collider.density = 1.0f; //Example density
-	collider.friction = 0.3f; //Example friction
-	collider.restitution = 0.1f; //Example restitution
-	auto& physBod = appCore->getEcsElement()->getPhysicsBody(dogEntity);
-	physBod.type = BodyType::Dynamic;
-
-	// Define an action when the left arrow key is pressed
-	ActionData leftMoveAction(glm::vec2(-1, 0), 20.0f, ForceType::Force, InputType::Keyboard);
-	appCore->getEcsElement()->getInput(dogEntity).addKeyAction(SDLK_LEFT, leftMoveAction);
-
-	ActionData rightMoveAction(glm::vec2(1, 0), 20.0f, ForceType::Force, InputType::Keyboard);
-	appCore->getEcsElement()->getInput(dogEntity).addKeyAction(SDLK_RIGHT, rightMoveAction);
-
-	ActionData jumpAction(glm::vec2(0, 1), 7.5f, ForceType::Impulse, InputType::Keyboard);
-	appCore->getEcsElement()->getInput(dogEntity).addKeyAction(SDLK_SPACE, jumpAction);
 
 	while (appRunning)
 	{
@@ -114,8 +49,7 @@ int main(int argc, char* args[]) {
 		appRunning = appCore->getEventElement()->isRunning();
 	}
 
-	//Good practice to
-	//Call Core's terminate function in case any Elements are still attached
+	//Good practice to call Core's terminate function in case any Elements are still attached
 	appCore->terminate();
 
 	//Reset appCore as this will destroy appCore's instance of Core

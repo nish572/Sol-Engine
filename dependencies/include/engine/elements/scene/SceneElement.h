@@ -38,17 +38,13 @@ namespace CoreSceneElement
 		//Initialize SceneElement
 		ENGINE_API bool initialize();
 
-		//Serialize the ECS Element's entity-component map into a JSON file], and set the ECS's data structure(s) appropriately
-		void serializeScene(const std::string& sceneFilepath);
+		void newScene();
 
-		//Deserialize the JSON file into the ECS Element's entity-component map, and reset the ECS's data structure(s) appropriately
-		void deserializeScene(const std::string& sceneFilepath);
-
-		//Load a scene by calling deserialize function
-		void loadScene(const std::string& sceneFilepath);
-
-		//Unoad a scene by calling serialize function
+		//Serialize the ECS Element's entity-component map into a JSON file, and reset the ECS's data structure(s) appropriately
 		void unloadScene(const std::string& sceneFilepath);
+
+		//Deserialize the JSON file into the ECS Element's entity-component map, and set the ECS's data structure(s) appropriately
+		void loadScene(const std::string& sceneFilepath);
 
 		//Terminate SceneElement
 		void terminate();
@@ -58,6 +54,8 @@ namespace CoreSceneElement
 		std::weak_ptr<Sol::Core> m_core;
 		//Is LogElement present
 		bool m_logElementAttached{ false };
+
+		std::string m_currentScene;
 
 		// Helper functions for serialization of components
 		json serializeTransform(const TransformComponent& component);

@@ -43,7 +43,6 @@ namespace CoreGuiElement
 		void mainEditorViewport();
 		void sceneHierarchyViewport();
 		void inspectorViewport();
-		void sceneToolbar();
 		void debuggerViewport();
 		void resourceBrowserViewport();
 

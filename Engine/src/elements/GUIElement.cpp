@@ -133,7 +133,6 @@ namespace CoreGuiElement
 		mainEditorViewport();
 		sceneHierarchyViewport();
 		inspectorViewport();
-		sceneToolbar();
 		debuggerViewport();
 		resourceBrowserViewport();
 	}
@@ -143,17 +142,125 @@ namespace CoreGuiElement
 		ImGui::Begin("Sol Editor", NULL, ImGuiWindowFlags_MenuBar);
 		ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
 		ImGui::DockSpace(dockspace_id, ImVec2(0, 0), ImGuiDockNodeFlags_None);
-		ImGui::End();
-	}
 
-	void GuiElement::sceneToolbar()
-	{
-		ImGui::Begin("Scene Toolbar");
-		ImGui::Button("Start");
-		ImGui::SameLine();
-		ImGui::Button("Stop");
-		ImGui::SameLine();
-		ImGui::Button("Save");
+		if (ImGui::BeginMenuBar())
+		{
+			if (ImGui::BeginMenu("Scene")) {
+				if (ImGui::MenuItem("New Scene", "Ctrl+N")) {
+					//Create new scene
+					auto corePtr = m_core.lock();
+					if (corePtr)
+					{
+						auto ecsPtr = corePtr->getEcsElement();
+						if (ecsPtr)
+						{
+							ecsPtr->setSceneRunning(false);
+						}
+
+						auto scenePtr = corePtr->getSceneElement();
+						if (scenePtr)
+						{
+							scenePtr->newScene();
+						}
+					}
+				}
+				if (ImGui::MenuItem("Load Scene", "Ctrl+L")) {
+					//Load scene
+					auto corePtr = m_core.lock();
+					if (corePtr)
+					{
+						auto ecsPtr = corePtr->getEcsElement();
+						if (ecsPtr)
+						{
+							ecsPtr->setSceneRunning(false);
+						}
+
+						auto scenePtr = corePtr->getSceneElement();
+						if (scenePtr)
+						{
+							scenePtr->loadScene("C:\\Software Development\\Sol-Engine\\Sol-Engine\\downloads\\test.scn");
+						}
+					}
+				}
+				if (ImGui::MenuItem("Save Scene", "Ctrl+S")) {
+					//Save current scene
+					auto corePtr = m_core.lock();
+					if (corePtr)
+					{
+						auto ecsPtr = corePtr->getEcsElement();
+						if (ecsPtr)
+						{
+							ecsPtr->setSceneRunning(false);
+						}
+
+						auto scenePtr = corePtr->getSceneElement();
+						if (scenePtr)
+						{
+							scenePtr->unloadScene("C:\\Software Development\\Sol-Engine\\Sol-Engine\\downloads\\test.scn");
+						}
+					}
+				}
+				ImGui::EndMenu();
+			}
+			if (ImGui::BeginMenu("Project")) {
+				if (ImGui::MenuItem("Project Settings", "Ctrl+Shift+S")) {
+					//Load config page for project settings
+				}
+				ImGui::EndMenu();
+			}
+			if (ImGui::BeginMenu("Help")) {
+				if (ImGui::MenuItem("Open Documentation", "F1")) {
+					//Load the text file with the documentation
+				}
+				ImGui::EndMenu();
+			}
+			ImGui::Separator();
+			if (ImGui::Button("Start"))
+			{
+				auto corePtr = m_core.lock();
+				if (corePtr)
+				{
+					auto ecsPtr = corePtr->getEcsElement();
+					if (ecsPtr)
+					{
+						ecsPtr->setSceneRunning(true);
+					}
+				}
+			}
+			ImGui::SameLine();
+			if (ImGui::Button("Stop"))
+			{
+				auto corePtr = m_core.lock();
+				if (corePtr)
+				{
+					auto ecsPtr = corePtr->getEcsElement();
+					if (ecsPtr)
+					{
+						ecsPtr->setSceneRunning(false);
+					}
+				}
+			}
+			ImGui::SameLine();
+			if (ImGui::Button("Save")) {
+				//Save current scene
+				auto corePtr = m_core.lock();
+				if (corePtr)
+				{
+					auto ecsPtr = corePtr->getEcsElement();
+					if (ecsPtr)
+					{
+						ecsPtr->setSceneRunning(false);
+					}
+
+					auto scenePtr = corePtr->getSceneElement();
+					if (scenePtr)
+					{
+						scenePtr->unloadScene("C:\\Software Development\\Sol-Engine\\Sol-Engine\\downloads\\test.scn");
+					}
+				}
+			}
+		}
+		ImGui::EndMenuBar();
 		ImGui::End();
 	}
 

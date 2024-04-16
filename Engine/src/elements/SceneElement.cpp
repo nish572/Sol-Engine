@@ -5,7 +5,7 @@
 
 namespace CoreSceneElement
 {
-	SceneElement::SceneElement(std::shared_ptr<Sol::Core> core) : m_core(core)
+	SceneElement::SceneElement(std::shared_ptr<Sol::Core> core) : m_core(core), m_currentScene("C:\\Software Development\\Sol-Engine\\Sol-Engine\\downloads\\ignore.scn")
 	{
 	}
 	SceneElement::~SceneElement()
@@ -36,12 +36,36 @@ namespace CoreSceneElement
 		return true;
 	}
 
+	//Create a new scene 
+
+	void SceneElement::newScene() {
+
+		auto corePtr = m_core.lock();
+		if (corePtr)
+		{
+			auto physPtr = corePtr->getPhysicsElement();
+			if (physPtr)
+			{
+				physPtr->clearWorld();
+			}
+			auto ecsPtr = corePtr->getEcsElement();
+			if (ecsPtr)
+			{
+				ecsPtr->clear();
+			}
+		}
+	}
+
 	//Serialization function for the scene
 
-	void SceneElement::serializeScene(const std::string& sceneFilepath) {
+	void SceneElement::unloadScene(const std::string& sceneFilepath) {
+		m_currentScene = "";
+
 		json j; //Create JSON object to hold all ECS data
 
 		auto corePtr = m_core.lock();
+
+
 		if (corePtr)
 		{
 			auto ecsPtr = corePtr->getEcsElement();
@@ -88,7 +112,8 @@ namespace CoreSceneElement
 
 	//Deserialization function for the scene
 
-	void SceneElement::deserializeScene(const std::string& sceneFilepath) {
+	void SceneElement::loadScene(const std::string& sceneFilepath) {
+		m_currentScene = sceneFilepath;
 
 		std::ifstream file(sceneFilepath);
 		if (!file.is_open()) {
@@ -101,6 +126,11 @@ namespace CoreSceneElement
 		auto corePtr = m_core.lock();
 		if (corePtr)
 		{
+			auto physPtr = corePtr->getPhysicsElement();
+			if (physPtr)
+			{
+				physPtr->clearWorld();
+			}
 			auto ecsPtr = corePtr->getEcsElement();
 			if (ecsPtr)
 			{
@@ -131,6 +161,7 @@ namespace CoreSceneElement
 							ecsPtr->addComponent(newEntity, pb);
 						}
 						else if (compType == "SpriteComponent") {
+							std::cout << "i am being called!";
 							SpriteComponent sc = deserializeSprite(compJson);
 							ecsPtr->addComponent(newEntity, sc);
 						}
@@ -280,6 +311,7 @@ namespace CoreSceneElement
 
 	SpriteComponent SceneElement::deserializeSprite(const json& j) {
 		std::string texturePath = j["textureFilePath"];
+		std::cout << texturePath;
 		glm::vec2 size = glm::vec2(j["size"][0], j["size"][1]);
 		glm::vec4 color = glm::vec4(j["color"][0], j["color"][1], j["color"][2], j["color"][3]);
 		unsigned int shaderProgram = j["shaderProgram"];

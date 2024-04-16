@@ -74,4 +74,17 @@ namespace CorePhysicsElement
 		std::cerr << "[Physics] Failed To Get World: nullptr found" << std::endl;
 		return nullptr;
 	}
+
+	void PhysicsElement::clearWorld()
+	{
+		if (!m_world) return;
+
+		//Iterate over the world's body list and destroy each body
+		for (b2Body* body = m_world->GetBodyList(); body != nullptr;) {
+			//Store the next body before destroying the current one
+			b2Body* nextBody = body->GetNext();
+			m_world->DestroyBody(body);
+			body = nextBody;
+		}
+	}
 }

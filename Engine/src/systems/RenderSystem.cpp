@@ -226,7 +226,10 @@ namespace EcsRenderSystem
             std::cout << std::endl << std::endl;
         }*/
 
-        renderSprites(tmpSpriteTransformPairs);
+        if (tmpSpriteTransformPairs.size() > 0)
+        {
+            renderSprites(tmpSpriteTransformPairs);
+        }
     }
 
     void RenderSystem::fixedUpdate(double fixedTimestep) {

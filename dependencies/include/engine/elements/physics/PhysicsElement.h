@@ -35,6 +35,8 @@ namespace CorePhysicsElement
 		//Return a pointer to the box2d world managed by the PhysicsElement/PhysicsSystem
 		std::shared_ptr<b2World> getWorld() const;
 
+		void clearWorld();
+
 	private:
 		//Pointer to core
 		std::weak_ptr<Sol::Core> m_core;

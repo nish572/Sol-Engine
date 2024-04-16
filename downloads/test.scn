@@ -1,0 +1,83 @@
+{
+    "2": {
+        "ColliderComponent": {
+            "density": 1.0,
+            "friction": 0.30000001192092896,
+            "restitution": 0.10000000149011612,
+            "shape": {
+                "height": 0.8159999847412109,
+                "type": "Box",
+                "width": 1.2239999771118164
+            }
+        },
+        "InputComponent": {
+            "1073741903": [
+                {
+                    "forceType": 0,
+                    "inputType": 0,
+                    "magnitude": 20.0,
+                    "moveDirection": [
+                        1.0,
+                        0.0
+                    ]
+                }
+            ],
+            "1073741904": [
+                {
+                    "forceType": 0,
+                    "inputType": 0,
+                    "magnitude": 20.0,
+                    "moveDirection": [
+                        -1.0,
+                        0.0
+                    ]
+                }
+            ],
+            "32": [
+                {
+                    "forceType": 1,
+                    "inputType": 0,
+                    "magnitude": 7.5,
+                    "moveDirection": [
+                        0.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        "PhysicsBodyComponent": {
+            "position": [
+                -6.599999904632568,
+                -7.331244945526123
+            ],
+            "type": 0
+        },
+        "SpriteComponent": {
+            "color": [
+                1.0,
+                1.0,
+                1.0,
+                1.0
+            ],
+            "shaderProgram": 0,
+            "size": [
+                612.0,
+                408.0
+            ],
+            "textureFilePath": "C:\\Software Development\\Sol-Engine\\Sol-Engine\\downloads\\dog.jpg"
+        },
+        "TransformComponent": {
+            "position": [
+                300.0,
+                -242.31292724609375,
+                0.0
+            ],
+            "rotation": 0.0,
+            "scale": [
+                0.20000000298023224,
+                0.20000000298023224,
+                0.0
+            ]
+        }
+    }
+}

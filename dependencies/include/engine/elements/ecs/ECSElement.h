@@ -102,6 +102,7 @@ namespace CoreEcsElement
         void updateSystems(double deltaTime);
         void fixedUpdateSystems(double fixedTimestep);
 
+        void setSceneRunning(bool runningState);
         std::unordered_map<Entity, std::unordered_map<std::type_index, std::shared_ptr<void>>> getEntityMap();
         void clear();
 
@@ -158,5 +159,7 @@ namespace CoreEcsElement
 
         //Entity ID management
         Entity m_entityID = 0;
+
+        bool m_isSceneRunning = true;
     };
 }
