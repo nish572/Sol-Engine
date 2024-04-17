@@ -1,18 +1,18 @@
-[2024-04-16 19:59:11.641] [SolLogger] [info] [Log] Successfully Initialized Logger
-[2024-04-16 19:59:11.642] [SolLogger] [info] [Core] Successfully Attached Shader Element
-[2024-04-16 19:59:11.642] [SolLogger] [info] [Core] Successfully Attached Resource Element
-[2024-04-16 19:59:11.642] [SolLogger] [info] [Core] Successfully Attached Render Element
-[2024-04-16 19:59:11.642] [SolLogger] [info] [Core] Successfully Attached Gui Element
-[2024-04-16 19:59:11.642] [SolLogger] [info] [Core] Successfully Attached Physics Element
-[2024-04-16 19:59:11.642] [SolLogger] [info] [Core] Successfully Attached Event Element
-[2024-04-16 19:59:11.642] [SolLogger] [info] [Core] Successfully Attached Ecs Element
-[2024-04-16 19:59:11.642] [SolLogger] [info] [Core] Successfully Attached Scene Element
-[2024-04-16 19:59:11.642] [SolLogger] [info] [Shader] Successfully Initialized
-[2024-04-16 19:59:11.642] [SolLogger] [info] [Resource] Successfully Initialized
-[2024-04-16 19:59:12.163] [SolLogger] [info] [Render] Successfully Initialized
-[2024-04-16 19:59:12.163] [SolLogger] [info] [Gui] Successfully Initialized
-[2024-04-16 19:59:12.163] [SolLogger] [info] [Physics] Successfully Initialized
-[2024-04-16 19:59:12.163] [SolLogger] [info] [Event] Successfully Initialized
-[2024-04-16 19:59:12.167] [SolLogger] [info] [Scene] Successfully Initialized
-[2024-04-16 19:59:15.888] [SolLogger] [info] [Resource] Successfully Loaded New Image: C:\Software Development\Sol-Engine\Sol-Engine\downloads\dog.jpg
-[2024-04-16 19:59:27.066] [SolLogger] [error] [Core] Failed To Detach Scene Element
+[2024-04-17 07:08:28.574] [SolLogger] [info] [Log] Successfully Initialized Logger
+[2024-04-17 07:08:28.574] [SolLogger] [info] [Core] Successfully Attached Shader Element
+[2024-04-17 07:08:28.574] [SolLogger] [info] [Core] Successfully Attached Resource Element
+[2024-04-17 07:08:28.574] [SolLogger] [info] [Core] Successfully Attached Render Element
+[2024-04-17 07:08:28.574] [SolLogger] [info] [Core] Successfully Attached Gui Element
+[2024-04-17 07:08:28.574] [SolLogger] [info] [Core] Successfully Attached Physics Element
+[2024-04-17 07:08:28.574] [SolLogger] [info] [Core] Successfully Attached Event Element
+[2024-04-17 07:08:28.574] [SolLogger] [info] [Core] Successfully Attached Ecs Element
+[2024-04-17 07:08:28.574] [SolLogger] [info] [Core] Successfully Attached Scene Element
+[2024-04-17 07:08:28.574] [SolLogger] [info] [Shader] Successfully Initialized
+[2024-04-17 07:08:28.574] [SolLogger] [info] [Resource] Successfully Initialized
+[2024-04-17 07:08:29.160] [SolLogger] [info] [Render] Successfully Initialized
+[2024-04-17 07:08:29.162] [SolLogger] [info] [Gui] Successfully Initialized
+[2024-04-17 07:08:29.162] [SolLogger] [info] [Physics] Successfully Initialized
+[2024-04-17 07:08:29.162] [SolLogger] [info] [Event] Successfully Initialized
+[2024-04-17 07:08:29.166] [SolLogger] [info] [Scene] Successfully Initialized
+[2024-04-17 07:08:32.927] [SolLogger] [info] [Resource] Successfully Loaded New Image: C:\Software Development\Sol-Engine\Sol-Engine\downloads\dog.jpg
+[2024-04-17 07:09:03.614] [SolLogger] [error] [Core] Failed To Detach Scene Element

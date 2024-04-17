@@ -1,5 +1,5 @@
 {
-    "2": {
+    "0": {
         "ColliderComponent": {
             "density": 1.0,
             "friction": 0.30000001192092896,
@@ -11,6 +11,7 @@
             }
         },
         "InputComponent": {
+            "103": null,
             "1073741903": [
                 {
                     "forceType": 0,
@@ -48,7 +49,7 @@
         "PhysicsBodyComponent": {
             "position": [
                 -6.599999904632568,
-                -7.331244945526123
+                -7.577003002166748
             ],
             "type": 0
         },
@@ -68,8 +69,8 @@
         },
         "TransformComponent": {
             "position": [
-                300.0,
-                -242.31292724609375,
+                0.0,
+                0.0,
                 0.0
             ],
             "rotation": 0.0,

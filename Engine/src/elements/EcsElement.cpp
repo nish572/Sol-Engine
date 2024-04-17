@@ -98,6 +98,7 @@ namespace CoreEcsElement
     {
         m_entityComponentMap.clear();
         m_componentEntityMap.clear();
+        m_entityID = 0;
     }
 
     void EcsElement::updateSystems(double deltaTime) {

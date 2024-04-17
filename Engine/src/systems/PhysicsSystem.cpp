@@ -144,10 +144,10 @@ namespace EcsPhysicsSystem
 
             //Sync the physics body's position and rotation with the TransformComponent
             b2Vec2 pos = physicsComponent->body->GetPosition();
-            //float angle = physicsComponent->body->GetAngle();
+            float angle = physicsComponent->body->GetAngle();
             transformComponent->position.x = (pos.x * m_scalingFactor) + (ApplicationConfig::Config::screenWidth / 2.0f);
             transformComponent->position.y = (pos.y * m_scalingFactor) + (ApplicationConfig::Config::screenHeight / 2.0f);
-            //transformComponent->rotation = angle;
+            transformComponent->rotation = angle;
         }
 
         //Physics step

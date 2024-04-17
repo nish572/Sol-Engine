@@ -117,6 +117,12 @@ namespace CoreRenderElement
 		SDL_GL_SwapWindow(m_sdlWindow);
 	}
 
+	void RenderElement::setWindowSize(float width, float height)
+	{
+		ApplicationConfig::Config::setScreenSize(width, height);
+		SDL_SetWindowSize(getWindow(), width, height);
+	}
+
 	void RenderElement::terminate()
 	{
 		//Cleanup first, so remove m_sdlWindow and m_glContext

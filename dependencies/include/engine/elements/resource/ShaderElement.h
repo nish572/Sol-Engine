@@ -22,7 +22,7 @@ namespace Sol {
 namespace CoreShaderElement
 {
 	//Represents the element responsible for managing the Shader creation operation in the Sol Engine
-	//More of a utility class than an Element, however it's functionality could be expanded in the future
+	//More of a utility class than an Element, however its functionality could be expanded in the future
 	class ShaderElement
 	{
 	public:

@@ -1,0 +1,4 @@
+Project Name: test dog project
+Project Path: 
+Game Width: 1920
+Game Height: 1080

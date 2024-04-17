@@ -17,6 +17,8 @@
 #include "ecs/Components.h"
 #include "scene/SceneElement.h"
 
+#include "Config.h"
+
 namespace Sol
 {
 	//Core represents the central manager of the Sol Engine

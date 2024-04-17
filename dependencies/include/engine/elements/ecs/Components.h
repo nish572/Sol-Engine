@@ -62,7 +62,7 @@ struct InputComponent
         if (keyActions.find(key) != keyActions.end()) {
             return keyActions[key];
         }
-        return {}; // Return empty vector if no actions found for the key
+        return {}; //Return empty vector if no actions found for the key
     }
 };
 

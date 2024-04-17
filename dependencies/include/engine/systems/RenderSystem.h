@@ -48,6 +48,8 @@ namespace EcsRenderSystem
         void singleDraw(int currentTexture, GLsizei numSpritesByTexture, size_t numSpritesRenderedBeforeThisBatch);
         void multiDraw(int currentTexture, GLsizei numSpritesByTexture, size_t numSpritesRenderedBeforeThisBatch);
 
+        void setProjectionMatrix();
+
     private:
         //Pointer to EcsElement
         std::shared_ptr<CoreEcsElement::EcsElement> m_ecsElement;
@@ -80,5 +82,7 @@ namespace EcsRenderSystem
 
         //Scaling factor for translation of Box2D coords into OpenGL appropriate
         const float m_scalingFactor = 100.0f; //100 pixels per metre
+
+        float m_aspect = 0.0f;
     };
 }

@@ -37,6 +37,9 @@ namespace CoreRenderElement
 		//Swap frame buffers
 		void swapBuffers();
 
+		//Set window size
+		void setWindowSize(float width, float height);
+
 		//Terminate RenderElement by destroying the SDL window and the OpenGL context
 		void terminate();
 

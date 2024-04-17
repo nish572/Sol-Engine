@@ -4,10 +4,16 @@
 
 #include <memory>
 #include <string>
+#include <regex>
+#include <typeindex>
 
 #include <imgui.h>
 #include <imgui_impl_opengl3.h>
 #include <imgui_impl_sdl2.h>
+
+#include <SDL.h>
+
+using Entity = std::uint32_t;
 
 //Forward declaration of Core class
 //This tells compiler Sol::Core exists without providing full definition
@@ -41,16 +47,28 @@ namespace CoreGuiElement
 
 		void editorViewports();
 		void mainEditorViewport();
+		std::string cleanTypeName(const std::string& typeName);
+		void handleProjectSettingsPopup();
 		void sceneHierarchyViewport();
+		void renderSceneHierarchy();
 		void inspectorViewport();
 		void debuggerViewport();
 		void resourceBrowserViewport();
+
+		std::vector<std::pair<std::string, SDL_Keycode>> getKeyCodeList();
 
 	private:
 		//Pointer to Core
 		std::weak_ptr<Sol::Core> m_core;
 		//Is LogElement present
 		bool m_logElementAttached{ false };
+
+		bool m_openProjectSettingsPopup = false;
+
+		bool m_isSceneRunning = false;
+
+		Entity m_selectedEntity = std::numeric_limits<std::uint32_t>::max(); //Indicate no entity is selected
+		std::type_index m_selectedComponentType = typeid(void); //Default to an invalid type index
 
 		bool m_debugMode;
 	};

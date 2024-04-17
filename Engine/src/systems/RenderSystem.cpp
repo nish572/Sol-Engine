@@ -23,11 +23,8 @@ namespace EcsRenderSystem
         //One for if instances are being used, one for if not
         //Check though to see if the sprite's shaderProgram field is 0, if it isn't then render using that shader but do so in a single draw call not instanced draw call
 
-        float aspect = ApplicationConfig::Config::screenWidth / ApplicationConfig::Config::screenHeight;
-        float halfHeight = ApplicationConfig::Config::screenHeight / 2.0f;
-        float halfWidth = halfHeight * aspect;
+        setProjectionMatrix();
 
-        m_projectionMatrix = glm::ortho(-halfWidth, halfWidth, -halfHeight, halfHeight, -1.0f, 1.0f);
         //Vertex and fragment shader source for single drawing
         const char* singleDrawVertexShaderSource = R"glsl(
         #version 330 core
@@ -172,7 +169,21 @@ namespace EcsRenderSystem
         glBindVertexArray(0);
     }
 
+    void RenderSystem::setProjectionMatrix()
+    {
+        float aspect = ApplicationConfig::Config::screenWidth / ApplicationConfig::Config::screenHeight;
+        if (aspect != m_aspect)
+        {
+            float halfHeight = ApplicationConfig::Config::screenHeight / 2.0f;
+            float halfWidth = halfHeight * aspect;
+
+            m_projectionMatrix = glm::ortho(-halfWidth, halfWidth, -halfHeight, halfHeight, -1.0f, 1.0f);
+            m_aspect = aspect;
+        }
+    }
+
     void RenderSystem::update(double deltaTime) {
+        setProjectionMatrix();
         //Get all entities with both TransformComponent and SpriteComponent
         auto transformComponents = m_ecsElement->getAllComponentsOfType<TransformComponent>();
         auto spriteComponents = m_ecsElement->getAllComponentsOfType<SpriteComponent>();

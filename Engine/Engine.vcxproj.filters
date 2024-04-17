@@ -78,13 +78,13 @@
     <ClCompile Include="src\elements\PhysicsElement.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Config.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\systems\EventSysten.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\elements\SceneElement.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Config.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

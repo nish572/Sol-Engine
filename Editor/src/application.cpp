@@ -30,13 +30,13 @@ int main(int argc, char* args[]) {
 	appCore->getResourceElement()->initialize();
 	//Setting the window name to "Sol Editor", width to 1920, height to 1080,
 	//window flags to (SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI), and vsync to 0 (disabled)
-	appCore->getRenderElement()->initialize("Sol Engine", 1920, 1080, (SDL_WindowFlags)(SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI), 0); //Render element does not depend upon any other element
+	appCore->getRenderElement()->initialize("Sol Engine", 800, 600, (SDL_WindowFlags)(SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI), 0); //Render element does not depend upon any other element
 	appCore->getGuiElement()->initialize(true); //Gui element depends upon render element, render element must be initialized first
 	appCore->getPhysicsElement()->initialize();
 	appCore->getEventElement()->initialize();
 	//Setting each system to true or false depending on whether or not they need to be used (for full ECS functionality, true for each required)
 	appCore->getEcsElement()->initialize(true, true, true);
-	appCore->getSceneElement()->initialize();
+	appCore->getSceneElement()->initialize();	
 
 	//Runtime loop
 	bool appRunning = true;
