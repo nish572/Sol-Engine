@@ -682,69 +682,6 @@ namespace CoreGuiElement
 		ImGui::End();
 	}
 
-	std::vector<std::pair<std::string, SDL_Keycode>> GuiElement::getKeyCodeList() {
-		std::vector<std::pair<std::string, SDL_Keycode>> keyList;
-
-		//Alphabet keys
-		for (char c = 'A'; c <= 'Z'; ++c) {
-			std::string keyName(1, c);
-			keyList.push_back({ keyName, SDL_Keycode(SDLK_a + (c - 'A')) });
-		}
-
-		//Number keys (top row)
-		for (int i = 0; i <= 9; ++i) {
-			std::string keyName = "0" + std::to_string(i);
-			keyList.push_back({ keyName, SDL_Keycode(SDLK_0 + i) });
-		}
-
-		//Function keys
-		for (int i = 1; i <= 12; ++i) {
-			std::string keyName = "F" + std::to_string(i);
-			keyList.push_back({ keyName, SDL_Keycode(SDLK_F1 + (i - 1)) });
-		}
-
-		//Modifier and special keys
-		keyList.push_back({ "Caps Lock", SDLK_CAPSLOCK });
-		keyList.push_back({ "L Shift", SDLK_LSHIFT });
-		keyList.push_back({ "R Shift", SDLK_RSHIFT });
-		keyList.push_back({ "L Ctrl", SDLK_LCTRL });
-		keyList.push_back({ "R Ctrl", SDLK_RCTRL });
-		keyList.push_back({ "L Alt", SDLK_LALT });
-		keyList.push_back({ "R Alt", SDLK_RALT });
-		keyList.push_back({ "Tab", SDLK_TAB });
-		keyList.push_back({ "Space", SDLK_SPACE });
-		keyList.push_back({ "Arrow Left", SDLK_LEFT });
-		keyList.push_back({ "Arrow Right", SDLK_RIGHT });
-		keyList.push_back({ "Arrow Up", SDLK_UP });
-		keyList.push_back({ "Arrow Down", SDLK_DOWN });
-		keyList.push_back({ "Backspace", SDLK_BACKSPACE });
-		keyList.push_back({ "Escape", SDLK_ESCAPE });
-		keyList.push_back({ "Delete", SDLK_DELETE });
-		keyList.push_back({ "Enter", SDLK_RETURN });
-		keyList.push_back({ "Num Lock", SDLK_NUMLOCKCLEAR });
-
-		//Numpad keys
-		for (int i = 0; i <= 9; ++i) {
-			std::string keyName = "Numpad " + std::to_string(i);
-			keyList.push_back({ keyName, SDL_Keycode(SDLK_KP_0 + i) });
-		}
-		keyList.push_back({ "Numpad /", SDLK_KP_DIVIDE });
-		keyList.push_back({ "Numpad *", SDLK_KP_MULTIPLY });
-		keyList.push_back({ "Numpad -", SDLK_KP_MINUS });
-		keyList.push_back({ "Numpad +", SDLK_KP_PLUS });
-		keyList.push_back({ "Numpad Enter", SDLK_KP_ENTER });
-		keyList.push_back({ "Numpad .", SDLK_KP_PERIOD });
-
-		//Extra
-		keyList.push_back({ "Home", SDLK_HOME });
-		keyList.push_back({ "End", SDLK_END });
-		keyList.push_back({ "Page Up", SDLK_PAGEUP });
-		keyList.push_back({ "Page Down", SDLK_PAGEDOWN });
-		keyList.push_back({ "Insert", SDLK_INSERT });
-
-		return keyList;
-	}
-
 	void GuiElement::terminate()
 	{
 		ImGui_ImplOpenGL3_Shutdown();

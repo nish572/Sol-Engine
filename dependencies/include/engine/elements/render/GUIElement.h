@@ -55,8 +55,6 @@ namespace CoreGuiElement
 		void debuggerViewport();
 		void resourceBrowserViewport();
 
-		std::vector<std::pair<std::string, SDL_Keycode>> getKeyCodeList();
-
 	private:
 		//Pointer to Core
 		std::weak_ptr<Sol::Core> m_core;

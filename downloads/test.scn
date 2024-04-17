@@ -34,6 +34,8 @@
                     ]
                 }
             ],
+            "1073741906": null,
+            "1073742048": null,
             "32": [
                 {
                     "forceType": 1,
@@ -48,8 +50,8 @@
         },
         "PhysicsBodyComponent": {
             "position": [
-                -6.599999904632568,
-                -7.577003002166748
+                -4.0,
+                -3.0
             ],
             "type": 0
         },
@@ -70,14 +72,60 @@
         "TransformComponent": {
             "position": [
                 0.0,
-                0.0,
+                200.0,
                 0.0
             ],
-            "rotation": 0.0,
+            "rotation": 90.0,
             "scale": [
                 0.20000000298023224,
                 0.20000000298023224,
                 0.0
+            ]
+        }
+    },
+    "1": {
+        "ColliderComponent": {
+            "density": 1.0,
+            "friction": 0.30000001192092896,
+            "restitution": 0.10000000149011612,
+            "shape": {
+                "height": 2.0999999046325684,
+                "type": "Box",
+                "width": 10.0
+            }
+        },
+        "PhysicsBodyComponent": {
+            "position": [
+                -4.0,
+                -5.0
+            ],
+            "type": 1
+        },
+        "SpriteComponent": {
+            "color": [
+                1.0,
+                1.0,
+                1.0,
+                1.0
+            ],
+            "shaderProgram": 0,
+            "size": [
+                612.0,
+                408.0
+            ],
+            "textureFilePath": "C:\\Software Development\\Sol-Engine\\Sol-Engine\\downloads\\fish.jpg"
+        },
+        "TransformComponent": {
+            "position": [
+                0.0,
+                -200.0,
+                0.0
+            ],
+            "rotation": 0.0,
+            "scale": [
+                1.0,
+                0.5,
+                1.0
             ]
         }
     }

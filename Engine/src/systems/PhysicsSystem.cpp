@@ -32,14 +32,6 @@ namespace EcsPhysicsSystem
         b2BodyDef kinematicBodyDef;
         kinematicBodyDef.type = b2_kinematicBody;
         m_bodyDefs[BodyType::Kinematic] = kinematicBodyDef;
-
-        //Temporary groundbox definition
-        b2BodyDef groundBodyDef;
-        groundBodyDef.position.Set(0.0f, -9.0f);
-        b2Body* groundBody = m_world->CreateBody(&groundBodyDef);
-        b2PolygonShape groundBox;
-        groundBox.SetAsBox(100.0f, 1.0f);
-        groundBody->CreateFixture(&groundBox, 0.0f);
     }
 
     void PhysicsSystem::update(double deltaTime)
@@ -79,14 +71,17 @@ namespace EcsPhysicsSystem
             physicsComponent->position.x = ((transformComponent->position.x) - (ApplicationConfig::Config::screenWidth / 2.0f)) / m_scalingFactor;
             physicsComponent->position.y = ((transformComponent->position.y) - (ApplicationConfig::Config::screenHeight / 2.0f)) / m_scalingFactor;
 
+            //Convert rotation from degrees to radians
+            float newAngle = transformComponent->rotation * b2_pi / 180.0f;
+            std::cout << transformComponent->rotation << " And " << newAngle << std::endl;
+
             //If the body has not been created yet, create it.
             if (physicsComponent->body == nullptr) {
                 b2BodyDef& bodyDef = m_bodyDefs[physicsComponent->type];
                 physicsComponent->body = m_world->CreateBody(&bodyDef);
                 //Set the new position of the body
                 b2Vec2 newPosition(physicsComponent->position.x, physicsComponent->position.y);
-                physicsComponent->body->SetTransform(newPosition, physicsComponent->body->GetAngle());
-                //std::cout << physicsComponent->body->GetPosition().y;
+                physicsComponent->body->SetTransform(newPosition, newAngle);
 
                 //Check for the ColliderComponent of the entity
                 auto colliderIt = colliderComponents.find(entity);
@@ -147,7 +142,7 @@ namespace EcsPhysicsSystem
             float angle = physicsComponent->body->GetAngle();
             transformComponent->position.x = (pos.x * m_scalingFactor) + (ApplicationConfig::Config::screenWidth / 2.0f);
             transformComponent->position.y = (pos.y * m_scalingFactor) + (ApplicationConfig::Config::screenHeight / 2.0f);
-            transformComponent->rotation = angle;
+            transformComponent->rotation = angle * 180.0f / b2_pi;
         }
 
         //Physics step
