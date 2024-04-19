@@ -748,7 +748,7 @@ namespace CoreGuiElement
 	}
 
 	void GuiElement::displayFilesInDirectory() {
-		std::string directory = ApplicationConfig::Config::projectPath;
+		std::string directory = m_currentPath;
 		static char item_path_buffer[1024];
 
 		ImGui::BeginChild("FilesScrolling", ImVec2(0, -ImGui::GetTextLineHeightWithSpacing() * 2), true);
