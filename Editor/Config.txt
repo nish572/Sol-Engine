@@ -1,4 +1,4 @@
 Project Name: test dog project
-Project Path: 
+Project Path: C:\Software Development\Sol-Engine\Sol-Engine\downloads
 Game Width: 800
 Game Height: 600

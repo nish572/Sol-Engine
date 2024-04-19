@@ -85,6 +85,7 @@ enum class ShapeType {
 };
 
 struct ColliderComponent {
+    bool isVisible;
     ShapeType shapeType;
     b2Shape* shape;
     float width;  //Used for the width of a box

@@ -57,7 +57,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_SILENCE_EXPERIMENTAL_FILESYSTEM_DEPRECATION_WARNING;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)dependencies\include;$(SolutionDir)dependencies\include\engine;$(SolutionDir)dependencies\include\KHR;$(SolutionDir)dependencies\include\glad;$(SolutionDir)dependencies\include\nlohmann;$(SolutionDir)dependencies\include\sdl2;$(SolutionDir)dependencies\include\glm;$(SolutionDir)dependencies\include\dearimgui;$(SolutionDir)dependencies\include\engine\elements;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4005; 4251; 6262; 26451</DisableSpecificWarnings>
@@ -76,7 +76,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_SILENCE_EXPERIMENTAL_FILESYSTEM_DEPRECATION_WARNING;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)dependencies\include;$(SolutionDir)dependencies\include\engine;$(SolutionDir)dependencies\include\KHR;$(SolutionDir)dependencies\include\glad;$(SolutionDir)dependencies\include\nlohmann;$(SolutionDir)dependencies\include\sdl2;$(SolutionDir)dependencies\include\box2d;$(SolutionDir)dependencies\include\glm;$(SolutionDir)dependencies\include\dearimgui;$(SolutionDir)dependencies\include\engine\elements;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>Default</LanguageStandard>

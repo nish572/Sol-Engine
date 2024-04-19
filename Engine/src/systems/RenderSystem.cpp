@@ -92,7 +92,6 @@ namespace EcsRenderSystem
         }
         )glsl";
 
-
         m_defaultShaderID = createShader(singleDrawVertexShaderSource, singleDrawFragmentShaderSource);
         m_defaultInstanceShaderID = createShader(multiDrawVertexShaderSource, multiDrawFragmentShaderSource);
 

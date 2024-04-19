@@ -123,7 +123,6 @@ namespace EcsPhysicsSystem
                     b2Vec2 moveDirection(action.moveDirection.x, action.moveDirection.y);
                     moveDirection.Normalize();
                     float magnitude = action.magnitude;
-                    std::cout << action.magnitude << action.moveDirection.x << action.moveDirection.y << std::endl;
                     //Switch based on the type of force to apply
                     switch (action.fType) {
                     case ForceType::Force:

@@ -54,6 +54,7 @@ namespace CoreGuiElement
 				{
 					ecsPtr->setSceneRunning(false);
 					m_isSceneRunning = false;
+					m_currentPath = ApplicationConfig::Config::projectPath;
 				}
 			}
 		}
@@ -150,7 +151,6 @@ namespace CoreGuiElement
 		mainEditorViewport();
 		sceneHierarchyViewport();
 		inspectorViewport();
-		debuggerViewport();
 		resourceBrowserViewport();
 	}
 
@@ -528,28 +528,48 @@ namespace CoreGuiElement
 								ImGui::Text("Sprite Component");
 								ImGui::Separator();
 
-								//Temporary buffer for editing text
+								// Temporary buffer for editing text
 								char buffer[256];
-								//Use strncpy_s for safe copying
+								// Use strncpy_s for safe copying
 								strncpy_s(buffer, sizeof(buffer), spriteComponent->textureFilePath.c_str(), _TRUNCATE);
 
+								// Editable text field for the texture file path
 								if (ImGui::InputText("Texture File Path", buffer, sizeof(buffer))) {
+									// Update the component's file path and load new texture
 									spriteComponent->textureFilePath = buffer;
-									//Load the new texture resource based on the new path
 									auto resourceElement = corePtr->getResourceElement();
 									if (resourceElement) {
 										auto newSprite = resourceElement->loadTextureResource(buffer);
 										if (newSprite) {
 											spriteComponent->textureID = newSprite->textureID;
 											spriteComponent->size = glm::vec2(newSprite->width, newSprite->height);
-
 											spriteComponent->color = glm::vec4(1.0f);
 										}
-										else 
-										{
+										else {
 											ImGui::Text("Failed to load texture!");
 										}
 									}
+								}
+
+								// Drag and Drop for texture file path
+								if (ImGui::BeginDragDropTarget()) {
+									if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("ASSET_PATH")) {
+										strncpy_s(buffer, sizeof(buffer), (const char*)payload->Data, _TRUNCATE);
+										spriteComponent->textureFilePath = buffer;
+										auto resourceElement = corePtr->getResourceElement();
+										if (resourceElement) {
+											auto newSprite = resourceElement->loadTextureResource(buffer);
+											if (newSprite) {
+												spriteComponent->textureID = newSprite->textureID;
+												spriteComponent->size = glm::vec2(newSprite->width, newSprite->height);
+												spriteComponent->color = glm::vec4(1.0f);
+											}
+											else {
+												ImGui::Text("Failed to load texture!");
+											}
+										}
+									}
+									ImGui::EndDragDropTarget();
 								}
 
 								ImGui::InputFloat2("Size", &spriteComponent->size.x);
@@ -576,6 +596,11 @@ namespace CoreGuiElement
 
 								ImGui::Text("Collider Component");
 								ImGui::Separator();
+
+								bool isVisible = colliderComponent->isVisible;
+								if (ImGui::Checkbox("Show Collision Box", &isVisible)) {
+									colliderComponent->isVisible = isVisible;
+								}
 
 								//Shape type selector
 								const char* items[] = { "Box", "Circle" };
@@ -671,15 +696,89 @@ namespace CoreGuiElement
 		ImGui::End();
 	}
 
-	void GuiElement::debuggerViewport()
-	{
-		ImGui::Begin("Debug Log");
+	void GuiElement::resourceBrowserViewport() {
+		ImGui::Begin("Resource Browser");
+
+		//Navigation and current path display at the top
+		if (ImGui::Button("Up")) {
+			fs::path currentPath(m_currentPath);
+			fs::path rootPath(ApplicationConfig::Config::projectPath);
+			currentPath = fs::absolute(currentPath);
+			rootPath = fs::absolute(rootPath);
+
+			if (currentPath.has_parent_path() && fs::equivalent(currentPath.parent_path(), rootPath)) {
+				m_currentPath = rootPath.string();
+			}
+			else if (currentPath.has_parent_path() && currentPath.parent_path() != rootPath && currentPath > rootPath) {
+				m_currentPath = currentPath.parent_path().string();
+			}
+		}
+		ImGui::SameLine();
+		ImGui::Text("Current Directory: %s", m_currentPath.c_str());
+
+		//Columns for directories and files
+		ImGui::Columns(2, "FileBrowser"); //2 columns
+		ImGui::Separator();
+
+		//First column for directories
+		ImGui::Text("Directories");
+		displayDirectories();
+
+		ImGui::NextColumn();
+
+		//Second column for files
+		ImGui::Text("Files");
+		displayFilesInDirectory();
+
+		ImGui::Columns(1);
+		ImGui::Separator();
+
 		ImGui::End();
 	}
-	void GuiElement::resourceBrowserViewport()
-	{
-		ImGui::Begin("Resource Browser");
-		ImGui::End();
+
+	void GuiElement::displayDirectories() {
+		std::string directory = m_currentPath;
+		for (const auto& entry : fs::directory_iterator(directory)) {
+			if (fs::is_directory(entry)) {
+				if (ImGui::Button((entry.path().filename().string() + "/").c_str())) {
+					m_currentPath = entry.path().string();
+				}
+			}
+		}
+	}
+
+	void GuiElement::displayFilesInDirectory() {
+		std::string directory = ApplicationConfig::Config::projectPath;
+		static char item_path_buffer[1024];
+
+		ImGui::BeginChild("FilesScrolling", ImVec2(0, -ImGui::GetTextLineHeightWithSpacing() * 2), true);
+		int columns = int(ImGui::GetContentRegionAvail().x / 110);
+		if (columns < 1) columns = 1;
+
+		if (ImGui::BeginTable("FilesTable", columns)) {
+			for (const auto& entry : fs::directory_iterator(directory)) {
+				if (fs::is_regular_file(entry) && (entry.path().extension() == ".png" || entry.path().extension() == ".jpg" || entry.path().extension() == ".jpeg")) {
+					ImGui::TableNextColumn();
+					ImGui::PushID(entry.path().filename().string().c_str());
+					if (ImGui::Button(entry.path().filename().string().c_str(), ImVec2(100, 100))) {
+					}
+					if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None)) {
+						memset(item_path_buffer, 0, sizeof(item_path_buffer));
+						strncpy_s(item_path_buffer, sizeof(item_path_buffer), entry.path().string().c_str(), _TRUNCATE);
+						ImGui::SetDragDropPayload("ASSET_PATH", item_path_buffer, strlen(item_path_buffer) + 1);
+						ImGui::Text("%s", entry.path().filename().string().c_str());
+						ImGui::EndDragDropSource();
+					}
+					ImGui::PopID();
+					if (ImGui::IsItemHovered()) {
+						ImGui::SetTooltip("%s", entry.path().string().c_str());
+					}
+				}
+			}
+			ImGui::EndTable();
+		}
+
+		ImGui::EndChild();
 	}
 
 	void GuiElement::terminate()

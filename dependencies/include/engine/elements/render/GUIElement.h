@@ -6,12 +6,15 @@
 #include <string>
 #include <regex>
 #include <typeindex>
+#include <experimental/filesystem>
 
 #include <imgui.h>
 #include <imgui_impl_opengl3.h>
 #include <imgui_impl_sdl2.h>
 
 #include <SDL.h>
+
+namespace fs = std::experimental::filesystem;
 
 using Entity = std::uint32_t;
 
@@ -52,8 +55,9 @@ namespace CoreGuiElement
 		void sceneHierarchyViewport();
 		void renderSceneHierarchy();
 		void inspectorViewport();
-		void debuggerViewport();
 		void resourceBrowserViewport();
+		void displayDirectories();
+		void displayFilesInDirectory();
 
 	private:
 		//Pointer to Core
@@ -67,6 +71,8 @@ namespace CoreGuiElement
 
 		Entity m_selectedEntity = std::numeric_limits<std::uint32_t>::max(); //Indicate no entity is selected
 		std::type_index m_selectedComponentType = typeid(void); //Default to an invalid type index
+
+		std::string m_currentPath; //Represents the current directory path in the resource browser
 
 		bool m_debugMode;
 	};
