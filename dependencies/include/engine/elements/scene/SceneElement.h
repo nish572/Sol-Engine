@@ -46,6 +46,11 @@ namespace CoreSceneElement
 		//Deserialize the JSON file into the ECS Element's entity-component map, and set the ECS's data structure(s) appropriately
 		void loadScene(const std::string& sceneFilepath);
 
+		const std::string& getCurrentScenePath() const
+		{
+			return m_currentScene;
+		}
+
 		//Terminate SceneElement
 		void terminate();
 

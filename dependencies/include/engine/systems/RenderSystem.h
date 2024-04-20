@@ -48,6 +48,8 @@ namespace EcsRenderSystem
         void singleDraw(int currentTexture, GLsizei numSpritesByTexture, size_t numSpritesRenderedBeforeThisBatch);
         void multiDraw(int currentTexture, GLsizei numSpritesByTexture, size_t numSpritesRenderedBeforeThisBatch);
 
+        void renderWireframe(const TransformComponent& transform, const ColliderComponent& collider, bool isCircle);
+
         void setProjectionMatrix();
 
     private:
@@ -61,6 +63,11 @@ namespace EcsRenderSystem
         unsigned int m_quadVBO;
         unsigned int m_quadEBO;
         unsigned int m_modelVBO;
+
+        unsigned int m_wireframeSquareVAO;
+        unsigned int m_wireframeCircleVAO;
+        unsigned int m_wireframeSquareVBO;
+        unsigned int m_wireframeCircleVBO;
 
         //Calculate model an view matrices
         glm::mat4 m_viewMatrix = glm::mat4(1.0f);

@@ -4,6 +4,7 @@
 
 #include <memory>
 #include <string>
+#include <cstring>
 #include <regex>
 #include <typeindex>
 #include <experimental/filesystem>
@@ -48,9 +49,14 @@ namespace CoreGuiElement
 		//Call this when amending Core's detachElement function and inside Core's terminate function
 		void terminate();
 
+		void startUpDialog();
+
 		void editorViewports();
 		void mainEditorViewport();
 		std::string cleanTypeName(const std::string& typeName);
+		void handleNewScenePopup();
+		void handleLoadScenePopup();
+		void handleSaveScenePopup();
 		void handleProjectSettingsPopup();
 		void sceneHierarchyViewport();
 		void renderSceneHierarchy();
@@ -65,14 +71,19 @@ namespace CoreGuiElement
 		//Is LogElement present
 		bool m_logElementAttached{ false };
 
+		bool m_openNewScenePopup = false;
+		bool m_openLoadScenePopup = false;
+		bool m_openSaveScenePopup = false;
 		bool m_openProjectSettingsPopup = false;
-
+		
 		bool m_isSceneRunning = false;
 
 		Entity m_selectedEntity = std::numeric_limits<std::uint32_t>::max(); //Indicate no entity is selected
 		std::type_index m_selectedComponentType = typeid(void); //Default to an invalid type index
 
 		std::string m_currentPath; //Represents the current directory path in the resource browser
+		std::string m_sceneLoadPath; //Represents the current directory path in the resource browser
+		std::string m_selectedScene = "";
 
 		bool m_debugMode;
 	};

@@ -35,6 +35,7 @@ namespace EcsRenderSystem
         
         uniform mat4 view;
         uniform mat4 projection;
+        uniform bool useWireframe; //Uniform to toggle wireframe rendering
 
         out vec2 TexCoords;
 
@@ -52,10 +53,17 @@ namespace EcsRenderSystem
         in vec2 TexCoords;
 
         uniform sampler2D spriteTexture;
+        uniform vec4 lineColor;
+        uniform bool useWireframe;
 
         void main()
-        {    
-            FragColor = texture(spriteTexture, TexCoords);
+        {
+            if (useWireframe)
+            {
+                FragColor = lineColor;
+            } else {
+                FragColor = texture(spriteTexture, TexCoords);
+            }
         }
         )glsl";
 
@@ -166,6 +174,55 @@ namespace EcsRenderSystem
 
         //Unbind the VAO
         glBindVertexArray(0);
+
+        //Define vertices for a wireframe square
+        float squareVertices[] = {
+            0.5f, 0.5f, 0.0f,  // Top right
+            0.5f, -0.5f, 0.0f, // Bottom right
+            -0.5f, -0.5f, 0.0f, // Bottom left
+            -0.5f, 0.5f, 0.0f  // Top left
+        };
+
+        //Generate VAO and VBO for the wireframe square
+        glGenVertexArrays(1, &m_wireframeSquareVAO);
+        glBindVertexArray(m_wireframeSquareVAO);
+
+        glGenBuffers(1, &m_wireframeSquareVBO);
+        glBindBuffer(GL_ARRAY_BUFFER, m_wireframeSquareVBO);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(squareVertices), squareVertices, GL_STATIC_DRAW);
+
+        //Specify vertex attribute data
+        glEnableVertexAttribArray(0);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+
+        //Unbind the VAO
+        glBindVertexArray(0);
+
+        //Circle parameters
+        const int numSegments = 32;
+        float circleVertices[3 * numSegments]; //Vertex count for the circle
+
+        for (int i = 0; i < numSegments; ++i) {
+            float angle = 2.0f * M_PI * float(i) / float(numSegments);
+            circleVertices[3 * i] = 0.5f * cosf(angle); //0.5f is the radius
+            circleVertices[3 * i + 1] = 0.5f * sinf(angle);
+            circleVertices[3 * i + 2] = 0.0f;
+        }
+
+        //Generate VAO and VBO for the wireframe circle
+        glGenVertexArrays(1, &m_wireframeCircleVAO);
+        glBindVertexArray(m_wireframeCircleVAO);
+
+        glGenBuffers(1, &m_wireframeCircleVBO);
+        glBindBuffer(GL_ARRAY_BUFFER, m_wireframeCircleVBO);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(circleVertices), circleVertices, GL_STATIC_DRAW);
+
+        //Specify vertex attribute data
+        glEnableVertexAttribArray(0);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+
+        //Unbind the VAO
+        glBindVertexArray(0);
     }
 
     void RenderSystem::setProjectionMatrix()
@@ -186,19 +243,28 @@ namespace EcsRenderSystem
         //Get all entities with both TransformComponent and SpriteComponent
         auto transformComponents = m_ecsElement->getAllComponentsOfType<TransformComponent>();
         auto spriteComponents = m_ecsElement->getAllComponentsOfType<SpriteComponent>();
+        auto colliderComponents = m_ecsElement->getAllComponentsOfType<ColliderComponent>();
 
         std::vector<std::pair<std::shared_ptr<SpriteComponent>, std::shared_ptr<TransformComponent>>> tmpSpriteTransformPairs;
 
-        //Iterate over all SpriteComponents
+        //Sprite rendering
         for (const auto& spritePair : spriteComponents) {
-            //Find the corresponding TransformComponent
             auto transformPair = transformComponents.find(spritePair.first);
-
-            //If the transform does exist, then execute below
             if (transformPair != transformComponents.end()) {
                 tmpSpriteTransformPairs.push_back(std::make_pair(spritePair.second, transformPair->second));
             }
-            //Otherwise log an error message
+            else {
+                //Log an error message if no TransformComponent is found
+            }
+        }
+
+        //New loop for rendering colliders irrespective of sprite components
+        for (const auto& colliderPair : colliderComponents) {
+            auto transformPair = transformComponents.find(colliderPair.first);
+            if (transformPair != transformComponents.end() && colliderPair.second->isVisible) {
+                bool isCircle = colliderPair.second->shapeType == ShapeType::Circle;
+                renderWireframe(*(transformPair->second), *(colliderPair.second), isCircle);
+            }
         }
 
         //Sort the temporary vector of sprite-transform pairs
@@ -224,17 +290,6 @@ namespace EcsRenderSystem
 
             m_modelMatricesCache.push_back(modelMatrix);
         }
-
-        //Test code if 
-        /*for (const auto& mod : modelMatrices) {
-            for (int i = 0; i < 4; i++) {
-                for (int j = 0; j < 4; j++) {
-                    std::cout << mod[i][j] << " ";
-                }
-                std::cout << std::endl;
-            }
-            std::cout << std::endl << std::endl;
-        }*/
 
         if (tmpSpriteTransformPairs.size() > 0)
         {
@@ -389,5 +444,54 @@ namespace EcsRenderSystem
         //Unbind
         glBindTexture(GL_TEXTURE_2D, 0);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
+    }
+
+    void RenderSystem::renderWireframe(const TransformComponent& transform, const ColliderComponent& collider, bool isCircle) {
+        glm::mat4 model = glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(transform.position.x, transform.position.y, 0.0f));
+        model = glm::rotate(model, glm::radians(transform.rotation), glm::vec3(0.0f, 0.0f, 1.0f));
+
+        glm::vec3 sizeInPixels;
+        if (isCircle) {
+            //Convert the radius from meters to pixels and calculate the diameter for scaling
+            float diameterInPixels = collider.radius * 2.0f * 100.0f; // Assuming 100 pixels per meter
+            sizeInPixels = glm::vec3(diameterInPixels, diameterInPixels, 1.0f);
+        }
+        else {
+            //Box collider sizing
+            sizeInPixels = glm::vec3(collider.width * 100.0f, collider.height * 100.0f, 1.0f);
+        }
+
+        model = glm::scale(model, sizeInPixels); //Apply the size in pixels
+        model = glm::scale(model, glm::vec3(transform.scale.x, transform.scale.y, 1.0f)); //Then apply any additional scaling from the transform
+
+        glUseProgram(m_defaultShaderID);
+
+        GLint modelLoc = glGetUniformLocation(m_defaultShaderID, "uModelMatrix");
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+
+        GLint viewLoc = glGetUniformLocation(m_defaultShaderID, "uViewMatrix");
+        GLint projLoc = glGetUniformLocation(m_defaultShaderID, "uProjectionMatrix");
+        glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(m_viewMatrix));
+        glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(m_projectionMatrix));
+
+        GLint useWireframeLoc = glGetUniformLocation(m_defaultShaderID, "useWireframe");
+        GLint lineColorLoc = glGetUniformLocation(m_defaultShaderID, "lineColor");
+
+        glUniform1i(useWireframeLoc, GL_TRUE);
+        glUniform4f(lineColorLoc, 1.0f, 0.0f, 0.0f, 1.0f); //Red color for wireframe
+
+        if (isCircle) {
+            glBindVertexArray(m_wireframeCircleVAO);
+            glDrawArrays(GL_LINE_LOOP, 0, 32); //Assuming circle is made of 32 segments
+        }
+        else {
+            glBindVertexArray(m_wireframeSquareVAO);
+            glDrawArrays(GL_LINE_LOOP, 0, 4); //4 vertices for the square
+        }
+
+        glUniform1i(useWireframeLoc, GL_FALSE);
+        glBindVertexArray(0);
+        glUseProgram(0);
     }
 }

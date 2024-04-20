@@ -17,7 +17,7 @@ namespace EcsPhysicsSystem
 
     void PhysicsSystem::initialize()
     {
-        // Create the world with the specified gravity
+        //Create the world with the specified gravity
         m_world = m_ecsElement->getCore()->getPhysicsElement()->getWorld();
 
         //Create body definitions

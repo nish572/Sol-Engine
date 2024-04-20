@@ -30,33 +30,43 @@ namespace ApplicationConfig
 			projectPath = path;
 		}
 
-		static void saveConfig() {
-			std::ofstream file("Config.txt");
-			file << "Project Name: " << projectName << std::endl;
-			file << "Project Path: " << projectPath << std::endl;
-			file << "Game Width: " << screenWidth << std::endl;
-			file << "Game Height: " << screenHeight << std::endl;
-			file.close();
-		}
+        static void saveConfig() {
+            std::string configFilePath = projectPath + "/Config.txt";
+            std::ofstream file(configFilePath);
+            if (!file) {
+                std::cerr << "Error: Unable to open file for writing at " << configFilePath << std::endl;
+                return;
+            }
+            file << "Project Name: " << projectName << std::endl;
+            file << "Project Path: " << projectPath << std::endl;
+            file << "Game Width: " << screenWidth << std::endl;
+            file << "Game Height: " << screenHeight << std::endl;
+            file.close();
+        }
 
-		static void loadConfig() {
-			std::ifstream file("Config.txt");
-			std::string line;
-			while (getline(file, line)) {
-				if (line.find("Project Name: ") == 0) {
-					projectName = line.substr(14);
-				}
-				else if (line.find("Project Path: ") == 0) {
-					projectPath = line.substr(14);
-				}
-				else if (line.find("Game Width: ") == 0) {
-					screenWidth = std::stof(line.substr(12));
-				}
-				else if (line.find("Game Height: ") == 0) {
-					screenHeight = std::stof(line.substr(13));
-				}
-			}
-			file.close();
-		}
+        static void loadConfig() {
+            std::string configFilePath = projectPath + "/Config.txt";
+            std::ifstream file(configFilePath);
+            if (!file) {
+                std::cerr << "Error: Unable to open file for reading at " << configFilePath << std::endl;
+                return;
+            }
+            std::string line;
+            while (getline(file, line)) {
+                if (line.find("Project Name: ") == 0) {
+                    projectName = line.substr(14);
+                }
+                else if (line.find("Project Path: ") == 0) {
+                    projectPath = line.substr(14);
+                }
+                else if (line.find("Game Width: ") == 0) {
+                    screenWidth = std::stoi(line.substr(12));
+                }
+                else if (line.find("Game Height: ") == 0) {
+                    screenHeight = std::stoi(line.substr(13));
+                }
+            }
+            file.close();
+        }
 	};
 }

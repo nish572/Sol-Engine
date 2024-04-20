@@ -161,7 +161,6 @@ namespace CoreSceneElement
 							ecsPtr->addComponent(newEntity, pb);
 						}
 						else if (compType == "SpriteComponent") {
-							std::cout << "i am being called!";
 							SpriteComponent sc = deserializeSprite(compJson);
 							ecsPtr->addComponent(newEntity, sc);
 						}
@@ -311,7 +310,6 @@ namespace CoreSceneElement
 
 	SpriteComponent SceneElement::deserializeSprite(const json& j) {
 		std::string texturePath = j["textureFilePath"];
-		std::cout << texturePath;
 		glm::vec2 size = glm::vec2(j["size"][0], j["size"][1]);
 		glm::vec4 color = glm::vec4(j["color"][0], j["color"][1], j["color"][2], j["color"][3]);
 		unsigned int shaderProgram = j["shaderProgram"];
@@ -320,12 +318,6 @@ namespace CoreSceneElement
 		if (corePtr) {
 			std::shared_ptr<TextureResource> textureResource = corePtr->getResourceElement()->loadTextureResource(texturePath);
 			unsigned int textureID = textureResource ? textureResource->textureID : 0;
-
-			//Adjust size based on texture dimensions
-			if (textureResource) {
-				size = glm::vec2(textureResource->width, textureResource->height);
-			}
-
 			return SpriteComponent(textureID, texturePath, size, color, shaderProgram);
 		}
 	}

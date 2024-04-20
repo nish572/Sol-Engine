@@ -98,19 +98,19 @@ struct ColliderComponent {
 
     //Default constructor initializes to a default box shape as a placeholder
     ColliderComponent()
-        : shapeType(ShapeType::Box), width(1.0f), height(1.0f), radius(0.5f),
+        : isVisible(false), shapeType(ShapeType::Box), width(1.0f), height(1.0f), radius(0.5f),
         density(1.0f), friction(0.3f), restitution(0.1f) {}
 
     //Constructor for box shape
     ColliderComponent(float boxWidth, float boxHeight, float boxDensity,
         float boxFriction, float boxRestitution)
-        : shapeType(ShapeType::Box), width(boxWidth), height(boxHeight), radius(0),
+        : isVisible(false), shapeType(ShapeType::Box), width(boxWidth), height(boxHeight), radius(0),
         density(boxDensity), friction(boxFriction), restitution(boxRestitution) {}
 
     //Constructor for circle shape
     ColliderComponent(float circleRadius, float circleDensity,
         float circleFriction, float circleRestitution)
-        : shapeType(ShapeType::Circle), width(0), height(0), radius(circleRadius),
+        : isVisible(false), shapeType(ShapeType::Circle), width(0), height(0), radius(circleRadius),
         density(circleDensity), friction(circleFriction), restitution(circleRestitution) {}
 };
 

@@ -42,23 +42,6 @@ namespace CoreGuiElement
 
 		m_debugMode = debug;
 
-		if (m_debugMode)
-		{
-			ApplicationConfig::Config::loadConfig();
-			auto corePtr = m_core.lock();
-			if (corePtr)
-			{
-				corePtr->getRenderElement()->setWindowSize(ApplicationConfig::Config::screenWidth, ApplicationConfig::Config::screenHeight);
-				auto ecsPtr = corePtr->getEcsElement();
-				if (ecsPtr)
-				{
-					ecsPtr->setSceneRunning(false);
-					m_isSceneRunning = false;
-					m_currentPath = ApplicationConfig::Config::projectPath;
-				}
-			}
-		}
-
 		//Setup Dear ImGui context
 		IMGUI_CHECKVERSION();
 		ImGui::CreateContext();
@@ -146,8 +129,82 @@ namespace CoreGuiElement
 		}		
 	}
 
+	void GuiElement::startUpDialog() {
+		static bool openPopup = true;
+		static bool showLoadOptions = false;
+
+		if (openPopup) {
+			ImGui::OpenPopup("StartUp Options");
+			openPopup = false;
+		}
+
+		if (ImGui::BeginPopupModal("StartUp Options", NULL, ImGuiWindowFlags_AlwaysAutoResize)) {
+			if (!showLoadOptions) {
+				if (ImGui::Button("Load Existing Project")) {
+					showLoadOptions = true;
+				}
+				ImGui::SameLine();
+			}
+
+			if (ImGui::Button("Create New Project")) {
+				ApplicationConfig::Config::setProjectName("");
+				ApplicationConfig::Config::setProjectPath("");
+				m_openProjectSettingsPopup = true;
+				handleProjectSettingsPopup();
+				ImGui::CloseCurrentPopup();
+				auto corePtr = m_core.lock();
+				if (corePtr) {
+					corePtr->getRenderElement()->setWindowSize(ApplicationConfig::Config::screenWidth, ApplicationConfig::Config::screenHeight);
+					auto ecsPtr = corePtr->getEcsElement();
+					if (ecsPtr) {
+						ecsPtr->setSceneRunning(false);
+						m_isSceneRunning = false;
+						m_currentPath = ApplicationConfig::Config::projectPath;
+						m_sceneLoadPath = ApplicationConfig::Config::projectPath;
+					}
+				}
+				showLoadOptions = false;
+			}
+
+			if (showLoadOptions) {
+				static char filePath[1024];
+				if (ImGui::InputText("Project Path", filePath, IM_ARRAYSIZE(filePath)))
+				{
+					std::string path(filePath);
+					if (!path.empty() && path.front() == '"') {
+						path.erase(0, 1);
+					}
+					if (!path.empty() && path.back() == '"') {
+						path.pop_back();
+					}
+					strncpy_s(filePath, sizeof(filePath), path.c_str(), _TRUNCATE);
+				}
+				if (ImGui::Button("Load")) {
+					ApplicationConfig::Config::setProjectPath(filePath);
+					ApplicationConfig::Config::loadConfig();
+					ImGui::CloseCurrentPopup();
+					auto corePtr = m_core.lock();
+					if (corePtr) {
+						corePtr->getRenderElement()->setWindowSize(ApplicationConfig::Config::screenWidth, ApplicationConfig::Config::screenHeight);
+						auto ecsPtr = corePtr->getEcsElement();
+						if (ecsPtr) {
+							ecsPtr->setSceneRunning(false);
+							m_isSceneRunning = false;
+							m_currentPath = ApplicationConfig::Config::projectPath;
+							m_sceneLoadPath = ApplicationConfig::Config::projectPath;
+						}
+					}
+					showLoadOptions = false;
+				}
+			}
+
+			ImGui::EndPopup();
+		}
+	}
+
 	void GuiElement::editorViewports()
 	{
+		startUpDialog();
 		mainEditorViewport();
 		sceneHierarchyViewport();
 		inspectorViewport();
@@ -175,59 +232,34 @@ namespace CoreGuiElement
 					auto corePtr = m_core.lock();
 					if (corePtr)
 					{
-						auto ecsPtr = corePtr->getEcsElement();
-						if (ecsPtr)
-						{
-							ecsPtr->setSceneRunning(false);
-							m_isSceneRunning = false;
-						}
-
 						auto scenePtr = corePtr->getSceneElement();
 						if (scenePtr)
 						{
-							scenePtr->newScene();
+							m_openNewScenePopup = true;
 						}
 					}
-					m_selectedEntity = std::numeric_limits<std::uint32_t>::max();
-					m_selectedComponentType = typeid(void);
 				}
 				if (ImGui::MenuItem("Load Scene")) {
 					//Load scene
 					auto corePtr = m_core.lock();
 					if (corePtr)
 					{
-						auto ecsPtr = corePtr->getEcsElement();
-						if (ecsPtr)
-						{
-							ecsPtr->setSceneRunning(false);
-							m_isSceneRunning = false;
-						}
-
 						auto scenePtr = corePtr->getSceneElement();
 						if (scenePtr)
 						{
-							scenePtr->loadScene("C:\\Software Development\\Sol-Engine\\Sol-Engine\\downloads\\test.scn");
+							m_openLoadScenePopup = true;
 						}
 					}
-					m_selectedEntity = std::numeric_limits<std::uint32_t>::max();
-					m_selectedComponentType = typeid(void);
 				}
 				if (ImGui::MenuItem("Save Scene")) {
 					//Save current scene
 					auto corePtr = m_core.lock();
 					if (corePtr)
 					{
-						auto ecsPtr = corePtr->getEcsElement();
-						if (ecsPtr)
-						{
-							ecsPtr->setSceneRunning(false);
-							m_isSceneRunning = false;
-						}
-
 						auto scenePtr = corePtr->getSceneElement();
 						if (scenePtr)
 						{
-							scenePtr->unloadScene("C:\\Software Development\\Sol-Engine\\Sol-Engine\\downloads\\test.scn");
+							m_openSaveScenePopup = true;
 						}
 					}
 				}
@@ -290,14 +322,203 @@ namespace CoreGuiElement
 					auto scenePtr = corePtr->getSceneElement();
 					if (scenePtr)
 					{
-						scenePtr->unloadScene("C:\\Software Development\\Sol-Engine\\Sol-Engine\\downloads\\test.scn");
+						std::string currentScenePath = scenePtr->getCurrentScenePath();
+						scenePtr->unloadScene(currentScenePath);
+						scenePtr->loadScene(currentScenePath);
 					}
 				}
 			}
 		}
 		ImGui::EndMenuBar();
+
+		handleNewScenePopup();
+		handleLoadScenePopup();
+		handleSaveScenePopup();
 		handleProjectSettingsPopup();
+
 		ImGui::End();
+	}
+
+	void GuiElement::handleNewScenePopup()
+	{
+		if (m_openNewScenePopup) {
+			ImGui::OpenPopup("Save New Scene");
+			m_openNewScenePopup = false;
+		}
+
+		if (ImGui::BeginPopupModal("Save New Scene", NULL, ImGuiWindowFlags_AlwaysAutoResize)) {
+			static char filename[128] = "";
+			ImGui::InputText("Filename", filename, IM_ARRAYSIZE(filename));
+			if (ImGui::Button("Save")) {
+				m_selectedEntity = std::numeric_limits<std::uint32_t>::max();
+				m_selectedComponentType = typeid(void);
+				std::string baseDir = ApplicationConfig::Config::projectPath;
+				if (baseDir.back() != '\\' && baseDir.back() != '/') {
+					baseDir += '\\';
+				}
+				std::string filePath = baseDir + std::string(filename) + ".scn";
+				auto corePtr = m_core.lock();
+				if (corePtr) {
+					auto ecsPtr = corePtr->getEcsElement();
+					if (ecsPtr)
+					{
+						ecsPtr->setSceneRunning(false);
+						m_isSceneRunning = false;
+					}
+					auto scenePtr = corePtr->getSceneElement();
+					if (scenePtr) {
+						scenePtr->newScene();
+						scenePtr->unloadScene(filePath);
+						scenePtr->loadScene(filePath);
+					}
+				}
+				ImGui::CloseCurrentPopup();
+			}
+			ImGui::SameLine();
+			if (ImGui::Button("Cancel")) {
+				ImGui::CloseCurrentPopup();
+			}
+			ImGui::EndPopup();
+		}
+	}
+
+	void GuiElement::handleLoadScenePopup()
+	{
+		if (m_openLoadScenePopup) {
+			ImGui::OpenPopup("Load Existing Scene");
+			m_openLoadScenePopup = false;
+		}
+
+		if (ImGui::BeginPopupModal("Load Existing Scene", NULL, ImGuiWindowFlags_AlwaysAutoResize)) {
+			//Navigation and current path display at the top
+			if (ImGui::Button("Up")) {
+				fs::path currentPath(m_sceneLoadPath);
+				fs::path rootPath(ApplicationConfig::Config::projectPath);
+				currentPath = fs::absolute(currentPath);
+				rootPath = fs::absolute(rootPath);
+
+				if (currentPath.has_parent_path() && fs::equivalent(currentPath.parent_path(), rootPath)) {
+					m_sceneLoadPath = rootPath.string();
+				}
+				else if (currentPath.has_parent_path() && currentPath.parent_path() != rootPath && currentPath > rootPath) {
+					m_sceneLoadPath = currentPath.parent_path().string();
+				}
+			}
+			ImGui::SameLine();
+			ImGui::Text("Current Directory: %s", m_sceneLoadPath.c_str());
+
+			ImGui::Separator();
+
+			//Set up columns for directories and files
+			ImGui::Columns(2, nullptr, false);
+
+			ImGui::Text("Directories");
+			for (const auto& entry : fs::directory_iterator(m_sceneLoadPath)) {
+				if (fs::is_directory(entry)) {
+					if (ImGui::Button((entry.path().filename().string() + "/").c_str())) {
+						m_selectedScene = entry.path().string();
+					}
+				}
+			}
+			ImGui::NextColumn();
+			ImGui::Text("Scene Files");
+			for (const auto& entry : fs::directory_iterator(m_sceneLoadPath)) {
+				if (entry.path().extension() == ".scn") {
+					if (ImGui::Button(entry.path().filename().string().c_str())) {
+						m_selectedScene = entry.path().string();
+						ImGui::OpenPopup("Confirm Load");
+					}
+				}
+			}
+
+			ImGui::Columns(1);
+			ImGui::Separator();
+
+			if (ImGui::BeginPopupModal("Confirm Load", NULL, ImGuiWindowFlags_AlwaysAutoResize)) {
+
+
+				fs::path sceneName = fs::path(m_selectedScene).filename();
+				ImGui::Text("Scene To Load %s", sceneName.string().c_str());
+
+				ImGui::Separator();
+
+				ImGui::Text("Are you sure you want to load this scene?");
+				ImGui::Text("Remember to save your current work if necessary.");
+				if (ImGui::Button("Yes, Load")) {
+					m_selectedEntity = std::numeric_limits<std::uint32_t>::max();
+					m_selectedComponentType = typeid(void);
+					auto corePtr = m_core.lock();
+
+					auto ecsPtr = corePtr->getEcsElement();
+					if (ecsPtr)
+					{
+						ecsPtr->setSceneRunning(false);
+						m_isSceneRunning = false;
+					}
+
+					if (corePtr) {
+						auto scenePtr = corePtr->getSceneElement();
+						if (scenePtr) {
+							scenePtr->loadScene(m_selectedScene);
+						}
+					}
+
+					ImGui::CloseCurrentPopup();
+					ImGui::CloseCurrentPopup();
+				}
+				ImGui::SameLine();
+				if (ImGui::Button("Cancel")) {
+					ImGui::CloseCurrentPopup();
+				}
+				ImGui::EndPopup();
+			}
+
+			if (ImGui::Button("Cancel")) {
+				ImGui::CloseCurrentPopup();
+			}
+			ImGui::EndPopup();
+		}
+	}
+	
+	void GuiElement::handleSaveScenePopup()
+	{
+		if (m_openSaveScenePopup) {
+			ImGui::OpenPopup("Save Scene Confirmation");
+			m_openSaveScenePopup = false;
+		}
+
+		//Popup modal for save confirmation
+		if (ImGui::BeginPopupModal("Save Scene Confirmation", NULL, ImGuiWindowFlags_AlwaysAutoResize)) {
+			ImGui::Text("Do you want to save changes to the current scene?\nThis operation cannot be undone!\n\n");
+			ImGui::Separator();
+
+			if (ImGui::Button("Yes", ImVec2(120, 0))) {
+				auto corePtr = m_core.lock();
+				if (corePtr) {
+
+					auto ecsPtr = corePtr->getEcsElement();
+					if (ecsPtr)
+					{
+						ecsPtr->setSceneRunning(false);
+						m_isSceneRunning = false;
+					}
+
+					auto scenePtr = corePtr->getSceneElement();
+					if (scenePtr) {
+						std::string currentScenePath = scenePtr->getCurrentScenePath();
+						scenePtr->unloadScene(currentScenePath);
+						scenePtr->loadScene(currentScenePath);
+					}
+				}
+				ImGui::CloseCurrentPopup();
+			}
+			ImGui::SetItemDefaultFocus();
+			ImGui::SameLine();
+			if (ImGui::Button("No", ImVec2(120, 0))) {
+				ImGui::CloseCurrentPopup();
+			}
+			ImGui::EndPopup();
+		}
 	}
 
 	void GuiElement::handleProjectSettingsPopup()
@@ -315,9 +536,22 @@ namespace CoreGuiElement
 			}
 
 			static char pathBuffer[256];
-			strcpy_s(pathBuffer, ApplicationConfig::Config::projectPath.c_str());
+			strcpy_s(pathBuffer, sizeof(pathBuffer), ApplicationConfig::Config::projectPath.c_str());
+
 			if (ImGui::InputText("Project Path", pathBuffer, sizeof(pathBuffer))) {
-				ApplicationConfig::Config::setProjectPath(std::string(pathBuffer));
+				std::string path(pathBuffer);
+
+				if (!path.empty() && path.front() == '"') {
+					path.erase(0, 1);
+				}
+
+				if (!path.empty() && path.back() == '"') {
+					path.pop_back();
+				}
+
+				strncpy_s(pathBuffer, sizeof(pathBuffer), path.c_str(), _TRUNCATE);
+
+				ApplicationConfig::Config::setProjectPath(path);
 			}
 
 			static float width = ApplicationConfig::Config::screenWidth;
@@ -361,6 +595,7 @@ namespace CoreGuiElement
 				{
 					 auto newEntity = ecsPtr->createEntity();
 					 ecsPtr->addTransform(newEntity);
+					 ecsPtr->addSprite(newEntity);
 				}
 			}
 		}
