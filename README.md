@@ -95,6 +95,12 @@ When creating a new scene, or loading a scene, the file extension is .scn. This 
 Scene files are essentially a JSON formatted storage of the ECS's entity-component map.
 
 ---
+### Fixed Timestep vs Variable Delta Timestep
+Fixed Timestep: Represents the timestep to be used for Systems that should not be updated with a variable delta timestep, and instead should have a fixed timestep. Using a variable delta timestep for Physics System or Events System would produce erratic physics simulations, inaccurate collision detection/resolution, and inaccurate event detection/resolution.
+
+Variable Delta Timestep: This timestep is frame-dependent and will vary as the refresh rate varies (with factors such as VSYNC and hardware limitations affecting this value also). The refresh rate varies to ensure smooth rendering on the screen.
+
+---
 ### Custom Entity-Component-System
 Sol operates using a custom-built ECS (emplyoying a Data-Oriented approach), with further implementation details outlined in the following two sections (Entities, and Components).
 
