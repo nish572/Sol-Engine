@@ -105,6 +105,12 @@ The following components are provided to add to an entity to give it various dat
 
 ---
 
+### Project Settings
+
+By selecting Project in the Toolbar then Project Settings you can set the project's name and filepath, as well as the playtest scene window's dimensions.
+
+---
+
 ### Known Issues
 - Certain images may load either in black/white, or not load at all. However, this appears to be an issue with the STB image loading library and appears to only affect loading images imported from Apple phones. I believe this issue arises due to the manner in which Apple (and certain other devices) constructs the metadata of images from their platform. Please be careful when choosing images to load, and should this error present an issue, simply delete the affecting image, reload the Editor, and use a different image.
 - PNG blending issues. Images with transparent backgrounds load fine, with a transparent background. However, upon displaying them over other images, the background of the PNG turns black. This issue will be resolved in the future by introducing manual image layer setting to allow images to be layered more appropriately. OpenGL blending and depth testing has been enabled, and this allows PNGs to appear with a transparent background, but only when the background is not displayed over another image. This issue arises from the Painter's Algorithm, and will be rectified by introducing appropriate image layering functionality.
@@ -118,8 +124,12 @@ The following components are provided to add to an entity to give it various dat
 - Layer introduction to allow determination of which physics interact (i.e. physics bodies can be set to operate on specific layers to prevent collisions with physics from other layers), and to allow determination of which order sprites should be rendered on the screen (i.e. sprites with a lower layer will be rendered behind sprites with a higher layer).
 - Audio Element and Audio System implementation.
 - Full completion of the shader system to bring this functionality to the Editor. Currently mostly exists on the backend and allows shader creation from two separate shader files (one for a vertex shader, one for a fragment shader), however as of present rendering uses the default shader programs created.
+- Introduce a way to name entities on the frontend. Currently this isn't implemented due to entities existing merely as an identifier integer, however it would be ideal to introduced naming on the frontend only for ease-of-use.
 
 ---
 
 ## External Libraries
 
+For usage of external libraries please see the Licenses text file.
+
+---
