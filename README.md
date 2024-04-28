@@ -80,6 +80,15 @@ When creating a new scene, or loading a scene, the file extension is .scn. This 
 Scene files are essentially a JSON formatted storage of the ECS's entity-component map.
 
 ---
+### Custom Entity-Component-System
+Sol operates using a custom built ECS (emplyoying a Data-Oriented approach), with further implementation details outlined in the following two sections (Entities, and Components).
+
+This ECS has three custom-built Systems:
+- Rendering via an OpenGL 3.3 custom rendering engine (with SDL2 for window management and OpenGL context creation)
+- Physics via the Box2D physics engine
+- Events (as-of-current, primarily keyboard inputs) via SDL2 keyboard/mouse polling
+
+---
 ### Entities
 Entities in Sol are merely numerical identifiers to which components can be associated.
 
@@ -105,7 +114,9 @@ The following components are provided to add to an entity to give it various dat
   - This component is responsible for defining the body type to be set for physics.
   - User-modifiable properties include the body type (Kinematic which are bodies unaffected by gravity, Dynamic which are bodies affected by gravity, and Static which are bodies that can be collided with if the entity is given a collider component but will not be affected by gravity or physics simulations). Additionally, the user can toggle whether an entity with this body can be rotated by physics or not, which is useful if creating something like a platformer player that shouldn't rotate off of platforms for example.
 - **Collider**
-  - This component is responsible for holding the specific data for the physics body, such as the shape of the collider (Box, or Circle), as well as the dimensions (width and height for a Box, or radius for a Circle) and the density/friction/destitution.
+  - This component is responsible for holding the specific data for the physics bodies collider, and is used to help define the physics body for physics simulations.
+  - User-modifiable properties include the shape of the collider (Box, or Circle), as well as the dimensions (width and height for a Box, or radius for a Circle) and the density/friction/destitution.
+  - Additionally there is a visibility toggle to allow the collision shape to be rendered as a wireframe in the playtest scene window, which is useful as a collision box editor.
   - Please note that setting the dimensions affects the mass of a physics body (which affects how much forces/impulses/torques affect the body), but the density can be modified to counter or enhance this. Default values for friction and restitution are provided but may be modified if the user wishes differing effects.
 - **Input**
   - This component allows the user to add actions based upon key presses. This allows control of an entity when a scene is running in the playtest window by applying forces/impulses/torques to the physics body (if a physics body component and a collider are being used).
