@@ -23,7 +23,7 @@ Sol was developed using Visual Studio 2022. If you wish to run Sol via the Visua
 - For running the Visual Studio solution for the Debug-x64 configuration, this SDL2.dll should be pasted inside the following directory: "\Sol-Engine\Sol-Engine\bin\Debug-x64\Editor".
 - For running the Visual Studio solution for the Release-x64 configuration, this SDL2.dll should be pasted inside the following directory: "\Sol-Engine\Sol-Engine\bin\Release-x64\Editor".
 
-(Please note that the specific location of the Sol-Engine root directory will vary depending on where you download this codebase to on your system. Also, please note that those two directories will only appear once the Visual Studio solution debugger has been run once for that configuration. So, upon first running via the debugger an error will appear indicating SDL2.dll is missing, then simply add the SDL2.dll to the specified directory and re-run via the debugger).
+(Please note that the specific location of the Sol-Engine root directory will vary depending on where you download this codebase to on your system. Also, please note that those two directories will only appear once the Visual Studio solution debugger has been run once for that configuration. So, upon first running via the debugger an error will appear indicating SDL2.dll is missing, then simply add the SDL2.dll to the newly-created specified directory and re-run via the debugger).
 
 Upon creating a new project, please create a new scene via the Toolbar. If not, changes cannot be saved until a new scene has been created and saved.
 Upon loading an existing project, please set load a scene via the Toolbar, or create a new scene via the Toolbar. If not, changes cannot be saved as no scene will be present.
