@@ -6,6 +6,12 @@ A free and open source 2D Game Engine and Editor created for my BSc Computer Sci
 
 ---
 
+![main](https://github.com/nish572/Sol-Engine/assets/78385332/286966f4-1393-4bf2-8946-dd9643f65222)
+
+Featuring Hubert The Dog in the test scene shown, the beloved mascot of this project conceived during testing.
+
+---
+
 ## To Run Sol
 To run Sol, please download the latest release from the sidebar. Open the directory and find the Sol Engine.exe. Run this file to run Sol. Please ensure SDL2.dll and Engine.dll are present in the same directory (alternatively install to PATH, however for ease of use it is ideal to keep these .dll files in the same directory as the executable). Additionally, ensure the imgui configuration file is present in this same directory to allow the Editor to load with the same visual settings as I have set.
 
