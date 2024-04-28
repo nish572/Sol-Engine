@@ -18,7 +18,7 @@ Featuring Hubert The Dog in the test scene shown, who is the beloved mascot of t
 
 ## To Run Sol
 **Instructions for running the v1.0 release:**
-- Dwnload the latest (v1.0) release from the sidebar.
+- Download the latest (v1.0) release from the sidebar.
 - Open the directory and find the Sol Engine.exe.
 - Run this file to run Sol.
 - Note: please ensure SDL2.dll and Engine.dll are kept present in the same directory (alternatively install to PATH, however for ease of use it is ideal to keep these .dll files in the same directory as the executable). Additionally, ensure the imgui configuration file is present in this same directory to allow the Editor to load with the same layout that I have set.
