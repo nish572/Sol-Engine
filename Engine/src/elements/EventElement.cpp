@@ -1,14 +1,15 @@
+//------- Event Element -----
+//Manages User Input
+//For The Sol Core Engine
+//---------------------------
+
 #include "event/EventElement.h"
 
 #include "Core.h"
 
 namespace CoreEventElement
 {
-	//EventElement has initializer list
-	//All Elements MUST have at least m_core private member
-	//If EventElement has private member(s) for pointer(s) to object(s) managed by EventElement
-	//then include in initializer list here with nullptr as value(s)
-	EventElement::EventElement(std::shared_ptr<Sol::Core> core) : m_core(core),  m_running(true)//Extend initializer list if necessary
+	EventElement::EventElement(std::shared_ptr<Sol::Core> core) : m_core(core),  m_running(true)
 	{
 	}
 	EventElement::~EventElement()
@@ -16,7 +17,7 @@ namespace CoreEventElement
 	}
 
 	//Call after Core's attachElement(elementName) has been called
-	//Pass any required parameters for initialization, e.g. RenderElement's initialize function requires window height and width
+	//Pass any required parameters for initialization, none
 	bool EventElement::initialize()
 	{
 		auto corePtr = m_core.lock();
@@ -31,6 +32,8 @@ namespace CoreEventElement
 		{
 			if (!corePtr->getRenderElement())
 			{
+				//The Event Element requires the Render Element for processing events through SDL
+				//If not present, then log/output the appropriate error
 				if (m_logElementAttached)
 				{
 					corePtr->getLogElement()->logError("[Event] Failed to initialize EventElement: RenderElement is a nullptr");
@@ -53,13 +56,13 @@ namespace CoreEventElement
 		return true;
 	}
 
-	//Check if event element is running
+	//Check if Event Element is running
 	bool EventElement::isRunning() const
 	{
 		return m_running;
 	}
 
-	//Handle events
+	//Handle events by processing the queue
 	void EventElement::handleEvents(const std::vector<SDL_Event>& events)
 	{
 		for (const auto& event : events)
@@ -68,20 +71,20 @@ namespace CoreEventElement
 		}
 	}
 
-	//Process event
+	//Process events
 	void EventElement::processEvent(const SDL_Event& event)
-	{		
+	{
+		//Event is related to ImGui, so we can skip it	
 		if (ImGui_ImplSDL2_ProcessEvent(&event))
 		{
-			//Event is related to ImGui, so we can skip it
-			//Check if the event belongs to ImGui
+			//Check if the event belongs to ImGui, and if so, skip
 			if (ImGui::GetIO().WantCaptureKeyboard || ImGui::GetIO().WantCaptureMouse)
 			{
 				return;
 			}
 		}
 
-		//Check for application close events
+		//Check for application close events, and if event present then set the running state to false to signal closing to the Core
 		if (event.type == SDL_QUIT)
 		{
 			m_running = false;
@@ -94,10 +97,14 @@ namespace CoreEventElement
 		//Check for keyboard events
 		if (event.type == SDL_KEYDOWN)
 		{
+			//Push these back to a data structure of current input events
 			m_inputEvents.push_back(event);
 		}
 	}
 
+	//The following functions are to be used by the Event System and the Physics System
+	//Their usage is to compare any current input events to existing Input Component Actions
+	//And then for Physics to apply forces/impulses/torques by input
 	std::vector<SDL_Event> EventElement::getInputEvents()
 	{
 		return m_inputEvents;
@@ -116,7 +123,10 @@ namespace CoreEventElement
 		return m_actionsForPhysics;
 	}
 
+	//Event Element cleanup, should be clean prior but still useful to clear as a failsafe
 	void EventElement::terminate()
 	{
+		resetInputEvents();
+		m_actionsForPhysics.clear();
 	}
 }

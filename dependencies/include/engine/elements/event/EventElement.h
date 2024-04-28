@@ -2,16 +2,16 @@
 
 #include "EngineAPI.h"
 
+//C++ libraries
 #include <memory>
 #include <string>
 #include <vector>
 
+//The external libraries SDL2 and Dear ImGui
 #include <SDL.h>
 #include <imgui_impl_sdl2.h>
 
 #include "ecs/Components.h"
-
-using Entity = std::uint32_t;
 
 //Forward declaration of Core class
 //This tells compiler Sol::Core exists without providing full definition
@@ -21,19 +21,19 @@ namespace Sol {
 	class Core;
 }
 
+//The definition of an Entity (i.e. an Entity exists as an integer)
+using Entity = std::uint32_t;
+
 namespace CoreEventElement
 {
-	//Represents the element responsible for managing the Event operations in the Sol Engine
+	//Represents the Element responsible for managing the Event operations in the Sol Engine
+	//Primarily keyboard/mouse input
 	class EventElement
 	{
 	public:
-		//Instantiate EventElement
 		EventElement(std::shared_ptr<Sol::Core> core);
-		//Release resources associated with the EventElement instance
 		~EventElement();
 
-		//Initialize EventElement
-		//Call this after calling EventElement's attachElement
 		ENGINE_API bool initialize();
 
 		//Check if SDL/ImGui events still need to be checked
@@ -45,16 +45,16 @@ namespace CoreEventElement
 		//Process events
 		void processEvent(const SDL_Event& event);
 
+		//Get all input events
 		std::vector<SDL_Event> getInputEvents();
 
 		void resetInputEvents();
 
+		//For use by the Physics System so forces/impulses/torques can be applied by key input
 		void setActionsForPhysics(const std::unordered_map<Entity, std::vector<ActionData>>& actionsPerEntity);
 		const std::unordered_map<Entity, std::vector<ActionData>>& getActionsForPhysics() const;
 
-		//Terminate EventElement
-		//Call this to deallocate any of EventElement's resources
-		//Call this when amending Core's detachElement function and inside Core's terminate function
+		//Call terminate to deallocate any of Event Element's resources
 		void terminate();
 
 	private:
@@ -62,8 +62,9 @@ namespace CoreEventElement
 		std::weak_ptr<Sol::Core> m_core;
 		//Is LogElement present
 		bool m_logElementAttached{ false };
+		//Used by the Core to determine whether or not any SDL/ImGui quit events have been detected, and if so then the application cleanly quits
 		bool m_running;
-
+		//For use to determine and send any events required in-scene
 		std::vector<SDL_Event> m_inputEvents;
 		std::unordered_map<Entity, std::vector<ActionData>> m_actionsForPhysics;
 	};

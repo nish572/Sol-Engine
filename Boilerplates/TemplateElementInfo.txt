@@ -11,3 +11,5 @@ The terminate method is responsible for deallocating resources associated with t
 The custom Element can include methods for accessing or interacting with its managed objects, if needed.
 
 The Element's header file includes necessary includes, forward declarations, and pragma directives to prevent multiple inclusions.
+
+Ensure the attach and detach Element functions of the Core are modified to allow attaching and detaching of the Element. Also ensure a get method is introduced to the Core.

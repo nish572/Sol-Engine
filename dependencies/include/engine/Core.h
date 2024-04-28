@@ -1,11 +1,21 @@
+//------- Sol Core ----------
+//The Core Of The Sol Engine
+//---------------------------
+
+//Core represents the central manager of the Sol Engine
+//Responsible for initializing, updating, and terminating the Elements
+//Responsible for allowing any Sol Applications such as the Sol Editor to interact with the Engine (Core, Elements, ECS)
+
 #pragma once
 
 #include "EngineAPI.h"
 
+//C++ libraries
 #include <memory>
 #include <iostream>
 #include <string>
 
+//All element headers, components header, and the config header
 #include "debuglog/LogElement.h"
 #include "render/RenderElement.h"
 #include "render/GuiElement.h"
@@ -21,9 +31,6 @@
 
 namespace Sol
 {
-	//Core represents the central manager of the Sol Engine
-	//Responsible for initializing, updating, and terminating the Elements
-	//Responsible for allowing any Sol Applications such as the Editor to interact with the Engine (Core, Elements, Ecs)
 	class Core : public std::enable_shared_from_this<Core>
 	{
 	public:
@@ -33,25 +40,21 @@ namespace Sol
 		ENGINE_API ~Core();
 
 		//Attach an Element in application runtime
-		//To make an Element usable by the Core, amend the attachElement code to include the Element
 		//elementName should only be in Capitalization case e.g. 'Render', and should not include 'Element'
 		ENGINE_API bool attachElement(const std::string& elementName);
 
-		//Detach an Element
-		//Preferably, do so ONLY from Core's terminate function as this checks to see if each Element is not a nullptr
-		//i.e. if the Element is still attached, and if so, call Element's terminate function
-		//which automatically calls detachElement once Element's termination complete
-		//However, if detachElement call desired prior to terminating Core, ensure the Element's terminate function has been called first
+		//Detach an Element, not normally used in application runtime however could be required outside of the Core's terminate function
+		//Calls the Element's terminate function and sets the Core's smart pointer to this Element as a nullptr to ensure memory deallocated
 		ENGINE_API bool detachElement(const std::string& elementName);
 
 		//Initialize Core
 		//Return true/false to be handled by the application
 		ENGINE_API bool initialize();
 
-		//Update Core
+		//Update Core (which in turn updates all Elements appropriately)
 		ENGINE_API void run();
 
-		//Call terminate functions for all Elements, first checking they're not nullptrs
+		//Detach all Elements using detachElement function for each Element
 		ENGINE_API void terminate();
 
 		//---
@@ -83,7 +86,7 @@ namespace Sol
 		ENGINE_API std::shared_ptr<CoreEcsElement::EcsElement> getEcsElement() const;
 
 		//Return a pointer to the SceneElement instance managed by the Core
-		ENGINE_API std::shared_ptr<CoreSceneElement::SceneElement> getSceneElement() const;
+		ENGINE_API CoreSceneElement::SceneElement* getSceneElement() const;
 
 		//---
 
@@ -93,7 +96,7 @@ namespace Sol
 		//Additionally, if an exception is thrown during the initialization of Core, Element objects automatically deleted
 		//This ensures no memory leaks there
 		
-		//Smart pointer(s) for an instance of the each Element
+		//Smart pointer(s) for an instance of the each Element (unique for most, shared for ECS to allow Systems to own the ECS and therefore ensure its lifetime until they are complete and no longer in use)
 		//--- 
 		std::unique_ptr<CoreLogElement::LogElement> m_logElement;
 		std::unique_ptr<CoreRenderElement::RenderElement> m_renderElement;
@@ -103,7 +106,7 @@ namespace Sol
 		std::unique_ptr<CoreResourceElement::ResourceElement> m_resourceElement;
 		std::unique_ptr<CoreShaderElement::ShaderElement> m_shaderElement;
 		std::shared_ptr<CoreEcsElement::EcsElement> m_ecsElement;
-		std::shared_ptr<CoreSceneElement::SceneElement> m_sceneElement;
+		std::unique_ptr<CoreSceneElement::SceneElement> m_sceneElement;
 		//---
 	};
 }

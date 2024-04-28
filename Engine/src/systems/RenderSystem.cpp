@@ -1,3 +1,8 @@
+//------- Render System -----
+//Implements Rendering
+//For The Sol Core Engine
+//---------------------------
+
 #include "systems/RenderSystem.h"
 #include "ecs/EcsElement.h"
 #include <iostream>
@@ -19,13 +24,13 @@ namespace EcsRenderSystem
 
     void RenderSystem::initialize()
     {
-        //Creating the two shader program ID's to be used
-        //One for if instances are being used, one for if not
+        //Creating the two shader program IDs to be used
+        //One for if batch rendering is to being used, one for if not
         //Check though to see if the sprite's shaderProgram field is 0, if it isn't then render using that shader but do so in a single draw call not instanced draw call
+        
+        setProjectionMatrix(); //Initial setting of the default project matrix, however this function is called every update to ensure it doesn't need to be changed
 
-        setProjectionMatrix();
-
-        //Vertex and fragment shader source for single drawing
+        //Vertex shader source for single drawing
         const char* singleDrawVertexShaderSource = R"glsl(
         #version 330 core
         layout (location = 0) in vec2 aPos;
@@ -45,7 +50,7 @@ namespace EcsRenderSystem
             TexCoords = aTexCoords;
         }
         )glsl";
-        //The fragment shader source can be the same as the single rendering fragment shader, but included for differentiation
+        //Fragment shader source for single drawing
         const char* singleDrawFragmentShaderSource = R"glsl(
         #version 330 core
         out vec4 FragColor;
@@ -67,7 +72,7 @@ namespace EcsRenderSystem
         }
         )glsl";
 
-        //Vertex and fragment shader source for multi drawing
+        //Vertex shader source for multi drawing
         const char* multiDrawVertexShaderSource = R"glsl(
         #version 330 core
         layout (location = 0) in vec2 aPos;
@@ -85,7 +90,7 @@ namespace EcsRenderSystem
             TexCoords = aTexCoords;
         }
         )glsl";
-        //The fragment shader source can be the same as the single rendering fragment shader, but included for differentiation
+        //Fragment shader source for multi drawing
         const char* multiDrawFragmentShaderSource = R"glsl(
         #version 330 core
         out vec4 FragColor;
@@ -100,6 +105,7 @@ namespace EcsRenderSystem
         }
         )glsl";
 
+        //Create the two shaders, one for single drawing and one for multi drawing
         m_defaultShaderID = createShader(singleDrawVertexShaderSource, singleDrawFragmentShaderSource);
         m_defaultInstanceShaderID = createShader(multiDrawVertexShaderSource, multiDrawFragmentShaderSource);
 
@@ -125,7 +131,7 @@ namespace EcsRenderSystem
         //Gen, bind, and buffer so ready
         glGenBuffers(1, &m_quadVBO);
         glBindBuffer(GL_ARRAY_BUFFER, m_quadVBO);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW); //Static as we are not changing the vertices' values
+        glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW); //Static as we not changing the vertices' values
 
         //Generate EBO
         //Indices for procesing vertex order
@@ -151,12 +157,12 @@ namespace EcsRenderSystem
         glGenBuffers(1, &m_modelVBO);
         glBindBuffer(GL_ARRAY_BUFFER, m_modelVBO);
         //Required for OpenGL to allocate the maximum potential memory possibly needed
-        glBufferData(GL_ARRAY_BUFFER, m_MAX_SPRITES * sizeof(glm::mat4), NULL, GL_DYNAMIC_DRAW); //Dynamic as the matrices data will be change a lot
+        glBufferData(GL_ARRAY_BUFFER, m_MAX_SPRITES * sizeof(glm::mat4), NULL, GL_DYNAMIC_DRAW); //Dynamic as the matrices data will change a lot
 
         //Specify instance attribute data
         //Loop 4 times since the mat4 is split into 4 lots of vec4
         //So effectively each vec4 is a vertex attribute and 4 of those make up the mat4
-        //In this case since the vertices' positional data is in layout location 0, and and the texture coords are in layout location 1, need to start at 2
+        //In this case since the vertices' positional data is in layout location 0, and the texture coords are in layout location 1, need to start at 2
         //And increment this by 1 each time since there are 4 vec4 to be stored
         //First vec4 will be in layout 2, then the next in layout 3, and so on
         //Effectively:
@@ -198,8 +204,9 @@ namespace EcsRenderSystem
         //Unbind the VAO
         glBindVertexArray(0);
 
-        //Circle parameters
+        //Circle parameters, number of segments to divide the circle into, more segments means a smoother circle
         const int numSegments = 32;
+        //Define vertices for a wireframe circle
         float circleVertices[3 * numSegments]; //Vertex count for the circle
 
         for (int i = 0; i < numSegments; ++i) {
@@ -225,6 +232,7 @@ namespace EcsRenderSystem
         glBindVertexArray(0);
     }
 
+    //Check if the aspect ratio has changed and if it has, update the projection matrix accordingly
     void RenderSystem::setProjectionMatrix()
     {
         float aspect = ApplicationConfig::Config::screenWidth / ApplicationConfig::Config::screenHeight;
@@ -233,17 +241,18 @@ namespace EcsRenderSystem
             float halfHeight = ApplicationConfig::Config::screenHeight / 2.0f;
             float halfWidth = halfHeight * aspect;
 
-            m_projectionMatrix = glm::ortho(-halfWidth, halfWidth, -halfHeight, halfHeight, -1.0f, 1.0f);
+            m_projectionMatrix = glm::ortho(-halfWidth, halfWidth, -halfHeight, halfHeight, -1.0f, 1.0f); //Set the projection matrix to orthographic and base upon the screen dimensions
             m_aspect = aspect;
         }
     }
 
     void RenderSystem::update(double deltaTime) {
+        //Check is projection matrix should be changed and if so, change
         setProjectionMatrix();
-        //Get all entities with both TransformComponent and SpriteComponent
+        //Get all Entities with both TransformComponent and SpriteComponent
         auto transformComponents = m_ecsElement->getAllComponentsOfType<TransformComponent>();
         auto spriteComponents = m_ecsElement->getAllComponentsOfType<SpriteComponent>();
-        auto colliderComponents = m_ecsElement->getAllComponentsOfType<ColliderComponent>();
+        auto colliderComponents = m_ecsElement->getAllComponentsOfType<ColliderComponent>(); //For use in rendering wireframes if made visible
 
         std::vector<std::pair<std::shared_ptr<SpriteComponent>, std::shared_ptr<TransformComponent>>> tmpSpriteTransformPairs;
 
@@ -252,9 +261,6 @@ namespace EcsRenderSystem
             auto transformPair = transformComponents.find(spritePair.first);
             if (transformPair != transformComponents.end()) {
                 tmpSpriteTransformPairs.push_back(std::make_pair(spritePair.second, transformPair->second));
-            }
-            else {
-                //Log an error message if no TransformComponent is found
             }
         }
 
@@ -277,6 +283,7 @@ namespace EcsRenderSystem
         m_modelMatricesCache.clear();
 
         //Calculate model matrices
+        //Used to manipulate sprites based on transformational data from the transform component
         for (size_t i = 0; i < tmpSpriteTransformPairs.size(); i++) {
             auto& tmpPair = tmpSpriteTransformPairs[i];
             //Calculate the model matrix (transformation) using the position, rotation, and scale from the TransformComponent
@@ -291,6 +298,7 @@ namespace EcsRenderSystem
             m_modelMatricesCache.push_back(modelMatrix);
         }
 
+        //Render sprites, but check first to ensure there are any appropriate sprites to be rendered
         if (tmpSpriteTransformPairs.size() > 0)
         {
             renderSprites(tmpSpriteTransformPairs);
@@ -298,10 +306,10 @@ namespace EcsRenderSystem
     }
 
     void RenderSystem::fixedUpdate(double fixedTimestep) {
-        //Not necessary for the RenderSystem as it doesn't require fixed updates
-        //Could have done a base class and inherited from this however that would have required a big chunk of refactoring that is unnecessary right now
+        //Not necessary for the Render System as it doesn't require fixed updates
     }
 
+    //For use in creating the default shaders for single drawing and multi drawing
     unsigned int RenderSystem::createShader(const char* vertexShaderSource, const char* fragmentShaderSource) {
         //Vertex shader
         unsigned int vertexShader = glCreateShader(GL_VERTEX_SHADER);
@@ -344,6 +352,8 @@ namespace EcsRenderSystem
         return shaderProgram;
     }
 
+    //Determine whether to use single drawing or multi drawing depending on the number of sprites to be rendered (with the same texture)
+    //Make calls to these functions based on this decision
     void RenderSystem::renderSprites(std::vector<std::pair<std::shared_ptr<SpriteComponent>, std::shared_ptr<TransformComponent>>> tmpSpriteTransformPairs) {
         GLsizei numSpritesByTexture = 1;
         int currentTexture = tmpSpriteTransformPairs[0].first->textureID;
@@ -400,6 +410,7 @@ namespace EcsRenderSystem
         glBindVertexArray(0);
     }
 
+    //Non-instanced rendering
     void RenderSystem::singleDraw(int currentTexture, GLsizei numSpritesByTexture, size_t numSpritesRenderedBeforeThisBatch) {
         //Bind the texture for this batch of sprites
         glActiveTexture(GL_TEXTURE0);
@@ -415,6 +426,8 @@ namespace EcsRenderSystem
         for (size_t j = numSpritesRenderedBeforeThisBatch; j < numSpritesRenderedBeforeThisBatch + numSpritesByTexture; j++) {
 
             glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(m_modelMatricesCache[j]));
+            glEnable(GL_BLEND);
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
             glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
         }
         //Unbind
@@ -422,6 +435,7 @@ namespace EcsRenderSystem
         glBindBuffer(GL_ARRAY_BUFFER, 0);
     }
 
+    //Instanced (batch) rendering
     void RenderSystem::multiDraw(int currentTexture, GLsizei numSpritesByTexture, size_t numSpritesRenderedBeforeThisBatch) {
         //Buffer the model matrix data of these sprites to the GPU to be used for instanced rendering
         //Add all model matrices in the appropriate range to a temporary store, to be used to buffer sub data
@@ -440,12 +454,15 @@ namespace EcsRenderSystem
         glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(m_viewMatrix));
         glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(m_projectionMatrix));
         //Draw the batch of sprites via instanced rendering
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glDrawElementsInstanced(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr, numSpritesByTexture);
         //Unbind
         glBindTexture(GL_TEXTURE_2D, 0);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
     }
 
+    //Render a square or cicle wireframe for an Entity whose collider is set to be visible in the Editor
     void RenderSystem::renderWireframe(const TransformComponent& transform, const ColliderComponent& collider, bool isCircle) {
         glm::mat4 model = glm::mat4(1.0f);
         model = glm::translate(model, glm::vec3(transform.position.x, transform.position.y, 0.0f));
@@ -454,12 +471,12 @@ namespace EcsRenderSystem
         glm::vec3 sizeInPixels;
         if (isCircle) {
             //Convert the radius from meters to pixels and calculate the diameter for scaling
-            float diameterInPixels = collider.radius * 2.0f * 100.0f; // Assuming 100 pixels per meter
+            float diameterInPixels = collider.radius * 2.0f * m_scalingFactor;
             sizeInPixels = glm::vec3(diameterInPixels, diameterInPixels, 1.0f);
         }
         else {
             //Box collider sizing
-            sizeInPixels = glm::vec3(collider.width * 100.0f, collider.height * 100.0f, 1.0f);
+            sizeInPixels = glm::vec3(collider.width * m_scalingFactor, collider.height * m_scalingFactor, 1.0f);
         }
 
         model = glm::scale(model, sizeInPixels); //Apply the size in pixels
@@ -483,13 +500,13 @@ namespace EcsRenderSystem
 
         if (isCircle) {
             glBindVertexArray(m_wireframeCircleVAO);
-            glDrawArrays(GL_LINE_LOOP, 0, 32); //Assuming circle is made of 32 segments
+            glDrawArrays(GL_LINE_LOOP, 0, 32); //Circle is made of 32 segments, as decided in the initialise function
         }
         else {
             glBindVertexArray(m_wireframeSquareVAO);
             glDrawArrays(GL_LINE_LOOP, 0, 4); //4 vertices for the square
         }
-
+        //Unbind
         glUniform1i(useWireframeLoc, GL_FALSE);
         glBindVertexArray(0);
         glUseProgram(0);

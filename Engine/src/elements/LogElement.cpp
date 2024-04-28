@@ -1,3 +1,8 @@
+//------- Event Element -----
+//Simple Log To File
+//For The Sol Core Engine
+//---------------------------
+
 #include "debuglog/LogElement.h"
 
 namespace CoreLogElement
@@ -9,12 +14,13 @@ namespace CoreLogElement
 	{
 	}
 
+	//Call after Core's attachElement(elementName) has been called
+	//Pass any required parameters for initialization, filename for the log file
 	bool LogElement::initialize(const std::string& logfileName)
 	{
 		try {
-			//Create file sink to log messages to Sol-Log.txt
-			//If file not present, file created
-			//truncated on opening
+			//Create file sink to log messages to the text file
+			//Truncated on opening
 			auto file_sink = std::make_shared<spdlog::sinks::basic_file_sink_mt>(std::string(logfileName), true);
 			//Create logger with the previously created file sink
 			logger = std::make_shared<spdlog::logger>("SolLogger", file_sink);

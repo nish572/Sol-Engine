@@ -17,7 +17,7 @@ int main(int argc, char* args[]) {
 	//Initialize any Element(s) by calling the Element's initialize function and passing any required parameters
 	//e.g. appCore->getRenderElement()->initialize(...)
 	// ---
-	// MAKE SURE ELEMENTS ATTACHED AND INITIALIZED ONE BY ONE
+	// MAKE SURE ELEMENTS ATTACHED FIRST THEN INITIALIZED, ONE BY ONE
 	// ESPECIALLY IMPORTANT IF LOG ELEMENT NOT INITIALIZED BEFORE ATTACHING OTHER ELEMENTS!
 
 	// ---

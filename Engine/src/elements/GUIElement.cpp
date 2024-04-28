@@ -1,3 +1,8 @@
+//------- GUI Element -------
+//Forms the Editor Interface
+//For The Sol Core Editor
+//---------------------------
+
 #include "render/GuiElement.h"
 #include "Config.h"
 
@@ -5,9 +10,7 @@
 
 namespace CoreGuiElement
 {
-	//GuiElement has initializer list for any managed resources that require initializing
-	//All Elements MUST have at least m_core private member
-	GuiElement::GuiElement(std::shared_ptr<Sol::Core> core) : m_core(core) //Extend initializer list if necessary
+	GuiElement::GuiElement(std::shared_ptr<Sol::Core> core) : m_core(core), m_debugMode(true)
 	{
 	}
 	GuiElement::~GuiElement()
@@ -15,7 +18,7 @@ namespace CoreGuiElement
 	}
 
 	//Call after Core's attachElement(elementName) has been called
-	//Pass any required parameters for initialization, e.g. RenderElement's initialize function requires window height and width
+	//Pass any required parameters for initialization, the debug mode
 	bool GuiElement::initialize(bool debug)
 	{
 		auto corePtr = m_core.lock();
@@ -30,6 +33,8 @@ namespace CoreGuiElement
 		{
 			if (!corePtr->getRenderElement())
 			{
+				//The GUI Element requires the Render Element for an OpenGL context to render GUI to
+				//If not present, then log/output the appropriate error
 				if (m_logElementAttached)
 				{
 					std::cerr << "Failed to initialize GuiElement: RenderElement is a nullptr" << std::endl;
@@ -40,6 +45,7 @@ namespace CoreGuiElement
 			}
 		}
 
+		//Check if the Editor should be viewed at all, if debug is false then no, otherwise yes (defaults to yes anyways)
 		m_debugMode = debug;
 
 		//Setup Dear ImGui context
@@ -51,11 +57,11 @@ namespace CoreGuiElement
 		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;         //Enable Docking
 		io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;       //Enable Multi-Viewport / Platform Windows
 
-		//Setup Dear ImGui style
+		//Setup Dear ImGui style (easy to switch to light mode however some widgets appear too light, so dark mode only for now)
 		ImGui::StyleColorsDark();
 		//ImGui::StyleColorsLight();
 
-		//When viewports are enabled we tweak WindowRounding/WindowBg so platform windows can look identical to regular ones.
+		//When viewports are enabled, tweak WindowRounding/WindowBg so platform windows can look identical to regular ones
 		ImGuiStyle& style = ImGui::GetStyle();
 		if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
 		{
@@ -64,9 +70,10 @@ namespace CoreGuiElement
 		}
 
 		//Setup Platform/Renderer backends
+		//In this case, OpenGL 3.3 with SDL2
 		if (corePtr)
 		{
-			//If RenderElement is not attached to Core, then GuiElement cannot be initialized
+			//If Render Element is not attached to Core, then GUI Element cannot be initialized, hence error check earlier
 			ImGui_ImplSDL2_InitForOpenGL(corePtr->getRenderElement()->getWindow(), corePtr->getRenderElement()->getGLContext());
 			ImGui_ImplOpenGL3_Init("#version 330");
 		}
@@ -83,35 +90,29 @@ namespace CoreGuiElement
 		return true;
 	}
 
-	//Current plan:
-	//Too tightly coupled, but the only working solution right now due to the nature of ImGui
+	//Current implementation to render and process the Editor GUI:
+	//Too tightly coupled, but the only working solution right now due to the nature of Dear ImGui
 	//Essentially include a debug flag
-	//When debug is enabled, editor viewports appear and create a new scene (or load existing scene of existing project, but default to new scene I think)
-	//When debug is disabled, editor viewports do not appear and instead load the first scene from the serialised scene data
+	//When debug is enabled, editor viewports appear
+	//When debug is disabled, editor viewports do not appear
 
-	//Update
 	void GuiElement::update(double deltaTime)
 	{
+		//Get ImGui input data
 		ImGuiIO& io = ImGui::GetIO();
 
-		//Use the provided deltaTime value
+		//Use the provided deltaTime value to set the value for ImGui
 		io.DeltaTime = static_cast<float>(deltaTime);
 
-		//Start the Dear ImGui frame
+		//Start the ImGui frame
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplSDL2_NewFrame();
 		ImGui::NewFrame();
 
-		//Create dockable background space for all viewports
-		//ImGui::DockSpaceOverViewport();
-
+		//If Editor should be present, call a function that handles all viewports
 		if (m_debugMode)
 		{
 			editorViewports();
-		}
-		else
-		{
-			;
 		}
 
 		ImGui::Render();
@@ -129,15 +130,19 @@ namespace CoreGuiElement
 		}		
 	}
 
+	//The popup to show upon first starting the Editor
 	void GuiElement::startUpDialog() {
 		static bool openPopup = true;
 		static bool showLoadOptions = false;
 
 		if (openPopup) {
 			ImGui::OpenPopup("StartUp Options");
+			//Once popup has been executed once, it is closed without another way to re-open
+			//This is intended otherwise this popup will show constantly
 			openPopup = false;
 		}
 
+		//Initial popup window
 		if (ImGui::BeginPopupModal("StartUp Options", NULL, ImGuiWindowFlags_AlwaysAutoResize)) {
 			if (!showLoadOptions) {
 				if (ImGui::Button("Load Existing Project")) {
@@ -147,6 +152,7 @@ namespace CoreGuiElement
 			}
 
 			if (ImGui::Button("Create New Project")) {
+				//If the user selects to create a new project, then the project settings popup is displayed to allow configuring the settings for this project
 				ApplicationConfig::Config::setProjectName("");
 				ApplicationConfig::Config::setProjectPath("");
 				m_openProjectSettingsPopup = true;
@@ -167,6 +173,7 @@ namespace CoreGuiElement
 			}
 
 			if (showLoadOptions) {
+				//If the user selects to load an existing project, then the user can set the filepath of the project to load
 				static char filePath[1024];
 				if (ImGui::InputText("Project Path", filePath, IM_ARRAYSIZE(filePath)))
 				{
@@ -202,6 +209,8 @@ namespace CoreGuiElement
 		}
 	}
 
+	//Handles the displaying of all viewports, including the start up dialog, the main dockable viewport, and any sub-viewports
+	//To be called in the GUI Element's update function during an ImGui frame
 	void GuiElement::editorViewports()
 	{
 		startUpDialog();
@@ -211,6 +220,7 @@ namespace CoreGuiElement
 		resourceBrowserViewport();
 	}
 
+	//Auxilliary function to be clean a Component type name to allow this to be written cleanly where required in the Editor
 	std::string GuiElement::cleanTypeName(const std::string& typeName) {
 		//Regular expression to remove common C++ type prefixes
 		std::regex prefixPattern(R"(^\s*(struct|class|enum)\s+)");
@@ -218,12 +228,14 @@ namespace CoreGuiElement
 		return std::regex_replace(typeName, prefixPattern, "");
 	}
 
+	//Presents the main dockable viewport with a toolbar, from which further popups may appear based upon user selection
 	void GuiElement::mainEditorViewport()
 	{
 		ImGui::Begin("Sol Editor", NULL, ImGuiWindowFlags_MenuBar);
 		ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
 		ImGui::DockSpace(dockspace_id, ImVec2(0, 0), ImGuiDockNodeFlags_None);
 
+		//Menu for scene management, project settings viewing/modification, and for the buttons to start/stop/save the scene in the playtest window
 		if (ImGui::BeginMenuBar())
 		{
 			if (ImGui::BeginMenu("Scene")) {
@@ -272,15 +284,10 @@ namespace CoreGuiElement
 				}
 				ImGui::EndMenu();
 			}
-			if (ImGui::BeginMenu("Help")) {
-				if (ImGui::MenuItem("Open Documentation")) {
-					//Load the text file with the documentation
-				}
-				ImGui::EndMenu();
-			}
 			ImGui::Separator();
 			if (ImGui::Button("Start"))
 			{
+				//Rendering will always occur, however starting physics and events is useful for playtesting
 				auto corePtr = m_core.lock();
 				if (corePtr)
 				{
@@ -295,6 +302,7 @@ namespace CoreGuiElement
 			ImGui::SameLine();
 			if (ImGui::Button("Stop"))
 			{
+				//Stop current scene (will still be rendered, however physics and events will halt)
 				auto corePtr = m_core.lock();
 				if (corePtr)
 				{
@@ -328,9 +336,35 @@ namespace CoreGuiElement
 					}
 				}
 			}
+			ImGui::SameLine();
+			ImGui::Separator();
+			ImGui::SameLine();
+			if (ImGui::Button("Reload Scene")) {
+				//Reload current scene
+				auto corePtr = m_core.lock();
+				if (corePtr)
+				{
+					auto ecsPtr = corePtr->getEcsElement();
+					if (ecsPtr)
+					{
+						ecsPtr->setSceneRunning(false);
+						m_isSceneRunning = false;
+					}
+
+					auto scenePtr = corePtr->getSceneElement();
+					if (scenePtr)
+					{
+						if (m_sceneLoadPath != "")
+						{
+							scenePtr->loadScene(scenePtr->getCurrentScenePath());
+						}
+					}
+				}
+			}
 		}
 		ImGui::EndMenuBar();
 
+		//Handle any popups from the menu bar
 		handleNewScenePopup();
 		handleLoadScenePopup();
 		handleSaveScenePopup();
@@ -339,6 +373,8 @@ namespace CoreGuiElement
 		ImGui::End();
 	}
 
+	//Upon new scene being selected in the toolbar, the user will be presented with a popup
+	//In this popup the user can set a name for the new scene and save, or cancel their actions
 	void GuiElement::handleNewScenePopup()
 	{
 		if (m_openNewScenePopup) {
@@ -382,6 +418,8 @@ namespace CoreGuiElement
 		}
 	}
 
+	//Upon load scene being selected in the toolbar, the user will be presented with a popup
+	//In this popup the user can browse the project directory to find a scene to load, and load this, or cancel their action
 	void GuiElement::handleLoadScenePopup()
 	{
 		if (m_openLoadScenePopup) {
@@ -415,8 +453,8 @@ namespace CoreGuiElement
 			ImGui::Text("Directories");
 			for (const auto& entry : fs::directory_iterator(m_sceneLoadPath)) {
 				if (fs::is_directory(entry)) {
-					if (ImGui::Button((entry.path().filename().string() + "/").c_str())) {
-						m_selectedScene = entry.path().string();
+					if (ImGui::Button((entry.path().filename().string() + "\\").c_str())) {
+						m_sceneLoadPath = entry.path().string();
 					}
 				}
 			}
@@ -433,10 +471,9 @@ namespace CoreGuiElement
 
 			ImGui::Columns(1);
 			ImGui::Separator();
-
+			
+			//An additional popup will presented to confirm the loading of a scene and to remind the user to go back and save their current scene should they wish
 			if (ImGui::BeginPopupModal("Confirm Load", NULL, ImGuiWindowFlags_AlwaysAutoResize)) {
-
-
 				fs::path sceneName = fs::path(m_selectedScene).filename();
 				ImGui::Text("Scene To Load %s", sceneName.string().c_str());
 
@@ -480,6 +517,8 @@ namespace CoreGuiElement
 		}
 	}
 	
+	//Upon save scene being selected in the toolbar, the user will be presented with a popup
+	//In this popup the user can choose to save the current scene, or cancel their action
 	void GuiElement::handleSaveScenePopup()
 	{
 		if (m_openSaveScenePopup) {
@@ -521,6 +560,8 @@ namespace CoreGuiElement
 		}
 	}
 
+	//Upon project settings being selected in the toolbar, the user will be presented with a popup
+	//In this popup the user can view and save any modified project settings (held by Context.txt), or cancel their actions
 	void GuiElement::handleProjectSettingsPopup()
 	{
 		if (m_openProjectSettingsPopup) {
@@ -552,6 +593,9 @@ namespace CoreGuiElement
 				strncpy_s(pathBuffer, sizeof(pathBuffer), path.c_str(), _TRUNCATE);
 
 				ApplicationConfig::Config::setProjectPath(path);
+
+				m_currentPath = ApplicationConfig::Config::projectPath;
+				m_sceneLoadPath = ApplicationConfig::Config::projectPath;
 			}
 
 			static float width = ApplicationConfig::Config::screenWidth;
@@ -582,6 +626,8 @@ namespace CoreGuiElement
 		}
 	}
 
+	//Viewport to provide the scene hierarchy and to provide a button to add new Entities
+	//By default the addition of an Entity adds a sprite and a transform, however these can be deleted after
 	void GuiElement::sceneHierarchyViewport()
 	{
 		ImGui::Begin("Scene");
@@ -604,6 +650,9 @@ namespace CoreGuiElement
 		ImGui::End();
 	}
 
+	//For use by the scene hierarchy viewport
+	//Provides the display of all Entities in a scene as a tree such that Components can be visible by toggling an Entity
+	//Additionally, allows Components to be added/removed from an Entity, as well as a delete button for the Entity via this popup
 	void GuiElement::renderSceneHierarchy()
 	{
 		auto corePtr = m_core.lock();
@@ -613,18 +662,18 @@ namespace CoreGuiElement
 			if (ecsPtr)
 			{
 				auto entityMap = ecsPtr->getEntityMap();
-				//Loop through each entity and its components map
+				//Loop through each Entity and its Components map
 				for (auto& entityComponents : entityMap) {
 					Entity entity = entityComponents.first;
 					auto& components = entityComponents.second;
 
-					//Format entity identifier as Entity followed by a number
+					//Format Entity identifier as Entity followed by a number
 					std::string entityLabel = "Entity " + std::to_string(entity);
 					if (ImGui::TreeNode(entityLabel.c_str())) {
-						//Loop through components of this entity
+						//Loop through components of this Entity
 						for (auto& componentPair : components) {
 							std::type_index componentType = componentPair.first;
-							//Display component type directly using the type name
+							//Display Component type using a cleaned version of the Component type name
 							std::string typeName = cleanTypeName(componentType.name());
 							if (ImGui::Selectable(typeName.c_str())) {
 								m_selectedEntity = entity;
@@ -634,7 +683,7 @@ namespace CoreGuiElement
 						ImGui::TreePop();
 					}
 
-					//Right-click context menu for adding and removing components
+					//Right-click context menu for adding and removing Components
 					if (ImGui::BeginPopupContextItem(entityLabel.c_str())) {
 						ImGui::Text("Add/Remove Components: ");
 						ImGui::Separator();
@@ -720,6 +769,8 @@ namespace CoreGuiElement
 		}
 	}
 
+	//Upon the selection of Component under an Entity in the scene hierarchy viewport, that specific Component will be visible in the inspector
+	//Additionally, the properties of this Component can be viewed and modified with instantaneous changes
 	void GuiElement::inspectorViewport()
 	{
 		ImGui::Begin("Inspector");
@@ -735,7 +786,7 @@ namespace CoreGuiElement
 						auto& components = entityIter->second;
 						auto componentIter = components.find(m_selectedComponentType);
 						if (componentIter != components.end()) {
-							auto component = componentIter->second;
+							auto& component = componentIter->second;
 							if (m_selectedComponentType == typeid(TransformComponent))
 							{
 								auto transformComponent = std::static_pointer_cast<TransformComponent>(component);
@@ -763,14 +814,14 @@ namespace CoreGuiElement
 								ImGui::Text("Sprite Component");
 								ImGui::Separator();
 
-								// Temporary buffer for editing text
+								//Temporary buffer for editing text
 								char buffer[256];
-								// Use strncpy_s for safe copying
+								//Use strncpy_s for safe copying
 								strncpy_s(buffer, sizeof(buffer), spriteComponent->textureFilePath.c_str(), _TRUNCATE);
 
-								// Editable text field for the texture file path
+								//Editable text field for the texture file path
 								if (ImGui::InputText("Texture File Path", buffer, sizeof(buffer))) {
-									// Update the component's file path and load new texture
+									//Update the Component's file path and load new texture
 									spriteComponent->textureFilePath = buffer;
 									auto resourceElement = corePtr->getResourceElement();
 									if (resourceElement) {
@@ -786,7 +837,8 @@ namespace CoreGuiElement
 									}
 								}
 
-								// Drag and Drop for texture file path
+								//Drag and Drop for texture file path
+								//Allows dragging a resource directly from the resource browser into the text field to load
 								if (ImGui::BeginDragDropTarget()) {
 									if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("ASSET_PATH")) {
 										strncpy_s(buffer, sizeof(buffer), (const char*)payload->Data, _TRUNCATE);
@@ -807,6 +859,7 @@ namespace CoreGuiElement
 									ImGui::EndDragDropTarget();
 								}
 
+								//Input float to manipulate the size of a sprite
 								ImGui::InputFloat2("Size", &spriteComponent->size.x);
 								ImGui::Separator();
 							}
@@ -816,14 +869,18 @@ namespace CoreGuiElement
 								ImGui::Text("Physics Body Component");
 								ImGui::Separator();
 
+								//Rotation checkbox to allow a setting of rotatable or not
+								bool isRotatable = physicsBodyComponent->rotationLock;
+								if (ImGui::Checkbox("Lock Rotation", &isRotatable)) {
+									physicsBodyComponent->rotationLock = isRotatable;
+								}
+
 								//Body Type Selector
 								const char* bodyTypes[] = { "Dynamic", "Static", "Kinematic" };
 								int currentType = static_cast<int>(physicsBodyComponent->type);
 								if (ImGui::Combo("Body Type", &currentType, bodyTypes, IM_ARRAYSIZE(bodyTypes))) {
 									physicsBodyComponent->type = static_cast<BodyType>(currentType);
 								}
-
-								//Other properties like body mass, density, friction etc. could be edited if relevant and exposed
 								ImGui::Separator();
 							}
 							if (m_selectedComponentType == typeid(ColliderComponent)) {
@@ -832,6 +889,7 @@ namespace CoreGuiElement
 								ImGui::Text("Collider Component");
 								ImGui::Separator();
 
+								//Visibility checkbox to allow a wireframe of the collider to be rendered
 								bool isVisible = colliderComponent->isVisible;
 								if (ImGui::Checkbox("Show Collision Box", &isVisible)) {
 									colliderComponent->isVisible = isVisible;
@@ -854,7 +912,7 @@ namespace CoreGuiElement
 									ImGui::InputFloat("Radius", &colliderComponent->radius);
 								}
 
-								//Common physics properties
+								//Input floats for common physics properties
 								ImGui::InputFloat("Density", &colliderComponent->density);
 								ImGui::InputFloat("Friction", &colliderComponent->friction);
 								ImGui::InputFloat("Restitution", &colliderComponent->restitution);
@@ -866,6 +924,8 @@ namespace CoreGuiElement
 								ImGui::Text("Input Component");
 								ImGui::Separator();
 
+								//The user can directly press a key after selecting the add action button
+								//This will add an action for the input, directly associated with the key pressed by the user
 								SDL_Keycode addActionKey;
 								if (ImGui::Button("Add Action")) {
 									SDL_Event e;
@@ -879,12 +939,13 @@ namespace CoreGuiElement
 											}
 										}
 									}
-									inputComponent->addKeyAction(addActionKey, ActionData(glm::vec2(0.0f, 0.0f), 1.0f, ForceType::Force, InputType::Keyboard));
+									inputComponent->addKeyAction(addActionKey, ActionData(glm::vec2(0.0f, 0.0f), 0.0f, 0.0f, ForceType::Force, InputType::Keyboard));
 									ImGui::Text("Key Captured: %s", SDL_GetKeyName(addActionKey));
 								}
 
 								ImGui::Separator();
 
+								//Display all current input actions set for the input component, and allow their modification
 								for (auto& keyAction : inputComponent->keyActions) {
 									const char* keyName = SDL_GetKeyName(keyAction.first);
 
@@ -896,20 +957,26 @@ namespace CoreGuiElement
 										ImGui::Text("Action:");
 
 										//Combo for selecting ForceType
-										const char* forceTypes[] = { "Force", "Impulse" };
+										const char* forceTypes[] = { "Force", "Impulse", "Torque", "AngularImpulse"};
 										int currentForceType = static_cast<int>(keyAction.second[i].fType);
 										if (ImGui::Combo("Force Type", &currentForceType, forceTypes, IM_ARRAYSIZE(forceTypes))) {
 											keyAction.second[i].fType = static_cast<ForceType>(currentForceType);
 										}
 
 										//Combo for selecting InputType
+										//Currently mouse movement not directly used
 										const char* inputTypes[] = { "Keyboard", "MouseMovement" };
 										int currentInputType = static_cast<int>(keyAction.second[i].iType);
 										if (ImGui::Combo("Input Type", &currentInputType, inputTypes, IM_ARRAYSIZE(inputTypes))) {
 											keyAction.second[i].iType = static_cast<InputType>(currentInputType);
 										}
+										//Move direction is the x,y direction to move (from -1, 0, or 1 in each axis)
 										ImGui::InputFloat2("Move Direction", &keyAction.second[i].moveDirection.x);
+										//Magnitude is for use if force type set to either force or impulse, and is the magnitude of the force to be applied upon the action being called
 										ImGui::InputFloat("Magnitude", &keyAction.second[i].magnitude);
+										//Angular magnitude is for use if force type set to either torque or angular impulse, and is the magnitude of the torque/angular impulse to be applied upon the action being called
+										//Pos/neg indicates which rotational direction this should be
+										ImGui::InputFloat("Angular Magnitude", &keyAction.second[i].angularMagnitude);
 
 										if (ImGui::Button("Remove Action")) {
 											toRemove = i;
@@ -931,6 +998,11 @@ namespace CoreGuiElement
 		ImGui::End();
 	}
 
+	//Viewport to provide the resource browser
+	//Allows an 'up' navigation button but limits this to the root of the project path set in project settings
+	//Displays current directory, a list of all directories (which can be selected to enter them), and all resources in that directory
+	//For now, only image resources are displyed
+	//These can be dragged and dropped from here into the texture filepath field of a sprite component in the inspector
 	void GuiElement::resourceBrowserViewport() {
 		ImGui::Begin("Resource Browser");
 
@@ -971,21 +1043,26 @@ namespace CoreGuiElement
 		ImGui::End();
 	}
 
+	//Auxilliary function for use by the resource browser to display all directories and provide a button to select them
+	//Uses a typically C++17 and above library Filesystem, however the std::experimental library is used to enable use in C++14
 	void GuiElement::displayDirectories() {
 		std::string directory = m_currentPath;
 		for (const auto& entry : fs::directory_iterator(directory)) {
 			if (fs::is_directory(entry)) {
-				if (ImGui::Button((entry.path().filename().string() + "/").c_str())) {
+				if (ImGui::Button((entry.path().filename().string() + "\\").c_str())) {
 					m_currentPath = entry.path().string();
 				}
 			}
 		}
 	}
 
+	//Auxilliary function for use by the resource browser to display all files in the current directory and provide drag-drop for images
+	//Uses a typically C++17 and above library Filesystem, however the std::experimental library is used to enable use in C++14
 	void GuiElement::displayFilesInDirectory() {
 		std::string directory = m_currentPath;
 		static char item_path_buffer[1024];
 
+		//A scrollable section for viewing files, akin to a user-familiar gallery
 		ImGui::BeginChild("FilesScrolling", ImVec2(0, -ImGui::GetTextLineHeightWithSpacing() * 2), true);
 		int columns = int(ImGui::GetContentRegionAvail().x / 110);
 		if (columns < 1) columns = 1;
@@ -997,6 +1074,7 @@ namespace CoreGuiElement
 					ImGui::PushID(entry.path().filename().string().c_str());
 					if (ImGui::Button(entry.path().filename().string().c_str(), ImVec2(100, 100))) {
 					}
+					//Allows drag-drop for images
 					if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None)) {
 						memset(item_path_buffer, 0, sizeof(item_path_buffer));
 						strncpy_s(item_path_buffer, sizeof(item_path_buffer), entry.path().string().c_str(), _TRUNCATE);
@@ -1005,6 +1083,7 @@ namespace CoreGuiElement
 						ImGui::EndDragDropSource();
 					}
 					ImGui::PopID();
+					//Additional tooltip to view the filepath of the hovered resource
 					if (ImGui::IsItemHovered()) {
 						ImGui::SetTooltip("%s", entry.path().string().c_str());
 					}
@@ -1012,10 +1091,10 @@ namespace CoreGuiElement
 			}
 			ImGui::EndTable();
 		}
-
 		ImGui::EndChild();
 	}
 
+	//Upon termination, shutdown Dear ImGui and destroy this Dear ImGui context, to deallocate resources
 	void GuiElement::terminate()
 	{
 		ImGui_ImplOpenGL3_Shutdown();

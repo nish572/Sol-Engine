@@ -2,13 +2,15 @@
 
 #include "EngineAPI.h"
 
+//C++ libraries
 #include <memory>
 #include <string>
-
 #include <unordered_map>
 
+//External library GLAD
 #include <glad.h>
 
+//The main resource currently being used is Texture Resource for sprite rendering
 
 //Forward declaration of Core class
 //This tells compiler Sol::Core exists without providing full definition
@@ -23,7 +25,6 @@ struct Resource {
 	//Resource type enum for identifying resource type
 	enum class ResourceType {
 		Texture,
-		Audio,
 		Shader
 	};
 
@@ -34,6 +35,8 @@ struct Resource {
 	Resource(ResourceType resourceType) : type(resourceType) {}
 };
 
+//Texture resource that holds the texture ID, width and height, and the number of channels of the texture
+//To be used for sprite rendering
 struct TextureResource : public Resource {
 	//textureID is the OpenGL texture ID
 	GLuint textureID;
@@ -44,11 +47,8 @@ struct TextureResource : public Resource {
 	TextureResource() : Resource(ResourceType::Texture), textureID(0), width(0), height(0), nrChannels(0) {}
 };
 
-//Fill in struct AudioResource here
-//... 
-
-//Fill in struct ShaderResource here
-//Shader resource struct
+//ShaderResource that holds the shader program ID
+//Not currently used
 struct ShaderResource : public Resource {
 	int shaderProgramID;
 
@@ -57,29 +57,24 @@ struct ShaderResource : public Resource {
 
 namespace CoreResourceElement
 {
-	//Represents the element responsible for managing the Resource operations in the Sol Engine
+	//Represents the Element responsible for managing the Resource operations in the Sol Engine
 	class ResourceElement
 	{
 	public:
-		//Instantiate ResourceElement
 		ResourceElement(std::shared_ptr<Sol::Core> core);
-		//Release resources associated with the ResourceElement instance
 		~ResourceElement();
 
-		//Get resource from cache without loading it, useful if we know the resource is already loaded
+		//Get resource from cache without loading it, useful if it is known the resource is already loaded
 		std::shared_ptr<Resource> getResource(const std::string& filePath);
 
 		//Load image resource by the file path
 		std::shared_ptr<Resource> loadImage(const std::string& filePath);
 
-		//Load audio resource by the file path
-		//...
-
 		//Load shader resource by the file path
-		ENGINE_API std::shared_ptr<ShaderResource> loadShader(const std::string& vertexPath, const std::string& fragmentPath);
+		std::shared_ptr<ShaderResource> loadShader(const std::string& vertexPath, const std::string& fragmentPath);
 
 		//Load texture resource by the file path
-		ENGINE_API std::shared_ptr<TextureResource> loadTextureResource(const std::string& filePath);
+		std::shared_ptr<TextureResource> loadTextureResource(const std::string& filePath);
 
 		//Unload resource, decrement refCount and unload resource if refCount is 0
 		void unloadResource(const std::string& filePath);
@@ -87,13 +82,9 @@ namespace CoreResourceElement
 		//Clear resource cache, clear the entire resource cache and release all resources
 		void clearCache();
 
-		//Initialize ResourceElement
-		//Call this after calling ResourceElement's attachElement
 		ENGINE_API bool initialize();
 
-		//Terminate ResourceElement
-		//Call this to deallocate any of ResourceElement's resources
-		//Call this when amending Core's detachElement function and inside Core's terminate function
+		//Call terminate to deallocate any of Resource Element's resources
 		void terminate();
 
 	private:
@@ -101,7 +92,7 @@ namespace CoreResourceElement
 		std::weak_ptr<Sol::Core> m_core;
 		//Is LogElement present
 		bool m_logElementAttached{ false };
-		//Resource cache
+		//Resource cache where the string associated with the resource is the key and the shared pointer to the resource is the value
 		std::unordered_map<std::string, std::shared_ptr<Resource>> m_resourceCache;
 	};
 } 

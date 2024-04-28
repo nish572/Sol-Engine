@@ -2,10 +2,16 @@
 
 #include "EngineAPI.h"
 
+#pragma warning(push)
+#pragma warning(disable: 26495) //Disable numerous Box2D warnings - warnings considered, Box2D fully functional and trusted, no need for these warnings
+
+//C++ libraries
 #include <memory>
 #include <string>
 
+//External library Box2D
 #include <Box2D/Box2D.h>
+#pragma warning(pop)
 
 //Forward declaration of Core class
 //Essentially, telling compiler Sol::Core exists, but not providing full definition
@@ -17,24 +23,22 @@ namespace Sol {
 
 namespace CorePhysicsElement
 {
-	//Represents the element responsible for managing the physics (including collisions) in the Sol Engine
+	//Represents the Element responsible for managing the physics (including collision detection and resolution, and force/impulse/torque applications) in the Sol Engine
 	class PhysicsElement
 	{
 	public:
-		//Initialize pointers ...
 		PhysicsElement(std::shared_ptr<Sol::Core> core);
-		//Release resources associated with the PhysicsElement instance
 		~PhysicsElement();
 
-		//Initialize PhysicsElement by ...
 		ENGINE_API bool initialize();
 
-		//Terminate PhysicsElement by ...
+		//Resources for physics managed by Box2D, but world cleared and pointer to world set to nullptr to be safe
 		void terminate();
 
-		//Return a pointer to the box2d world managed by the PhysicsElement/PhysicsSystem
+		//Return a pointer to the Box2D world managed by the PhysicsElement/PhysicsSystem
 		std::shared_ptr<b2World> getWorld() const;
 
+		//Clear this world by removing all bodies and resetting the world
 		void clearWorld();
 
 	private:

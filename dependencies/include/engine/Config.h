@@ -1,22 +1,34 @@
+//------- Config ------------
+//Project Settings Management
+//For The Sol Core Engine
+//---------------------------
+
 #pragma once
 
 #include "EngineAPI.h"
 
+#pragma warning(push)
+#pragma warning(disable: 4244)
+
+//C++ libraries
 #include <memory>
 #include <iostream>
 #include <string>
 #include <fstream>
+#pragma warning(pop)
 
 namespace ApplicationConfig
 {
 	class Config {
 	public:
+        //Global, public members for project settings
 		static float screenWidth;
 		static float screenHeight;
 
 		static std::string projectName;
 		static std::string projectPath;
 
+        //Set functions to set these values
 		static void setScreenSize(float width, float height) {
 			screenWidth = width;
 			screenHeight = height;
@@ -30,6 +42,7 @@ namespace ApplicationConfig
 			projectPath = path;
 		}
 
+        //A function to allow saving these settings to Config.txt
         static void saveConfig() {
             std::string configFilePath = projectPath + "/Config.txt";
             std::ofstream file(configFilePath);
@@ -44,6 +57,7 @@ namespace ApplicationConfig
             file.close();
         }
 
+        //A function to allow loading these settings from Config.txt
         static void loadConfig() {
             std::string configFilePath = projectPath + "/Config.txt";
             std::ifstream file(configFilePath);

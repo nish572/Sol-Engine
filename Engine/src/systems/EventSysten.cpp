@@ -1,3 +1,8 @@
+//------- Events System -----
+//Implements Events Processing
+//For The Sol Core Engine
+//---------------------------
+
 #include "systems/EventSystem.h"
 #include "ecs/EcsElement.h"
 
@@ -21,11 +26,13 @@ namespace EcsEventSystem
 
     void EventSystem::update(double deltaTime)
     {
-        //Not necessary for the EventSystem as it doesn't require frame-dependent updates
+        //Not necessary for the Event System as it doesn't require frame-dependent updates
     }
 
+    //Prepare actions based upon key event for the Physics System to utilise to apply forces/impulses/torques
     void EventSystem::fixedUpdate(double fixedTimestep)
     {
+        //Get all input events and all input components to find key-relevant actions
         m_inputEvents = m_ecsElement->getCore()->getEventElement()->getInputEvents();
         auto inputComponents = m_ecsElement->getAllComponentsOfType<InputComponent>();
 
@@ -51,7 +58,8 @@ namespace EcsEventSystem
             }
         }
 
-        //Pass the actionsPerEntity to the PhysicsSystem
+        //Pass the actionsPerEntity to the Physics System
+        //Or rather, set a data structure the Physics System can use to access these currently induced actions
         m_ecsElement->getCore()->getEventElement()->setActionsForPhysics(actionsPerEntity);
     }
 }

@@ -1,12 +1,17 @@
+//------- Shader Element ----
+//Shader System
+//For The Sol Core Engine
+//---------------------------
+
+//Currently not in use
+
 #include "resource/ShaderElement.h"
 
 #include "Core.h"
 
 namespace CoreShaderElement
 {
-	//ShaderElement has initializer list for any managed resources that require initializing
-	//All Elements MUST have at least m_core private member
-	ShaderElement::ShaderElement(std::shared_ptr<Sol::Core> core) : m_core(core) //Extend initializer list if necessary
+	ShaderElement::ShaderElement(std::shared_ptr<Sol::Core> core) : m_core(core)
 	{
 	}
 	ShaderElement::~ShaderElement()
@@ -14,7 +19,7 @@ namespace CoreShaderElement
 	}
 
 	//Call after Core's attachElement(elementName) has been called
-	//Pass any required parameters for initialization, e.g. RenderElement's initialize function requires window height and width
+	//Pass any required parameters for initialization, none
     bool ShaderElement::initialize()
     {
         auto corePtr = m_core.lock();
@@ -38,7 +43,7 @@ namespace CoreShaderElement
 		return true;
 	}
 
-	//Create shader program
+	//Create shader program via a vertex shader file and a fragment shader file
     unsigned int ShaderElement::createShaderProgram(const std::string& vertexPath, const std::string& fragmentPath)
     {
         unsigned int shaderProgramID;
@@ -132,6 +137,7 @@ namespace CoreShaderElement
         return shaderProgramID;        
     }
 
+    //Auxilliary function to check shader compilation errors
     void ShaderElement::checkShaderCompilationErrors(unsigned int shader, const std::string& type)
     {
         int success;
@@ -166,6 +172,7 @@ namespace CoreShaderElement
         }
     }
 
+    //Auxilliary function to check shader program link errors
     void ShaderElement::checkProgramLinkErrors(unsigned int program)
     {
         int success;

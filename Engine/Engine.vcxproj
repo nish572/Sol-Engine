@@ -120,6 +120,7 @@
     <ClCompile Include="src\systems\RenderSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\dependencies\include\engine\Config.h" />
     <ClInclude Include="..\dependencies\include\engine\Core.h" />
     <ClInclude Include="..\dependencies\include\engine\elements\debuglog\LogElement.h" />
     <ClInclude Include="..\dependencies\include\engine\elements\ecs\Components.h" />

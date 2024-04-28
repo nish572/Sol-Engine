@@ -1,3 +1,8 @@
+//------- Render Element ----
+//Manages Rendering
+//For The Sol Core Engine
+//---------------------------
+
 #include "render/RenderElement.h"
 
 #include "Core.h"
@@ -12,6 +17,9 @@ namespace CoreRenderElement
 	{
 	}
 
+	//Call after Core's attachElement(elementName) has been called
+	//Pass any required parameters for initialization
+	//Here those parameters are the window name, the width and height of the window to be created, any SDL window flags to determine window properties, and whether vsync should be used
 	bool RenderElement::initialize(const std::string& windowName, float width, float height, SDL_WindowFlags window_flags, int vsync)
 	{
 		auto corePtr = m_core.lock();
@@ -41,14 +49,14 @@ namespace CoreRenderElement
 		{
 			//Set OpenGL version
 			SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3); //Set version to 3
-			SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3); //Specifically set to X.3
+			SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3); //Specifically set to X.3 (so in this case, 3.3)
 			SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE); //Chose glad-core when getting glad rather than compatibility for reliability
-			SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1); //Believe defaults to 1 anyways, but explicitly writing for readability and assurance
+			SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1); //Defaults to 1, but explicitly writing for readability and assurance
 			SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24); //24 bit color allows full color range, even though 8 bits fine for human eye, more bits=higher quality
 			SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8); //8 bit stencil buffer, 8 bits fine for stencil buffer, more bits=higher quality
 
 			//Create SDL window
-			m_sdlWindow = SDL_CreateWindow(windowName.c_str(), //.c_str() converts windowName to const char* as that is SDL param type
+			m_sdlWindow = SDL_CreateWindow(windowName.c_str(), //.c_str() converts windowName to const char* as that is SDL parameter type
 				SDL_WINDOWPOS_CENTERED, //Center window horizontally
 				SDL_WINDOWPOS_CENTERED, //Center window vertically
 				width, height, //Set window size
@@ -90,7 +98,7 @@ namespace CoreRenderElement
 			}
 		}
 
-		//Enable depth test
+		//Enable depth testing
 		glEnable(GL_DEPTH_TEST);
 
 		//If SDL initialized successfully, SDL window created successfully, and OpenGL context created successfully
@@ -107,22 +115,27 @@ namespace CoreRenderElement
 		return true;
 	}
 
+	//Clear the screen, otherwise the next frame will be rendered over the last
 	void RenderElement::clearScreen()
 	{
-		glClearColor(0.059f, 0.059f, 0.059f, 0.0f);
+		glClearColor(0.059f, 0.059f, 0.059f, 0.0f); //Setting the background colour to a default grey to match the Editor colouring
 		glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 	}
 
+	//Swap the buffers which is useful as OpenGL renders the next frame in the background while displaying the current frame, swap to make this next frame visible
 	void RenderElement::swapBuffers() {
 		SDL_GL_SwapWindow(m_sdlWindow);
 	}
 
+	//Set the window size based upon the given parameters
+	//Mainly used when altering project settings to reflect this change appropriately
 	void RenderElement::setWindowSize(float width, float height)
 	{
 		ApplicationConfig::Config::setScreenSize(width, height);
 		SDL_SetWindowSize(getWindow(), width, height);
 	}
 
+	//Cleanup by deallocating SDL and OpenGL resources
 	void RenderElement::terminate()
 	{
 		//Cleanup first, so remove m_sdlWindow and m_glContext
@@ -134,10 +147,11 @@ namespace CoreRenderElement
 			SDL_DestroyWindow(m_sdlWindow);
 			m_sdlWindow = nullptr;
 		}
-		//Safe to call here as RenderElement terminated last
+		//Safe to call here as Render Element terminated last
 		SDL_Quit();
 	}
 
+	//Get a pointer to the window, useful for the GUI Element to access the window to build an ImGui context to
 	SDL_Window* RenderElement::getWindow() const
 	{
 		//If SDL window is found, return m_sdlWindow
@@ -160,6 +174,7 @@ namespace CoreRenderElement
 		return nullptr;
 	}
 
+	//Get a pointer to the context, useful for the GUI Element to access the window to render an ImGui context with
 	SDL_GLContext RenderElement::getGLContext() const
 	{
 		//If m_glContext is found, return m_glContext

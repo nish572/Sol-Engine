@@ -13,7 +13,7 @@
 #include <memory>
 #include <string>
 
-//Include any of this Element's specific required includes, e.g. SDL or linmath
+//Include any of this Element's specific required includes, e.g. SDL
 // ... //
 
 //Forward declaration of Core class
@@ -41,7 +41,7 @@ namespace CoreTemplateElement
 
 		//Initialize TemplateElement
 		//Call this after calling TemplateElement's attachElement
-		bool initialize();
+		ENGINE_API bool initialize();
 
 		//Any custom functionality
 		// ... //

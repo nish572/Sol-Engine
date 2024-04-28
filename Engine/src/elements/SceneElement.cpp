@@ -1,3 +1,8 @@
+//------- Scene Element -----
+//Scene Management
+//For The Sol Core Engine
+//---------------------------
+
 #include "scene/SceneElement.h"
 
 #include "Core.h"
@@ -5,7 +10,7 @@
 
 namespace CoreSceneElement
 {
-	SceneElement::SceneElement(std::shared_ptr<Sol::Core> core) : m_core(core), m_currentScene("C:\\Software Development\\Sol-Engine\\Sol-Engine\\downloads\\ignore.scn")
+	SceneElement::SceneElement(std::shared_ptr<Sol::Core> core) : m_core(core), m_currentScene("")
 	{
 	}
 	SceneElement::~SceneElement()
@@ -36,8 +41,7 @@ namespace CoreSceneElement
 		return true;
 	}
 
-	//Create a new scene 
-
+	//Creates a new scene by resetting the ECS and the physics world 
 	void SceneElement::newScene() {
 
 		auto corePtr = m_core.lock();
@@ -56,16 +60,13 @@ namespace CoreSceneElement
 		}
 	}
 
-	//Serialization function for the scene
-
+	//Serialise the ECS Element's entity-component map into a JSON file, and reset the ECS's data structure(s) appropriately
 	void SceneElement::unloadScene(const std::string& sceneFilepath) {
 		m_currentScene = "";
 
 		json j; //Create JSON object to hold all ECS data
 
 		auto corePtr = m_core.lock();
-
-
 		if (corePtr)
 		{
 			auto ecsPtr = corePtr->getEcsElement();
@@ -77,7 +78,7 @@ namespace CoreSceneElement
 					const auto& componentsMap = pair.second;
 					json jEntity;
 
-					//Serialize each component based on its type
+					//Serialise each component based on its type
 					for (const auto& compPair : componentsMap) {
 						const std::type_index& typeIndex = compPair.first;
 						const auto& component = compPair.second;
@@ -110,8 +111,7 @@ namespace CoreSceneElement
 		file.close();
 	}
 
-	//Deserialization function for the scene
-
+	//Deserialise the JSON file into the ECS Element's entity-component map, and set the ECS's data structure(s) appropriately
 	void SceneElement::loadScene(const std::string& sceneFilepath) {
 		m_currentScene = sceneFilepath;
 
@@ -140,6 +140,7 @@ namespace CoreSceneElement
 					const json& components = entityPair.value();
 
 					Entity newEntity = ecsPtr->createEntity();
+					//Deserialise each component based on its type
 					for (const auto& componentPair : components.items()) {
 						const std::string& compType = componentPair.key();
 						const json& compJson = componentPair.value();
@@ -170,7 +171,7 @@ namespace CoreSceneElement
 		}
 	}
 
-	//Serialization functions for each component type
+	//Serialisation functions for each component type
 
 	json SceneElement::serializeTransform(const TransformComponent& component) {
 		return {
@@ -191,6 +192,7 @@ namespace CoreSceneElement
 				jActions.push_back({
 					{"moveDirection", {action.moveDirection.x, action.moveDirection.y}},
 					{"magnitude", action.magnitude},
+					{"angularMagnitude", action.angularMagnitude},
 					{"forceType", static_cast<int>(action.fType)},
 					{"inputType", static_cast<int>(action.iType)}
 					});
@@ -229,7 +231,8 @@ namespace CoreSceneElement
 	json SceneElement::serializePhysicsBody(const PhysicsBodyComponent& component) {
 		return {
 			{"type", static_cast<int>(component.type)},
-			{"position", {component.position.x, component.position.y}}
+			{"position", {component.position.x, component.position.y}},
+			{"rotation lock", component.rotationLock}
 			//Body will be recreated based on the scene setup, not serialized
 		};
 	}
@@ -239,11 +242,11 @@ namespace CoreSceneElement
 			{"textureFilePath", component.textureFilePath},
 			{"size", {component.size.x, component.size.y}},
 			{"color", {component.color.r, component.color.g, component.color.b, component.color.a}},
-			{"shaderProgram", component.shaderProgram} //Redundant since nowhere we are actually setting this value for the sprite, just here as placeholder for now
+			{"shaderProgram", component.shaderProgram} //Redundant since nowhere actually setting this value for the sprite, just here as placeholder for now
 		};
 	}
 
-	//Deserialization functions for each component type
+	//Deserialisation functions for each component type
 
 	TransformComponent SceneElement::deserializeTransform(const json& j) {
 		glm::vec3 position = glm::vec3(j["position"][0], j["position"][1], j["position"][2]);
@@ -260,9 +263,10 @@ namespace CoreSceneElement
 			for (auto& action : item.value()) {
 				glm::vec2 moveDirection = glm::vec2(action["moveDirection"][0], action["moveDirection"][1]);
 				float magnitude = action["magnitude"];
+				float angularMagnitude = action["angularMagnitude"];
 				ForceType fType = static_cast<ForceType>(action["forceType"]);
 				InputType iType = static_cast<InputType>(action["inputType"]);
-				actions.emplace_back(moveDirection, magnitude, fType, iType);
+				actions.emplace_back(moveDirection, magnitude, angularMagnitude, fType, iType);
 			}
 			inputComponent.keyActions[key] = actions;
 		}
@@ -304,8 +308,9 @@ namespace CoreSceneElement
 	PhysicsBodyComponent SceneElement::deserializePhysicsBody(const json& j) {
 		BodyType type = static_cast<BodyType>(j["type"]);
 		b2Vec2 position = b2Vec2(j["position"][0], j["position"][1]);
+		bool rotatatable = bool(j["rotation lock"]);
 		//Body will be reconstructed during the physics world setup, not directly from JSON
-		return PhysicsBodyComponent(type, position, nullptr);
+		return PhysicsBodyComponent(type, position, nullptr, rotatatable);
 	}
 
 	SpriteComponent SceneElement::deserializeSprite(const json& j) {
@@ -322,8 +327,8 @@ namespace CoreSceneElement
 		}
 	}
 
+	//No resources requiring cleanup
 	void SceneElement::terminate()
 	{
-		return;
 	}
 }

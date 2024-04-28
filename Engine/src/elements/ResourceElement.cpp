@@ -1,16 +1,19 @@
+//------- Resource Element --
+//Resource Management
+//For The Sol Core Engine
+//---------------------------
+
 #include "resource/ResourceElement.h"
 
 #include "Core.h"
 
+//External library STB_IMAGE
 #define STB_IMAGE_IMPLEMENTATION
 #include "util/stb_image.h"
 
-
 namespace CoreResourceElement
 {
-	//ResourceElement has initializer list for any managed resources that require initializing
-	//All Elements MUST have at least m_core private member
-	ResourceElement::ResourceElement(std::shared_ptr<Sol::Core> core) : m_core(core)//Extend initializer list if necessary
+	ResourceElement::ResourceElement(std::shared_ptr<Sol::Core> core) : m_core(core)
 	{
 	}
 	ResourceElement::~ResourceElement()
@@ -18,7 +21,7 @@ namespace CoreResourceElement
 	}
 
 	//Call after Core's attachElement(elementName) has been called
-	//Pass any required parameters for initialization, e.g. RenderElement's initialize function requires window height and width
+	//Pass any required parameters for initialization, none
 	bool ResourceElement::initialize()
 	{
 		auto corePtr = m_core.lock();
@@ -151,8 +154,6 @@ namespace CoreResourceElement
 		return nullptr;
 	}
 
-    //Load audio resource from a file path, returns shared pointer to AudioResource
-
 	//Load a shader from a file path, returns a ShaderResource object
 	std::shared_ptr<ShaderResource> ResourceElement::loadShader(const std::string& vertexPath, const std::string& fragmentPath)
 	{
@@ -284,7 +285,8 @@ namespace CoreResourceElement
 		//Clear unordered map
 		m_resourceCache.clear();
 	}
-
+	
+	//Resource Element cleanup by clearing the resource cache to deallocate resources
 	void ResourceElement::terminate()
 	{
 		clearCache();

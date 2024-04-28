@@ -2,12 +2,15 @@
 
 #include "EngineAPI.h"
 
+//C++ libraries
 #include <memory>
 #include <iostream>
 #include <string>
 
 #pragma warning(push)
 #pragma warning(disable: 6285 26450 26451 26437 26498 26800 26495) //Disable numerous spdlog warnings - warnings considered, spdlog fully functional and trusted, no need for these warnings
+
+//The external library spdlog
 #include <spdlog/spdlog.h>
 #include <spdlog/sinks/basic_file_sink.h>
 #pragma warning(pop)
@@ -27,23 +30,20 @@ namespace CoreLogElement
 	class LogElement
 	{
 	public:
-		//Create LogElement
 		LogElement(std::shared_ptr<Sol::Core> core);
-		//Clean up LogElement resources
 		~LogElement();
 
 		//Create file sink and set file to output to (creates file if it doesn't exist)
 		//Set flush frequency/level
-		//Create logger
-		//Register logger
+		//Create and register logger
 		//Takes custom logfileName e.g. 'Sol-Log.txt'
 		ENGINE_API bool initialize(const std::string& logfileName);
 
-		//Use logger to log messages
-		ENGINE_API void logInfo(const std::string& msg);
-		ENGINE_API void logError(const std::string& msg);
+		//Use logger to log messages (info or error)
+		void logInfo(const std::string& msg);
+		void logError(const std::string& msg);
 
-		//Use spdlog's shutdown on the logger to clean up logger resources
+		//Use spdlog's shutdown function on the logger to clean up logger resources
 		void terminate();
 
 	private:

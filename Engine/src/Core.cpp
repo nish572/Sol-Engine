@@ -1,3 +1,11 @@
+//------- Sol Core ----------
+//The Core Of The Sol Engine
+//---------------------------
+
+//Core represents the central manager of the Sol Engine
+//Responsible for initializing, updating, and terminating the Elements
+//Responsible for allowing any Sol Applications such as the Sol Editor to interact with the Engine (Core, Elements, ECS)
+
 #include "Core.h"
 
 namespace Sol
@@ -110,7 +118,7 @@ namespace Sol
 		}
 		if (elementName == "Scene" && !m_sceneElement)
 		{
-			m_sceneElement = std::make_shared<CoreSceneElement::SceneElement>(shared_from_this());
+			m_sceneElement = std::make_unique<CoreSceneElement::SceneElement>(shared_from_this());
 			if (m_logElement)
 			{
 				m_logElement->logInfo(std::string("[Core] Successfully Attached ") + elementName + " Element");
@@ -229,6 +237,7 @@ namespace Sol
 			accumulatedTime += deltaTime;
 
 			//Handle events at a fixed timestep
+			//This includes handling the ECS's fixed update timestep based Systems via the ECS Element
 			while (accumulatedTime >= fixedTimestep)
 			{
 				std::vector<SDL_Event> events;
@@ -239,17 +248,18 @@ namespace Sol
 				}
 				if (m_eventElement) { m_eventElement->handleEvents(events); }
 				if (m_ecsElement) { m_ecsElement->fixedUpdate(fixedTimestep); }
-				if (!m_eventElement->isRunning()) { break; }
+				if (!m_eventElement->isRunning()) { break; } //If the Event Element detects a quit event, the application will quit as this is the main loop of an application using the Core
 				m_eventElement->resetInputEvents();
 				accumulatedTime -= fixedTimestep;
 			}
 
-			//Render using delta timestep
-			if (m_renderElement) { m_renderElement->clearScreen(); }
+			//Render using delta timestep, and render the GUI
+			//This includes handling the ECS's variable delta timestep based Systems via the ECS Element
+			if (m_renderElement) { m_renderElement->clearScreen(); } //Clear screen to ensure frames aren't drawn on top of one another
 			if (m_ecsElement) { m_ecsElement->update(deltaTime); }
 			if (m_guiElement) { m_guiElement->update(deltaTime); }
-			if (m_renderElement) { m_renderElement->swapBuffers(); }
-			if (!m_eventElement->isRunning()) { break; }
+			if (m_renderElement) { m_renderElement->swapBuffers(); } //Swap buffers since OpenGL renders two frames, one in the background to be calculated and then presented after swap, and one in the foreground to be currently presented
+			if (!m_eventElement->isRunning()) { break; } //If the Event Element detects a quit event, the application will quit as this is the main loop of an application using the Core
 		}
 	}
 
@@ -392,11 +402,11 @@ namespace Sol
 		return nullptr;
 	}
 
-	std::shared_ptr<CoreSceneElement::SceneElement> Core::getSceneElement() const
+	CoreSceneElement::SceneElement* Core::getSceneElement() const
 	{
 		if (m_sceneElement)
 		{
-			return m_sceneElement;
+			return m_sceneElement.get();
 		}
 		if (m_logElement)
 		{

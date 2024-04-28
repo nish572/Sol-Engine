@@ -1,3 +1,8 @@
+//------- Physics Element ---
+//Manages Physics Simulations
+//For The Sol Core Engine
+//---------------------------
+
 #include "physics/PhysicsElement.h"
 
 #include "Core.h"
@@ -11,6 +16,8 @@ namespace CorePhysicsElement
 	{
 	}
 
+	//Call after Core's attachElement(elementName) has been called
+	//Pass any required parameters for initialization, none
 	bool PhysicsElement::initialize()
 	{
 		auto corePtr = m_core.lock();
@@ -22,7 +29,7 @@ namespace CorePhysicsElement
 			}
 		}
 
-		//Set up gravity
+		//Set up gravity, current default is the Earth's gravity
 		b2Vec2 gravity(0.0f, -9.81f);
 
 		//Create the world with gravity
@@ -34,7 +41,6 @@ namespace CorePhysicsElement
 		//Enable auto-clearing of forces after each simulation step
 		m_world->SetAutoClearForces(true);
 
-		//Then log success and return true
 		if (m_logElementAttached)
 		{
 			if (corePtr)
@@ -47,12 +53,14 @@ namespace CorePhysicsElement
 		return true;
 	}
 
+	//Cleanup not inherently necessary as Box2D manages the world, but done so to ensure proper memory deallocation
 	void PhysicsElement::terminate()
 	{
-		//Cleanup first, so remove ...
-		//Safe to call here as PhysicsElement terminated last
+		clearWorld();
+		m_world = nullptr;
 	}
 
+	//Get the pointer to the world
 	std::shared_ptr<b2World> PhysicsElement::getWorld() const
 	{
 		//If world is found, return m_world
@@ -75,6 +83,7 @@ namespace CorePhysicsElement
 		return nullptr;
 	}
 
+	//Clear the world by destroying each body present in the world
 	void PhysicsElement::clearWorld()
 	{
 		if (!m_world) return;
