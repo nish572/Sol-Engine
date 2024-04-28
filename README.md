@@ -1,4 +1,4 @@
-# Sol-Engine
+# Sol-Engine - 2D Game Engine and Editor
 
 ## Description
 
@@ -65,6 +65,13 @@ Sprite Components use pixels for dimension.
 Collider Components align with Box2D meters-kilograms-seconds convention.
 
 Input Components use Newtons for the force magnitude. Angular magnitude internally uses Newtons if the force type is angular impulse, but Newton-meters if the force type is set to torque. It is best to not consider these units for the Input Components and instead playtest by trial and error to determine appropriate values.
+
+---
+
+### Scenes
+When creating a new scene, or loading a scene, the file extension is .scn. This is automatically done when creating a new scene so please only enter the file name and not the extension too.
+
+Scene files are essentially a JSON formatted storage of the ECS's entity-component map.
 
 ---
 ### Entities
