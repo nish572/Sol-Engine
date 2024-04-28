@@ -14,6 +14,9 @@ If running Sol in the Visual Studio solution debugger, please ensure SDL2.dll is
 - For running the Visual Studio solution for the Release-x64 configuration, this SDL2.dll should be pasted inside the following directory: "\Sol-Engine\Sol-Engine\bin\Release-x64\Editor".
 (Please note that the specific location of the Sol-Engine root directory will vary depending on where you download this codebase to on your system.)
 
+Upon creating a new project, please create a new scene via the Toolbar. If not, changes cannot be saved until a new scene has been created and saved.
+Upon loading an existing project, please set load a scene via the Toolbar, or create a new scene via the Toolbar. If not, changes cannot be saved as no scene will be present.
+
 To close the application, please first select the playtest scene window to make this the active window, then click the cross button in the top-right.
 
 ---
@@ -42,11 +45,60 @@ To load and play each of these, follow the steps below:
 
 ---
 
-### Components
-Sol Engine provides the following components to add to an entity to give it various data and by extension logic.
+### Co-ordinate System and Units
+Box2D used to provide physics simulations presents units in the meters-kilograms-seconds convention.
+Rendering is configured to use an orthogonal projection matrix. This presents units in a more user-friendly format as pixels.
+The scaling factor applied is on-screen 100 pixels represents 1 meter in the physics world.
 
+The origin of (0,0) has been configured to be the center of the scene playtest viewport, and presents a co-ordinate system as follows:
+- A negative X-value is left of the origin.
+- A positive X-value is right of the origin.
+- A negative Y-value is down from the origin.
+- A positive Y-value is up from the origin.
+
+The gravity of the physics world is set to Earth's gravity, set internally as -9.81.
+
+Transform Components use pixels for position, and degrees for rotation (with negative and positive representing the directions clockwise and anti-clockwise respectively).
+Sprite Components use pixels for dimension.
+Collider Components align with Box2D meters-kilograms-seconds convention.
+Input Components use Newtons for the force magnitude. Angular magnitude internally uses Newtons if the force type is angular impulse, but Newton-meters if the force type is set to torque. It is best to not consider these units for the Input Components and instead playtest by trial and error to determine appropriate values.
+
+---
+### Entities
+Entities in Sol are merely numerical identifiers to which components can be associated.=
+
+To add an entity to the scene, click 'Add Entity' from the Scene viewport. Adding an entity adds a sprite component and a transform component by default. To remove these, add other components, or delete an entity, simply right click the entity entry in the Scene viewport to view a context menu.
+
+---
+
+### Components
+Components in Sol are merely data stuctures to be processed by the Systems of the Entity-Component-System backend.
+
+To add component to an entity, right click the entity entry in the Scene viewport, and select an option from the provided context menu. To modify the properties of a component, select the entity and then select the component you wish to modify. This will show the specific component in the Inspector viewport where you can modify the properties directly.
+
+The following components are provided to add to an entity to give it various data (and by extension, logic):
 - Transform
--   This is 
+  - This component is responsible for holding the transformation data of an entity, i.e. its positional, rotational, and scalar data.
+  - This allows physics to move entities (provided a physics body component and a collider component are also attached to the entity), and allows rendering to render with the appropriate transform data.
+  - User-modifiiable X and Y position, the X and Y scale (please see the note below), and the rotation.
+  - Please note that setting the Scale X and Scale Y values is not recommended. To modify an entity's scale, please re-size the sprite associated with it (if a sprite is being used) and re-size the collider associated with it (if a collider is being used, and this will in turn amend the size of the physics body if a physics body is being used, which it should be if a collider is being used).
+- Sprite
+  - This component is responsible for representing an image to be rendered.
+  - User-modifiiable properties include the texture file path (for ease-of-use images can be dragged from the resource browser and dropped into this input field to automatically enter them), and the sprite dimensions.
+- Physics Body
+  - This component is responsible for defining the body type to be set for physics.
+  - User-modifiiable properties include the body type (Kinematic which are bodies unaffected by gravity, Dynamic which are bodies affected by gravity, and Static which are bodies that can be collided with if the entity is given a collider component but will not be affected by gravity or physics simulations). Additionally, the user can toggle whether an entity with this body can be rotated by physics or not, which is useful if creating something like a platformer player that shouldn't rotate off of platforms for example.
+- Collider
+  - This component is responsible for holding the specific data for the physics body, such as the shape of the collider (Box, or Circle), as well as the dimensions (width and height for a Box, or radius for a Circle) and the density/friction/destitution.
+  - Please note that setting the dimensions affects the mass of a physics body (which affects how much forces/impulses/torques affect the body), but the density can be modified to counter or enhance this. Default values for friction and restitution are provided but may be modified if the user wishes differing effects.
+- Input
+  - This component allows the user to add actions based upon key presses. This allows control of an entity when a scene is running in the playtest window by applying forces/impulses/torques to the physics body (if a physics body component and a collider are being used).
+  - Upon adding an action, keyboard input is polled so the user can press a key to associate with this action.
+  - User-modifiable properties include setting the key associated with an action, setting the force type (outlined in more detail below), setting the input type (currently only Keyboard is implemented, please see known issues), move direction, magnitude, and angular magnitude.
+  - There are four force types: force is a linear force applied to the center of mass; impulse is essentially a sudden application of force (still linear, applied to the center of mass); torque (rotational force applied with the origin of rotation being the center of mass); angular impulse (essentially a sudden torque, applied with the origin of rotation being the center of mass).
+  - Move direction only applies to actions with force type set to force or impulse, and is an (X,Y) value such that -1, 0, 1 for the X-value represent left, none, or right in the X-axis, and -1, 0, 1 for the Y-value represent down, none, or up in the Y-axis.
+  - Magnitude is only used if the force type is set to force or impulse and is the amount of force or impulse to apply.
+  - Angular magnitude is only used if the force type is set to torque or angular impulse and is the amount of torque or angular impulse to apply, with a value such that negative and positive represent the directions clockwise and anti-clockwise respectively.
 
 ---
 
@@ -54,6 +106,7 @@ Sol Engine provides the following components to add to an entity to give it vari
 - Certain images may load either in black/white, or not load at all. However, this appears to be an issue with the STB image loading library and appears to only affect loading images imported from Apple phones. I believe this issue arises due to the manner in which Apple (and certain other devices) constructs the metadata of images from their platform. Please be careful when choosing images to load, and should this error present an issue, simply delete the affecting image, reload the Editor, and use a different image.
 - PNG blending issues. Images with transparent backgrounds load fine, with a transparent background. However, upon displaying them over other images, the background of the PNG turns black. This issue will be resolved in the future by introducing manual image layer setting to allow images to be layered more appropriately. OpenGL blending and depth testing has been enabled, and this allow PNGs to appear with a transparent background, but only when the background is not displayed over another image. This issue arises from the Painter's Algorithm, and will be rectified by introducing appropriate image layering functionality.
 - Transform Component scalar value modification leads to faulty physics. If you wish to resize an Entity on the screen, please directly modify the size values within the Sprite Component in the Inspector viewport, and  then directly modify the size values within the Collider Component (width/height for a Box collider, radius for a square collider) in the Inspector viewport.
+- MouseMovement input types currently are not fully implemented and as such have no use despite being present in the Editor.
 
 ---
 
