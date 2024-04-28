@@ -4,6 +4,8 @@
 
 A free and open source 2D Game Engine and Editor created for my BSc Computer Science dissertation. This project could more aptly be described as an auxilliary game development tool for the purposes of learning game development, learning game engine development, and for rapid prototyping.
 
+The codebase is thoroughly commented so please feel free to also use this project as an aid or basis if you are developing your own game engine. Building a game engine is a thoroughly rewarding process, one that I recommend undertaking since it has given me a plethora of skills and knowledge.
+
 ---
 
 ![main](https://github.com/nish572/Sol-Engine/assets/78385332/286966f4-1393-4bf2-8946-dd9643f65222)
@@ -50,6 +52,10 @@ The Version 1.0 release build includes a directory titled "Example Projects".
 - Then once you see the loaded scene in the playtest window, click 'Cancel' in the Load Existing Scene popup to exit back to the Editor.
 - To playtest this scene, click 'Start' from the Toolbar.
 - Scene-specific user controls for playing are detailed in the README included inside each Example Project's Assets folder.
+
+---
+### Core-Element Architecture
+Sol exists as two projects, the Engine and the Editor. The Editor is a project built via the Sol Core-Element architecture, which is an architecture I developed to allow a central Core manager with Elements that are, in essence, plugins.  If you wish to create further Elements as plugins, or applications with the Sol Core-Element architecture, boilerplate code has been provided as templates for your use.
 
 ---
 
