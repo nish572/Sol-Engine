@@ -8,6 +8,8 @@ A free and open source 2D Game Engine and Editor created for my BSc Computer Sci
 
 ![main](https://github.com/nish572/Sol-Engine/assets/78385332/286966f4-1393-4bf2-8946-dd9643f65222)
 
+The custom-built Editor (via Dear ImGui) with the visible playtest scene window.
+
 Featuring Hubert The Dog in the test scene shown, who is the beloved mascot of this project conceived during testing.
 
 ---
