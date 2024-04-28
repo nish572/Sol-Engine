@@ -30,7 +30,7 @@ The Version 1.0 release build includes a directory titled "Example Projects".
 ![space](https://github.com/nish572/Sol-Engine/assets/78385332/a3834d9e-7218-43e2-b9df-de4039c29e0f)
 
 
-To load and play each of these, follow the steps below:
+**To load and play each of these, follow the steps below:**
 - Run the Sol Engine.exe application executable.
 - When greeted with the StartUp Dialog popup, select Load Existing Project.
 - To run the Platformer example project, enter the path as follows: "Example Projects\Platformer"
@@ -80,21 +80,21 @@ Components in Sol are merely data structures to be processed by the Systems of t
 To add a component to an entity, right-click the entity entry in the Scene viewport, and select an option from the provided context menu. To modify the properties of a component, select the entity and then select the component you wish to modify. This will show the specific component in the Inspector viewport where you can modify the properties directly.
 
 The following components are provided to add to an entity to give it various data (and by extension, logic):
-- Transform
+- **Transform**
   - This component is responsible for holding the transformation data of an entity, i.e. its positional, rotational, and scalar data.
   - This allows physics to move entities (provided a physics body component and a collider component are also attached to the entity), and allows rendering to render with the appropriate transform data.
   - User-modifiable X and Y position, the X and Y scale (please see the note below), and the rotation.
   - Please note that setting the Scale X and Scale Y values is not recommended. To modify an entity's scale, please re-size the sprite associated with it (if a sprite is being used) and re-size the collider associated with it (if a collider is being used, and this will in turn amend the size of the physics body if a physics body is being used, which it should be if a collider is being used).
-- Sprite
+- **Sprite**
   - This component is responsible for representing an image to be rendered.
   - User-modifiable properties include the texture file path (for ease-of-use images can be dragged from the resource browser and dropped into this input field to automatically enter them), and the sprite dimensions.
-- Physics Body
+- **Physics Body**
   - This component is responsible for defining the body type to be set for physics.
   - User-modifiable properties include the body type (Kinematic which are bodies unaffected by gravity, Dynamic which are bodies affected by gravity, and Static which are bodies that can be collided with if the entity is given a collider component but will not be affected by gravity or physics simulations). Additionally, the user can toggle whether an entity with this body can be rotated by physics or not, which is useful if creating something like a platformer player that shouldn't rotate off of platforms for example.
-- Collider
+- **Collider**
   - This component is responsible for holding the specific data for the physics body, such as the shape of the collider (Box, or Circle), as well as the dimensions (width and height for a Box, or radius for a Circle) and the density/friction/destitution.
   - Please note that setting the dimensions affects the mass of a physics body (which affects how much forces/impulses/torques affect the body), but the density can be modified to counter or enhance this. Default values for friction and restitution are provided but may be modified if the user wishes differing effects.
-- Input
+- **Input**
   - This component allows the user to add actions based upon key presses. This allows control of an entity when a scene is running in the playtest window by applying forces/impulses/torques to the physics body (if a physics body component and a collider are being used).
   - Upon adding an action, keyboard input is polled so the user can press a key to associate with this action.
   - User-modifiable properties include setting the key associated with an action, setting the force type (outlined in more detail below), setting the input type (currently only Keyboard is implemented, please see known issues), move direction, magnitude, and angular magnitude.
