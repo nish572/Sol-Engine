@@ -2,7 +2,7 @@
 
 ## Description
 
-A 2D Game Engine and Editor created for my BSc Computer Science dissertation and could more aptly be described as an auxilliary game development tool for the purposes of learning game development, learning game engine development, and for rapid prototyping.
+A 2D Game Engine and Editor created for my BSc Computer Science dissertation. This project could more aptly be described as an auxilliary game development tool for the purposes of learning game development, learning game engine development, and for rapid prototyping.
 
 ---
 
@@ -17,7 +17,24 @@ If running Sol in the Visual Studio solution debugger, please ensure SDL2.dll is
 ---
 
 ## Example Projects
-To run
+The Version 1.0 release build includes a directory titled "Example Projects".
+
+![platformer](https://github.com/nish572/Sol-Engine/assets/78385332/df00a506-3f0e-4fba-8d3e-ff8a127d9d8e)
+![space](https://github.com/nish572/Sol-Engine/assets/78385332/a3834d9e-7218-43e2-b9df-de4039c29e0f)
+
+
+To load each of these, follow these steps:
+- Run the Sol Engine.exe application executable.
+- When greeted with the StartUp Dialog popup, select Load Existing Project.
+- To run the Platformer example project, enter the path as follows: "Example Projects\Platformer"
+- Alternatively, to run the Space example project, enter the path as follows: "Example Projects\Space"
+- (Please note that the inclusion of quotation marks does not affect loading the project, these can be omitted if you wish.)
+- In the Toolbar select 'Scene', then 'Load Scene'.
+- If running the Platformer example project, select 'Main Platformer.scn', then click 'Yes, Load' in the confirmation popup.
+- If running the Space example project, select 'Asteroid Field.scn', then click 'Yes, Load' in the confirmation popup.
+- Then once you see the loaded scene in the playtest window, click 'Cancel' in the Load Existing Scene popup to exit back to the Editor.
+- To playtest this scene, click 'Start' from the Toolbar.
+- Scene-specific user controls for playing are detailed in the README included inside each Example Project's Asset's folder.
 
 ---
 
