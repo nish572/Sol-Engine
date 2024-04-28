@@ -41,7 +41,7 @@ To load and play each of these, follow the steps below:
 - If running the Space example project, select 'Asteroid Field.scn', then click 'Yes, Load' in the confirmation popup.
 - Then once you see the loaded scene in the playtest window, click 'Cancel' in the Load Existing Scene popup to exit back to the Editor.
 - To playtest this scene, click 'Start' from the Toolbar.
-- Scene-specific user controls for playing are detailed in the README included inside each Example Project's Asset's folder.
+- Scene-specific user controls for playing are detailed in the README included inside each Example Project's Assets folder.
 
 ---
 
@@ -67,27 +67,27 @@ Input Components use Newtons for the force magnitude. Angular magnitude internal
 ### Entities
 Entities in Sol are merely numerical identifiers to which components can be associated.
 
-To add an entity to the scene, click 'Add Entity' from the Scene viewport. Adding an entity adds a sprite component and a transform component by default. To remove these, add other components, or delete an entity, simply right click the entity entry in the Scene viewport to view a context menu.
+To add an entity to the scene, click 'Add Entity' from the Scene viewport. Adding an entity adds a sprite component and a transform component by default. To remove these, add other components, or delete an entity, simply right-click the entity entry in the Scene viewport to view a context menu.
 
 ---
 
 ### Components
-Components in Sol are merely data stuctures to be processed by the Systems of the Entity-Component-System backend.
+Components in Sol are merely data structures to be processed by the Systems of the Entity-Component-System backend.
 
-To add component to an entity, right click the entity entry in the Scene viewport, and select an option from the provided context menu. To modify the properties of a component, select the entity and then select the component you wish to modify. This will show the specific component in the Inspector viewport where you can modify the properties directly.
+To add a component to an entity, right-click the entity entry in the Scene viewport, and select an option from the provided context menu. To modify the properties of a component, select the entity and then select the component you wish to modify. This will show the specific component in the Inspector viewport where you can modify the properties directly.
 
 The following components are provided to add to an entity to give it various data (and by extension, logic):
 - Transform
   - This component is responsible for holding the transformation data of an entity, i.e. its positional, rotational, and scalar data.
   - This allows physics to move entities (provided a physics body component and a collider component are also attached to the entity), and allows rendering to render with the appropriate transform data.
-  - User-modifiiable X and Y position, the X and Y scale (please see the note below), and the rotation.
+  - User-modifiable X and Y position, the X and Y scale (please see the note below), and the rotation.
   - Please note that setting the Scale X and Scale Y values is not recommended. To modify an entity's scale, please re-size the sprite associated with it (if a sprite is being used) and re-size the collider associated with it (if a collider is being used, and this will in turn amend the size of the physics body if a physics body is being used, which it should be if a collider is being used).
 - Sprite
   - This component is responsible for representing an image to be rendered.
-  - User-modifiiable properties include the texture file path (for ease-of-use images can be dragged from the resource browser and dropped into this input field to automatically enter them), and the sprite dimensions.
+  - User-modifiable properties include the texture file path (for ease-of-use images can be dragged from the resource browser and dropped into this input field to automatically enter them), and the sprite dimensions.
 - Physics Body
   - This component is responsible for defining the body type to be set for physics.
-  - User-modifiiable properties include the body type (Kinematic which are bodies unaffected by gravity, Dynamic which are bodies affected by gravity, and Static which are bodies that can be collided with if the entity is given a collider component but will not be affected by gravity or physics simulations). Additionally, the user can toggle whether an entity with this body can be rotated by physics or not, which is useful if creating something like a platformer player that shouldn't rotate off of platforms for example.
+  - User-modifiable properties include the body type (Kinematic which are bodies unaffected by gravity, Dynamic which are bodies affected by gravity, and Static which are bodies that can be collided with if the entity is given a collider component but will not be affected by gravity or physics simulations). Additionally, the user can toggle whether an entity with this body can be rotated by physics or not, which is useful if creating something like a platformer player that shouldn't rotate off of platforms for example.
 - Collider
   - This component is responsible for holding the specific data for the physics body, such as the shape of the collider (Box, or Circle), as well as the dimensions (width and height for a Box, or radius for a Circle) and the density/friction/destitution.
   - Please note that setting the dimensions affects the mass of a physics body (which affects how much forces/impulses/torques affect the body), but the density can be modified to counter or enhance this. Default values for friction and restitution are provided but may be modified if the user wishes differing effects.
@@ -104,8 +104,8 @@ The following components are provided to add to an entity to give it various dat
 
 ### Known Issues
 - Certain images may load either in black/white, or not load at all. However, this appears to be an issue with the STB image loading library and appears to only affect loading images imported from Apple phones. I believe this issue arises due to the manner in which Apple (and certain other devices) constructs the metadata of images from their platform. Please be careful when choosing images to load, and should this error present an issue, simply delete the affecting image, reload the Editor, and use a different image.
-- PNG blending issues. Images with transparent backgrounds load fine, with a transparent background. However, upon displaying them over other images, the background of the PNG turns black. This issue will be resolved in the future by introducing manual image layer setting to allow images to be layered more appropriately. OpenGL blending and depth testing has been enabled, and this allow PNGs to appear with a transparent background, but only when the background is not displayed over another image. This issue arises from the Painter's Algorithm, and will be rectified by introducing appropriate image layering functionality.
-- Transform Component scalar value modification leads to faulty physics. If you wish to resize an Entity on the screen, please directly modify the size values within the Sprite Component in the Inspector viewport, and  then directly modify the size values within the Collider Component (width/height for a Box collider, radius for a square collider) in the Inspector viewport.
+- PNG blending issues. Images with transparent backgrounds load fine, with a transparent background. However, upon displaying them over other images, the background of the PNG turns black. This issue will be resolved in the future by introducing manual image layer setting to allow images to be layered more appropriately. OpenGL blending and depth testing has been enabled, and this allows PNGs to appear with a transparent background, but only when the background is not displayed over another image. This issue arises from the Painter's Algorithm, and will be rectified by introducing appropriate image layering functionality.
+- Transform Component scalar value modification leads to faulty physics. If you wish to resize an Entity on the screen, please directly modify the size values within the Sprite Component in the Inspector viewport, and then directly modify the size values within the Collider Component (width/height for a Box collider, radius for a square collider) in the Inspector viewport.
 - MouseMovement input types currently are not fully implemented and as such have no use despite being present in the Editor.
 
 ---
@@ -114,7 +114,7 @@ The following components are provided to add to an entity to give it various dat
 - The introduction of a 'max force/impulse/torque' would enable forces/impulses/torques to be applied until a maximum value is reached. Additionally, a 'key press limiter' would enable the resultant action of a key press to only be applied under certain circumstances, e.g. if the player is on the ground the key can be pressed to jump otherwise this action will not be executed.
 - Layer introduction to allow determination of which physics interact (i.e. physics bodies can be set to operate on specific layers to prevent collisions with physics from other layers), and to allow determination of which order sprites should be rendered on the screen (i.e. sprites with a lower layer will be rendered behind sprites with a higher layer).
 - Audio Element and Audio System implementation.
-- Full completion of the shader system to bring this functionality to the Editor. Currently mostly exists onthe backend and allows shader creation from two separate shader files (one for a vertex shader, one for a fragment shader), however as of present, rendering uses the default shader programs created.
+- Full completion of the shader system to bring this functionality to the Editor. Currently mostly exists on the backend and allows shader creation from two separate shader files (one for a vertex shader, one for a fragment shader), however as of present rendering uses the default shader programs created.
 
 ---
 
