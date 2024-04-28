@@ -8,6 +8,45 @@ If running Sol in the Visual Studio solution debugger, please ensure SDL2.dll is
 - For running the Visual Studio solution for the Release-x64 configuration, this SDL2.dll should be pasted inside the following directory: "\Sol-Engine\Sol-Engine\bin\Release-x64\Editor".
 (Please note that the specific location of the Sol-Engine root directory will vary depending on where you download this codebase to on your system.)
 
+## External Libraries
+- spdlog
+- - Usage: To build the Log Element to provide solution-wide logging functionality to a .txt file for debugging purposes.
+o	Found at: https://github.com/gabime/spdlog
+o	License: MIT
+•	OpenGL 3.3
+o	Usage: To interact with the GPU to achieve hardware-accelerated rendering.
+o	OpenGL 3.3 is not a library, but rather a standard or specification supported by the graphics drivers of desktop devices. The specific version I have chosen to use however is OpenGL 3.3.
+o	Information found at: https://www.opengl.org/
+o	License: Not Applicable
+•	GLAD
+o	Usage: To simplify the process of managing OpenGL function pointers, as a loader-generator, a utility (of various implementations) which The Khronos Group (the group responsible for the deployment of OpenGL) instructs developers to make use of in order to use OpenGL.
+o	Found at: https://glad.dav1d.de/
+o	License: The GLAD loader-generator itself is under the MIT license however the code it generates is under the Apache License. (GitHub, 2017)
+•	SDL2
+o	Usage: To manage the window upon which an OpenGL context can be used for rendering. Additionally, to poll keyboard and mouse input.
+o	Found at: https://www.libsdl.org/
+o	License: zlib
+•	GLM
+o	Usage: For matrix calculations for transformation data representation.
+o	Found at: https://www.opengl.org/sdk/libs/GLM/
+o	License: MIT
+•	Box2D
+o	Usage: As the physics engine powering the physics of this game engine. Specifically used in the Physics System of the ECS in order to provide a physics world for collision detection and resolution as well as physics simulations.
+o	Found at: https://github.com/erincatto/box2d
+o	License: MIT
+•	Dear ImGui
+o	Usage: To build the Graphical User Interface of the Editor.
+o	Found at: https://github.com/ocornut/imgui
+o	License: MIT
+•	JSON for Modern C++
+o	Usage: For scene serialisation and deserialisation. Specifically used by the Scene Element in order to load and unload scenes by deserialising and serialising (respectively) the ECS’s main data structure of Entity-Components mappings into .scn files which are essentially JSON files. 
+o	Found at: https://github.com/nlohmann/json
+o	License: MIT
+•	STB image loader (stb_image.h)
+o	Usage: To load images into a texture format usable by the Render System.
+o	Found at: https://github.com/nothings/stb/blob/master/stb_image.h
+o	License: Both MIT and Public Domain
+
 ### Known Issues
 - Certain images may load either in black/white, or not load at all. However, this appears to be an issue with the STB image loading library and appears to only affect loading images imported from Apple phones. I believe this issue arises due to the manner in which Apple (and certain other devices) constructs the metadata of images from their platform. Please be careful when choosing images to load, and should this error present an issue, simply delete the affecting image, reload the Editor, and use a different image.
 - PNG blending issues. Images with transparent backgrounds load fine, with a transparent background. However, upon displaying them over other images, the background of the PNG turns black. This issue will be resolved in the future by introducing manual image layer setting to allow images to be layered more appropriately. OpenGL blending and depth testing has been enabled, and this allow PNGs to appear with a transparent background, but only when the background is not displayed over another image. This issue arises from the Painter's Algorithm, and will be rectified by introducing appropriate image layering functionality.
