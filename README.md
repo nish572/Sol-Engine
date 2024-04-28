@@ -65,7 +65,7 @@ Input Components use Newtons for the force magnitude. Angular magnitude internal
 
 ---
 ### Entities
-Entities in Sol are merely numerical identifiers to which components can be associated.=
+Entities in Sol are merely numerical identifiers to which components can be associated.
 
 To add an entity to the scene, click 'Add Entity' from the Scene viewport. Adding an entity adds a sprite component and a transform component by default. To remove these, add other components, or delete an entity, simply right click the entity entry in the Scene viewport to view a context menu.
 
