@@ -19,7 +19,9 @@ If running Sol in the Visual Studio solution debugger, please ensure SDL2.dll is
 ## Example Projects
 The Version 1.0 release build includes a directory titled "Example Projects".
 
+### 'Platformer' Example Project
 ![platformer](https://github.com/nish572/Sol-Engine/assets/78385332/df00a506-3f0e-4fba-8d3e-ff8a127d9d8e)
+### 'Space' Example Project
 ![space](https://github.com/nish572/Sol-Engine/assets/78385332/a3834d9e-7218-43e2-b9df-de4039c29e0f)
 
 
