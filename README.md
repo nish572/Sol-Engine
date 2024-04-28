@@ -2,7 +2,7 @@
 
 ## Description
 
-A free and open source 2D Game Engine and Editor created with C++ for my BSc Computer Science dissertation. This project could more aptly be described as an auxilliary game development tool for the purposes of learning game development, learning game engine development, and for rapid prototyping.
+A free and open source 2D Game Engine and Editor created with C++ for my BSc Computer Science dissertation. This project could more aptly be described as an auxiliary game development tool for the purposes of learning game development, learning game engine development, and for rapid prototyping.
 
 The codebase is thoroughly commented so please feel free to also use this project as an aid or basis if you are developing your own game engine. Building a game engine is a thoroughly rewarding process, one that I recommend undertaking since it has given me a plethora of skills and knowledge.
 
