@@ -14,6 +14,8 @@ If running Sol in the Visual Studio solution debugger, please ensure SDL2.dll is
 - For running the Visual Studio solution for the Release-x64 configuration, this SDL2.dll should be pasted inside the following directory: "\Sol-Engine\Sol-Engine\bin\Release-x64\Editor".
 (Please note that the specific location of the Sol-Engine root directory will vary depending on where you download this codebase to on your system.)
 
+To close the application, please first select the playtest scene window to make this the active window, then click the cross button in the top-right.
+
 ---
 
 ## Example Projects
@@ -37,6 +39,14 @@ To load and play each of these, follow the steps below:
 - Then once you see the loaded scene in the playtest window, click 'Cancel' in the Load Existing Scene popup to exit back to the Editor.
 - To playtest this scene, click 'Start' from the Toolbar.
 - Scene-specific user controls for playing are detailed in the README included inside each Example Project's Asset's folder.
+
+---
+
+### Components
+Sol Engine provides the following components to add to an entity to give it various data and by extension logic.
+
+- Transform
+-   This is 
 
 ---
 
