@@ -25,7 +25,7 @@ If running Sol in the Visual Studio solution debugger, please ensure SDL2.dll is
   -	Found at: https://github.com/gabime/spdlog
   -	License: MIT
 -	OpenGL 3.3
-  -	Usage: To interact with the GPU to achieve hardware-accelerated rendering.
+	-	Usage: To interact with the GPU to achieve hardware-accelerated rendering.
   -	OpenGL 3.3 is not a library, but rather a standard or specification supported by the graphics drivers of desktop devices. The specific version I have chosen to use however is OpenGL 3.3.
   -	Information found at: https://www.opengl.org/
   -	License: Not Applicable
