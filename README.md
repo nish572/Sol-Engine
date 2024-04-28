@@ -9,8 +9,8 @@ If running Sol in the Visual Studio solution debugger, please ensure SDL2.dll is
 (Please note that the specific location of the Sol-Engine root directory will vary depending on where you download this codebase to on your system.)
 
 ## External Libraries
-- spdlog
-- - Usage: To build the Log Element to provide solution-wide logging functionality to a .txt file for debugging purposes.
+* spdlog
+- Usage: To build the Log Element to provide solution-wide logging functionality to a .txt file for debugging purposes.
 o	Found at: https://github.com/gabime/spdlog
 o	License: MIT
 •	OpenGL 3.3
