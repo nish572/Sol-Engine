@@ -81,10 +81,10 @@ Scene files are essentially a JSON formatted storage of the ECS's entity-compone
 
 ---
 ### Custom Entity-Component-System
-Sol operates using a custom built ECS (emplyoying a Data-Oriented approach), with further implementation details outlined in the following two sections (Entities, and Components).
+Sol operates using a custom-built ECS (emplyoying a Data-Oriented approach), with further implementation details outlined in the following two sections (Entities, and Components).
 
 This ECS has three custom-built Systems:
-- Rendering via an OpenGL 3.3 custom rendering engine (with SDL2 for window management and OpenGL context creation)
+- Rendering via an OpenGL 3.3 custom-built rendering engine (with SDL2 for window management and OpenGL context creation)
 - Physics via the Box2D physics engine
 - Events (as-of-current, primarily keyboard inputs) via SDL2 keyboard/mouse polling
 
