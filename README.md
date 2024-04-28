@@ -59,8 +59,11 @@ The origin of (0,0) has been configured to be the center of the scene playtest v
 The gravity of the physics world is set to Earth's gravity, set internally as -9.81.
 
 Transform Components use pixels for position, and degrees for rotation (with negative and positive representing the directions clockwise and anti-clockwise respectively).
+
 Sprite Components use pixels for dimension.
+
 Collider Components align with Box2D meters-kilograms-seconds convention.
+
 Input Components use Newtons for the force magnitude. Angular magnitude internally uses Newtons if the force type is angular impulse, but Newton-meters if the force type is set to torque. It is best to not consider these units for the Input Components and instead playtest by trial and error to determine appropriate values.
 
 ---
