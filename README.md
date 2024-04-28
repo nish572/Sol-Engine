@@ -130,42 +130,41 @@ By selecting Project in the Toolbar then Project Settings you can set the projec
 
 ## External Libraries
 
-• spdlog
-  o Usage: To build the Log Element to provide solution-wide logging functionality to a .txt file for debugging purposes.
-  o Found at: https://github.com/gabime/spdlog
-  o License: MIT
-• OpenGL 3.3
-  o Usage: To interact with the GPU to achieve hardware-accelerated rendering.
-  o OpenGL 3.3 is not a library, but rather a standard or specification supported by the graphics drivers of desktop devices. The specific version I have chosen to use however is OpenGL 3.3.
-  o Information found at: https://www.opengl.org/
-  o License: Not Applicable
-• GLAD
-  o Usage: To simplify the process of managing OpenGL function pointers, as a loader-generator, a utility (of various implementations) which The Khronos Group (the group responsible for the deployment of OpenGL) instructs developers to make use of in order to use OpenGL.
-  o Found at: https://glad.dav1d.de/
-  o License: The GLAD loader-generator itself is under the MIT license however the code it generates is under the Apache License. (GitHub, 2017)
-• SDL2
-  o Usage: To manage the window upon which an OpenGL context can be used for rendering. Additionally, to poll keyboard and mouse input.
-  o Found at: https://www.libsdl.org/
-  o License: zlib
-• GLM
-  o Usage: For matrix calculations for transformation data representation.
-  o Found at: https://www.opengl.org/sdk/libs/GLM/
-  o License: MIT
-• Box2D
-  o Usage: As the physics engine powering the physics of this game engine. Specifically used in the Physics System of the ECS in order to provide a physics world for collision detection and resolution as well as physics simulations.
-  o Found at: https://github.com/erincatto/box2d
-  o License: MIT
-• Dear ImGui
-  o Usage: To build the Graphical User Interface of the Editor.
-  o Found at: https://github.com/ocornut/imgui
-  o License: MIT
-• JSON for Modern C++
-  o Usage: For scene serialisation and deserialisation. Specifically used by the Scene Element in order to load and unload scenes by deserialising and serialising (respectively) the ECS’s main data structure of Entity-Components mappings into .scn files which are essentially JSON files. 
-  o Found at: https://github.com/nlohmann/json
-  o License: MIT
-• STB image loader (stb_image.h)
-  o Usage: To load images into a texture format usable by the Render System.
-  o Found at: https://github.com/nothings/stb/blob/master/stb_image.h
-  o License: Both MIT and Public Domain
+- **spdlog**
+  - **Usage**: To build the Log Element to provide solution-wide logging functionality to a .txt file for debugging purposes.
+  - **Found at**: [spdlog](https://github.com/gabime/spdlog)
+  - **License**: MIT
+- **OpenGL 3.3**
+  - **Usage**: To interact with the GPU to achieve hardware-accelerated rendering.
+  - **Information found at**: [OpenGL 3.3](https://www.opengl.org/)
+  - **License**: Not Applicable
+- **GLAD**
+  - **Usage**: To simplify the process of managing OpenGL function pointers, as a loader-generator, a utility which The Khronos Group instructs developers to make use of in order to use OpenGL.
+  - **Found at**: [GLAD](https://glad.dav1d.de/)
+  - **License**: The GLAD loader-generator itself is under the MIT license; however, the code it generates is under the Apache License.
+- **SDL2**
+  - **Usage**: To manage the window upon which an OpenGL context can be used for rendering. Additionally, to poll keyboard and mouse input.
+  - **Found at**: [SDL2](https://www.libsdl.org/)
+  - **License**: zlib
+- **GLM**
+  - **Usage**: For matrix calculations for transformation data representation.
+  - **Found at**: [GLM](https://www.opengl.org/sdk/libs/GLM/)
+  - **License**: MIT
+- **Box2D**
+  - **Usage**: As the physics engine powering the physics of this game engine. Specifically used in the Physics System of the ECS to provide a physics world for collision detection and resolution as well as physics simulations.
+  - **Found at**: [Box2D](https://github.com/erincatto/box2d)
+  - **License**: MIT
+- **Dear ImGui**
+  - **Usage**: To build the Graphical User Interface of the Editor.
+  - **Found at**: [Dear ImGui](https://github.com/ocornut/imgui)
+  - **License**: MIT
+- **JSON for Modern C++**
+  - **Usage**: For scene serialization and deserialization. Specifically used by the Scene Element to load and unload scenes by deserializing and serializing the ECS’s main data structure of Entity-Components mappings into .scn files which are essentially JSON files.
+  - **Found at**: [JSON for Modern C++](https://github.com/nlohmann/json)
+  - **License**: MIT
+- **STB image loader (stb_image.h)**
+  - **Usage**: To load images into a texture format usable by the Render System.
+  - **Found at**: [STB image loader](https://github.com/nothings/stb/blob/master/stb_image.h)
+  - **License**: Both MIT and Public Domain
   
 ---
