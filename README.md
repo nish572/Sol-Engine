@@ -2,7 +2,7 @@
 
 ## Description
 
-A free and open source 2D Game Engine and Editor created for my BSc Computer Science dissertation. This project could more aptly be described as an auxilliary game development tool for the purposes of learning game development, learning game engine development, and for rapid prototyping.
+A free and open source 2D Game Engine and Editor created with C++ for my BSc Computer Science dissertation. This project could more aptly be described as an auxilliary game development tool for the purposes of learning game development, learning game engine development, and for rapid prototyping.
 
 The codebase is thoroughly commented so please feel free to also use this project as an aid or basis if you are developing your own game engine. Building a game engine is a thoroughly rewarding process, one that I recommend undertaking since it has given me a plethora of skills and knowledge.
 
@@ -19,7 +19,7 @@ Featuring Hubert The Dog in the test scene shown, who is the beloved mascot of t
 ## To Run Sol
 To run Sol, please download the latest release from the sidebar. Open the directory and find the Sol Engine.exe. Run this file to run Sol. Please ensure SDL2.dll and Engine.dll are present in the same directory (alternatively install to PATH, however for ease of use it is ideal to keep these .dll files in the same directory as the executable). Additionally, ensure the imgui configuration file is present in this same directory to allow the Editor to load with the same visual settings as I have set.
 
-If running Sol in the Visual Studio solution debugger, please ensure SDL2.dll is copied and pasted directly into the appropriate directory (or installed to PATH) outlined below:
+Sol was developed using Visual Studio 2022. If you wish to run Sol via the Visual Studio solution debugger, please ensure SDL2.dll is copied and pasted directly into the appropriate directory (or installed to PATH) outlined below:
 - For running the Visual Studio solution for the Debug-x64 configuration, this SDL2.dll should be pasted inside the following directory: "\Sol-Engine\Sol-Engine\bin\Debug-x64\Editor".
 - For running the Visual Studio solution for the Release-x64 configuration, this SDL2.dll should be pasted inside the following directory: "\Sol-Engine\Sol-Engine\bin\Release-x64\Editor".
 (Please note that the specific location of the Sol-Engine root directory will vary depending on where you download this codebase to on your system.)
