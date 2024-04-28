@@ -122,6 +122,8 @@ The following components are provided to add to an entity to give it various dat
 
 By selecting Project in the Toolbar then Project Settings you can set the project's name and filepath, as well as the playtest scene window's dimensions.
 
+![project settings](https://github.com/nish572/Sol-Engine/assets/78385332/f22863e8-613a-445f-bbe7-e13270288c33)
+
 ---
 
 ### Known Issues
