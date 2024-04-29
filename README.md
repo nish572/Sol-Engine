@@ -38,6 +38,7 @@ Featuring Hubert The Dog in the test scene shown, who is the beloved mascot of t
   - If the codebase .zip has been downloaded from the dev branch:
     - For running the Visual Studio solution for the Debug-x64 configuration, this SDL2.dll should be pasted inside the following directory: "\Sol-Engine-dev\Sol-Engine-dev\bin\Debug-x64\Editor".
     - For running the Visual Studio solution for the Release-x64 configuration, this SDL2.dll should be pasted inside the following directory: "\Sol-Engine-dev\Sol-Engine-dev\bin\Release-x64\Editor".
+  - Re-run the now fully-setup Visual Studio solution debugger in your desired configuration (debug or release).
 
 **Once inside the Editor:**
 - Upon creating a new project, please create a new scene via the Toolbar. If not, changes cannot be saved until a new scene has been created and saved.
