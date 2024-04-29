@@ -17,8 +17,8 @@ Featuring Hubert The Dog in the test scene shown, who is the beloved mascot of t
 ---
 
 ## To Run Sol
-**Instructions for running the v1.0 release:**
-- Download the latest (v1.0) release from the sidebar.
+**Instructions for running the v1.1 release:**
+- Download the latest (v1.1) release from the sidebar.
 - Open the directory and find the Sol Engine.exe.
 - Run this file to run Sol.
 - Note: please ensure SDL2.dll and Engine.dll are kept present in the same directory (alternatively install to PATH, however for ease of use it is ideal to keep these .dll files in the same directory as the executable). Additionally, ensure the imgui configuration file is present in this same directory to allow the Editor to load with the same layout that I have set.
@@ -31,7 +31,7 @@ Featuring Hubert The Dog in the test scene shown, who is the beloved mascot of t
   - Note that the specific location of the Sol-Engine root directory will vary depending on where you download this codebase to on your system.
   - Upon running the Visual Studio solution debugger, an error will be generated indicating SDL2.dll is missing. This is normal, as SDL2.dll must be copied into the appropriate 'bin' directory.
   - Note that this 'bin' directory will only appear once the Visual Studio solution debugger has been run once for that configuration.
-  - SDL2.dll must be copied and pasted (provided in the root directory for convenience, or available in the release build v1.0 from the sidebar) directly into the appropriate directory (or installed to PATH) as outlined below:
+  - SDL2.dll must be copied and pasted (provided in the root directory for convenience, or available in the release build v1.1 from the sidebar) directly into the appropriate directory (or installed to PATH) as outlined below:
   - If the codebase .zip has been downloaded from the master branch: 
     - For running the Visual Studio solution for the Debug-x64 configuration, this SDL2.dll should be pasted inside the following directory: "\Sol-Engine-master\Sol-Engine-master\bin\Debug-x64\Editor".
     - For running the Visual Studio solution for the Release-x64 configuration, this SDL2.dll should be pasted inside the following directory: "\Sol-Engine-master\Sol-Engine-master\bin\Release-x64\Editor".
@@ -48,7 +48,7 @@ Featuring Hubert The Dog in the test scene shown, who is the beloved mascot of t
 ---
 
 ## Example Projects
-The Version 1.0 release build includes a directory titled "Example Projects".
+The Version 1.1 release build includes a directory titled "Example Projects".
 
 ### 'Platformer' Example Project
 ![platformer](https://github.com/nish572/Sol-Engine/assets/78385332/df00a506-3f0e-4fba-8d3e-ff8a127d9d8e)
