@@ -23,7 +23,9 @@ Featuring Hubert The Dog in the test scene shown, who is the beloved mascot of t
 - Run this file to run Sol.
 - Note: please ensure SDL2.dll and Engine.dll are kept present in the same directory (alternatively install to PATH, however for ease of use it is ideal to keep these .dll files in the same directory as the executable). Additionally, ensure the imgui configuration file is present in this same directory to allow the Editor to load with the same layout that I have set.
 
-**Notes for running via the Visual Studio solution debugger:**
+**Notes for running via the Visual Studio (not Visual Studio Code) solution debugger:**
+- Pre-requisites:
+  - Visual Studio (preferably 2022) installed with MSVC build tools. See here for help: [Microsoft Visual Studio Installation Instructions](https://learn.microsoft.com/en-us/visualstudio/install/install-visual-studio?view=vs-2022)
 - Sol was developed using Visual Studio 2022. If you wish to run Sol via the Visual Studio solution debugger, please read the following notes and instructions:
   - Load the solution by opening the .sln file in the root directory.
   - Note that the specific location of the Sol-Engine root directory will vary depending on where you download this codebase to on your system.
