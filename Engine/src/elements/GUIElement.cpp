@@ -1069,7 +1069,9 @@ namespace CoreGuiElement
 
 		if (ImGui::BeginTable("FilesTable", columns)) {
 			for (const auto& entry : fs::directory_iterator(directory)) {
-				if (fs::is_regular_file(entry) && (entry.path().extension() == ".png" || entry.path().extension() == ".jpg" || entry.path().extension() == ".jpeg")) {
+				std::string ext = entry.path().extension().string();  //Extract the extension
+				std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower);  //Convert to lowercase
+				if (fs::is_regular_file(entry) && (ext == ".png" || ext == ".jpg" || ext == ".jpeg")) {
 					ImGui::TableNextColumn();
 					ImGui::PushID(entry.path().filename().string().c_str());
 					if (ImGui::Button(entry.path().filename().string().c_str(), ImVec2(100, 100))) {
