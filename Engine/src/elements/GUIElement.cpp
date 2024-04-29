@@ -6,7 +6,7 @@
 #include "render/GuiElement.h"
 #include "Config.h"
 
-#include "Core.h"
+#include "Core.h" 
 
 namespace CoreGuiElement
 {
