@@ -42,7 +42,7 @@ Featuring Hubert The Dog in the test scene shown, who is the beloved mascot of t
 
 **Once inside the Editor:**
 - Upon creating a new project, please create a new scene via the Toolbar. If not, changes cannot be saved until a new scene has been created and saved.
-- Upon loading an existing project, please set load a scene via the Toolbar, or create a new scene via the Toolbar. If not, changes cannot be saved as no scene will be present.
+- Upon loading an existing project, please load a scene via the Toolbar, or create a new scene via the Toolbar. If not, changes cannot be saved as no scene will be present.
 - To close the application, please first select the playtest scene window to make this the active window, then click the cross button in the top-right.
 
 ---
