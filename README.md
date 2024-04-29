@@ -24,12 +24,18 @@ Featuring Hubert The Dog in the test scene shown, who is the beloved mascot of t
 - Note: please ensure SDL2.dll and Engine.dll are kept present in the same directory (alternatively install to PATH, however for ease of use it is ideal to keep these .dll files in the same directory as the executable). Additionally, ensure the imgui configuration file is present in this same directory to allow the Editor to load with the same layout that I have set.
 
 **Notes for running via the Visual Studio solution debugger:**
-- Sol was developed using Visual Studio 2022. If you wish to run Sol via the Visual Studio solution debugger, please ensure SDL2.dll is copied and pasted directly into the appropriate directory (or installed to PATH) outlined below:
-  - For running the Visual Studio solution for the Debug-x64 configuration, this SDL2.dll should be pasted inside the following directory: "\Sol-Engine\Sol-Engine\bin\Debug-x64\Editor".
-  - For running the Visual Studio solution for the Release-x64 configuration, this SDL2.dll should be pasted inside the following directory: "\Sol-Engine\Sol-Engine\bin\Release-x64\Editor".
-- Please note that the specific location of the Sol-Engine root directory will vary depending on where you download this codebase to on your system.
-- SDL2.dll is provided in the root directory for convenience, or available in the release build v.1.0 from the sidebar.
-- Also, please note that those two directories will only appear once the Visual Studio solution debugger has been run once for that configuration. So, upon first running via the debugger an error will appear indicating SDL2.dll is missing, then simply add the SDL2.dll to the newly-created specified directory and re-run via the debugger.
+- Sol was developed using Visual Studio 2022. If you wish to run Sol via the Visual Studio solution debugger, please read the following notes and instructions:
+  - Load the solution by opening the .sln file in the root directory.
+  - Note that the specific location of the Sol-Engine root directory will vary depending on where you download this codebase to on your system.
+  - Upon running the Visual Studio solution debugger, an error will be generated indicating SDL2.dll is missing. This is normal, as SDL2.dll must be copied into the appropriate 'bin' directory.
+  - Note that this 'bin' directory will only appear once the Visual Studio solution debugger has been run once for that configuration.
+  - SDL2.dll must be copied and pasted (provided in the root directory for convenience, or available in the release build v1.0 from the sidebar) directly into the appropriate directory (or installed to PATH) as outlined below:
+  - If the codebase .zip has been downloaded from the master branch: 
+    - For running the Visual Studio solution for the Debug-x64 configuration, this SDL2.dll should be pasted inside the following directory: "\Sol-Engine-master\Sol-Engine-master\bin\Debug-x64\Editor".
+    - For running the Visual Studio solution for the Release-x64 configuration, this SDL2.dll should be pasted inside the following directory: "\Sol-Engine-master\Sol-Engine-master\bin\Release-x64\Editor".
+  - If the codebase .zip has been downloaded from the dev branch:
+    - For running the Visual Studio solution for the Debug-x64 configuration, this SDL2.dll should be pasted inside the following directory: "\Sol-Engine-dev\Sol-Engine-dev\bin\Debug-x64\Editor".
+    - For running the Visual Studio solution for the Release-x64 configuration, this SDL2.dll should be pasted inside the following directory: "\Sol-Engine-dev\Sol-Engine-dev\bin\Release-x64\Editor".
 
 **Once inside the Editor:**
 - Upon creating a new project, please create a new scene via the Toolbar. If not, changes cannot be saved until a new scene has been created and saved.
