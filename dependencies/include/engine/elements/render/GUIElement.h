@@ -9,6 +9,8 @@
 #include <regex>
 #include <typeindex>
 #include <experimental/filesystem>
+#include <algorithm>
+#include <cctype>
 
 //The external libraries SDL2 and Dear ImGui
 #include <imgui.h>
