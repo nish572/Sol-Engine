@@ -113,7 +113,7 @@ Variable Delta Timestep: This timestep is frame-dependent and will vary as the r
 
 ---
 ### Custom Entity-Component-System
-Sol operates using a custom-built ECS (emplyoying a Data-Oriented approach), with further implementation details outlined in the following two sections (Entities, and Components).
+Sol operates using a custom-built ECS (employing a Data-Oriented approach), with further implementation details outlined in the following two sections (Entities, and Components).
 
 This ECS has three custom-built Systems:
 - Rendering via an OpenGL 3.3 custom-built rendering engine (with SDL2 for window management and OpenGL context creation)
